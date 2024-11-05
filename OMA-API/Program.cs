@@ -8,7 +8,7 @@ namespace OMA_API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var configuration = builder.Configuration;
             // Add services to the container.
             builder.Services.AddAuthorization();
 
@@ -19,7 +19,7 @@ namespace OMA_API
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:5000";
+                    options.Authority = configuration["Authentication:Authority"];
                     options.TokenValidationParameters.ValidateAudience = false;
                 });
             builder.Services.AddAuthorization(options =>
