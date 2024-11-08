@@ -1,4 +1,5 @@
 
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace OMA_API
@@ -20,7 +21,14 @@ namespace OMA_API
                 .AddJwtBearer(options =>
                 {
                     options.Authority = configuration["Authentication:Authority"];
-                    options.TokenValidationParameters.ValidateAudience = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = false, 
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true
+                    };
+                    options.RequireHttpsMetadata = true; 
                 });
             builder.Services.AddAuthorization(options =>
             {
