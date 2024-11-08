@@ -7,13 +7,14 @@ using OMA_Data.ExtensionMethods;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AlarmConfigController(IDataContext context) : Controller
     {
         private readonly IDataContext _context = context;
 
-        [HttpPost(template: "get-item")]
+        [HttpGet(template: "get-item")]
         [Produces<AlarmConfig>]
         public async Task<IResult> GetTask(int id)
         {

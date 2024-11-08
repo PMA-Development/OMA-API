@@ -12,7 +12,7 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpPost(template: "get-item")]
+        [HttpGet(template: "get-item")]
         [Produces<Drone>]
         public async Task<IResult> GetTask(int id)
         {
