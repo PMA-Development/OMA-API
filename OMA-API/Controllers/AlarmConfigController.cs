@@ -7,7 +7,7 @@ using OMA_Data.ExtensionMethods;
 
 namespace OMA_API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AlarmConfigController(IDataContext context) : Controller
