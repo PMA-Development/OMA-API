@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMA-API", "OMA-API\OMA-API.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMA-Data", "OMA-Data\OMA-Data.csproj", "{EC1EACCE-3DDD-4E17-8FC8-34462C967097}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMA-Services", "OMA-Services\OMA-Services.csproj", "{6629F467-9875-421B-983B-B4A2B7935E54}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EC1EACCE-3DDD-4E17-8FC8-34462C967097}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC1EACCE-3DDD-4E17-8FC8-34462C967097}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC1EACCE-3DDD-4E17-8FC8-34462C967097}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6629F467-9875-421B-983B-B4A2B7935E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6629F467-9875-421B-983B-B4A2B7935E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6629F467-9875-421B-983B-B4A2B7935E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6629F467-9875-421B-983B-B4A2B7935E54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
