@@ -1,46 +1,44 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using OMA_Data.ExtensionMethods;
-using System.Net;
-using Task = System.Threading.Tasks.Task;
+
 namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IDataContext context)  : Controller
+    public class DroneController(IDataContext context) : Controller
     {
         private readonly IDataContext _context = context;
 
         [HttpPost(template: "get-item")]
-        [Produces<User>]
+        [Produces<Drone>]
         public async Task<IResult> GetTask(int id)
         {
-            User? item = await _context.UserRepository.GetByIdAsync(id);
+            Drone? item = await _context.DroneRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
         [HttpPost(template: "add-item")]
         [Produces<int>]
-        public async Task<IResult> Add([FromBody] UserDTO? DTO)
+        public async Task<IResult> Add([FromBody] DroneDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
-            User item = DTO.FromDTO();
-            await _context.UserRepository.Add(item);
+            Drone item = DTO.FromDTO();
+            await _context.DroneRepository.Add(item);
             await _context.CommitAsync();
-            return Results.Ok(item.UserID);
+            return Results.Ok(item.DroneID);
         }
 
-        [HttpPut(template:"update-item")]
-        public async Task<IResult> Update([FromBody] UserDTO? DTO)
+        [HttpPut(template: "update-item")]
+        public async Task<IResult> Update([FromBody] DroneDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
-            User item = DTO.FromDTO();
-            _context.UserRepository.Update(item);
+            Drone item = DTO.FromDTO();
+            _context.DroneRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();
         }
@@ -48,10 +46,10 @@ namespace OMA_API.Controllers
         [HttpDelete(template: "delete-item")]
         public async Task<IResult> Delete(int id)
         {
-            User? item = await _context.UserRepository.GetByIdAsync(id);
+            Drone item = await _context.DroneRepository.GetByIdAsync(id);
             if (item == null)
                 return Results.NoContent();
-            _context.UserRepository.Delete(item);
+            _context.DroneRepository.Delete(item);
             await _context.CommitAsync();
             return Results.Ok();
         }

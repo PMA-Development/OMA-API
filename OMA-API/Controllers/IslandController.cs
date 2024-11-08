@@ -1,46 +1,44 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using OMA_Data.ExtensionMethods;
-using System.Net;
-using Task = System.Threading.Tasks.Task;
+
 namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IDataContext context)  : Controller
+    public class IslandController(IDataContext context) : Controller
     {
         private readonly IDataContext _context = context;
 
         [HttpPost(template: "get-item")]
-        [Produces<User>]
+        [Produces<Island>]
         public async Task<IResult> GetTask(int id)
         {
-            User? item = await _context.UserRepository.GetByIdAsync(id);
+            Island? item = await _context.IslandRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
         [HttpPost(template: "add-item")]
         [Produces<int>]
-        public async Task<IResult> Add([FromBody] UserDTO? DTO)
+        public async Task<IResult> Add([FromBody] IslandDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
-            User item = DTO.FromDTO();
-            await _context.UserRepository.Add(item);
+            Island item = DTO.FromDTO();
+            await _context.IslandRepository.Add(item);
             await _context.CommitAsync();
-            return Results.Ok(item.UserID);
+            return Results.Ok(item.IslandID);
         }
 
-        [HttpPut(template:"update-item")]
-        public async Task<IResult> Update([FromBody] UserDTO? DTO)
+        [HttpPut(template: "update-item")]
+        public async Task<IResult> Update([FromBody] IslandDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
-            User item = DTO.FromDTO();
-            _context.UserRepository.Update(item);
+            Island item = DTO.FromDTO();
+            _context.IslandRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();
         }
@@ -48,10 +46,10 @@ namespace OMA_API.Controllers
         [HttpDelete(template: "delete-item")]
         public async Task<IResult> Delete(int id)
         {
-            User? item = await _context.UserRepository.GetByIdAsync(id);
+            Island item = await _context.IslandRepository.GetByIdAsync(id);
             if (item == null)
                 return Results.NoContent();
-            _context.UserRepository.Delete(item);
+            _context.IslandRepository.Delete(item);
             await _context.CommitAsync();
             return Results.Ok();
         }
