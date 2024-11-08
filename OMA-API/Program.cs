@@ -1,5 +1,8 @@
 
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using OMA_Data.Data;
+using OMA_Data.Entities;
+using System;
 using System.Security.Claims;
 
 namespace OMA_API
@@ -10,8 +13,15 @@ namespace OMA_API
         {
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
+           
+
+            builder.Services.AddControllers();
             // Add services to the container.
             builder.Services.AddAuthorization();
+
+            builder.Services.AddDbContext<OMAContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'WebAPI' not found.")));
+            builder.Services.AddScoped<IDataContext, DataContext>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -52,27 +62,7 @@ namespace OMA_API
 
             app.UseAuthorization();
 
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
-
-            
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast")
-            .WithOpenApi()
-            .RequireAuthorization();
+            app.MapControllers();
 
             app.Run();
         }
