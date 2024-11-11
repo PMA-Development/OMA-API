@@ -14,7 +14,7 @@ namespace OMA_API.Controllers
 
         [HttpGet(template: "get-item")]
         [Produces<Drone>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> GetDrone(int id)
         {
             Drone? item = await _context.DroneRepository.GetByIdAsync(id);
             return Results.Ok(item);
@@ -22,7 +22,7 @@ namespace OMA_API.Controllers
 
         [HttpPost(template: "add-item")]
         [Produces<int>]
-        public async Task<IResult> Add([FromBody] DroneDTO? DTO)
+        public async Task<IResult> AddDrone([FromBody] DroneDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
@@ -33,7 +33,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpPut(template: "update-item")]
-        public async Task<IResult> Update([FromBody] DroneDTO? DTO)
+        public async Task<IResult> UpdateDrone([FromBody] DroneDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
@@ -44,7 +44,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpDelete(template: "delete-item")]
-        public async Task<IResult> Delete(int id)
+        public async Task<IResult> DeleteDrone(int id)
         {
             Drone item = await _context.DroneRepository.GetByIdAsync(id);
             if (item == null)
