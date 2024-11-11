@@ -34,7 +34,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Drone item = DTO.FromDTO();
+            Drone item = await DTO.FromDTO();
             await _context.DroneRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.DroneID);
@@ -45,7 +45,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Drone item = DTO.FromDTO();
+            Drone item = await DTO.FromDTO();
             _context.DroneRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

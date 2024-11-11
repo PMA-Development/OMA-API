@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OMA_Data.Core.Repositories.Interface
 {
-    public interface ISensorRepository : IGenericRepository<Sensor>
+    public interface IDeviceActionRepository : IGenericRepository<DeviceAction>
     {
     }
 }

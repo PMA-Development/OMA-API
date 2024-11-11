@@ -12,7 +12,7 @@ namespace OMA_Data.DTOs
     public class AlarmDTO
     {
         public int AlarmID { get; set; }
-        public Island Island { get; set; } = new();
-        public Turbine? Turbine { get; set; }
+        public int IslandID { get; set; } = new();
+        public int? TurbineID { get; set; }
     }
 }

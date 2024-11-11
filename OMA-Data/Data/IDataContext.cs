@@ -17,7 +17,9 @@ namespace OMA_Data.Data
         IDroneRepository DroneRepository { get; }
         IIslandRepository IslandRepository { get; }
         ILogRepository LogRepository { get; }
-        ISensorRepository SensorRepository { get; }
+        IDeviceRepository DeviceRepository { get; }
+        IDeviceActionRepository DeviceActionRepository { get; }
+        IDeviceDataRepository DeviceDataRepository { get; }
         ITaskRepository TaskRepository { get; }
         ITurbineRepository TurbineRepository { get; }
 

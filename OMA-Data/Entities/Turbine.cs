@@ -13,8 +13,10 @@ namespace OMA_Data.Entities
         public int TurbineID { get; set; }
         [Required]
         public string Title { get; set; } = string.Empty;
+        public string ClientID { get; set; } = string.Empty;
         [Required]
-        [ForeignKey("SensorFK")]
-        public Sensor Sensor { get; set; } = new();
+        [ForeignKey("DeviceFK")]
+        public List<Device> Devices { get; set; } = new();
+        public Island Island { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using OMA_Data.DTOs;
+﻿using OMA_Data.Core.Utils;
+using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,24 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class AlarmExtensions
     {
+        #region InitializeRepo
+        private static IGenericRepository<Island> _genericIsland;
+        private static IGenericRepository<Turbine> _genericTurbine;
+        public static IGenericRepository<Island> GenericIsland
+        {
+            get { return _genericIsland; }
+        }
+        public static IGenericRepository<Turbine> GenericTurbine
+        {
+            get { return _genericTurbine; }
+        }
+        public static void InitRepo(IGenericRepository<Island> genericIsland, IGenericRepository<Turbine> genericTurbine)
+        {
+            _genericIsland = genericIsland;
+            _genericTurbine = genericTurbine;
+        }
+        #endregion
+
         public static IEnumerable<AlarmDTO> ToDTOs(this IQueryable<Alarm> source)
         {
             List<Alarm> items = source.ToList();
@@ -19,8 +38,8 @@ namespace OMA_Data.ExtensionMethods
                 DTOs.Add(new AlarmDTO
                 {
                     AlarmID = item.AlarmID,
-                    Island  = item.Island,
-                    Turbine = item.Turbine
+                    IslandID  = item.Island.IslandID,
+                    TurbineID = item.Turbine.TurbineID
                 });
             }
             return DTOs;
@@ -35,20 +54,20 @@ namespace OMA_Data.ExtensionMethods
                 DTOs.Add(new AlarmDTO
                 {
                     AlarmID = item.AlarmID,
-                    Island = item.Island,
-                    Turbine = item.Turbine
+                    IslandID = item.Island.IslandID,
+                    TurbineID = item.Turbine.TurbineID
                 });
             }
             return DTOs;
         }
 
-        public static Alarm FromDTO(this AlarmDTO source)
+        public static async Task<Alarm> FromDTO(this AlarmDTO source)
         {
             Alarm item = new()
             {
                 AlarmID = source.AlarmID,
-                Island = source.Island,
-                Turbine = source.Turbine
+                Island = await _genericIsland.GetByIdAsync(source.IslandID),
+                Turbine = source.TurbineID != null ? await _genericTurbine.GetByIdAsync(source.TurbineID.Value) : null
             };
 
             return item;

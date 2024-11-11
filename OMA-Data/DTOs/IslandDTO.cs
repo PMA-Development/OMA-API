@@ -13,7 +13,7 @@ namespace OMA_Data.DTOs
     {
         public int IslandID { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string ClientID { get; set; } = string.Empty;
         public string Abbreviation { get; set; } = string.Empty;
-        public Turbine Turbine { get; set; } = new();
     }
 }

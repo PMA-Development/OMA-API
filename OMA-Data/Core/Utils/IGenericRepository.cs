@@ -9,6 +9,7 @@ namespace OMA_Data.Core.Utils
     public interface IGenericRepository<T> where T : class
     {
         Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(Guid id);
         IQueryable<T> GetAll();
         Task<bool> Add(T entity);
         bool Update(T entity);

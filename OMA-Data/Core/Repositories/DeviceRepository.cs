@@ -10,11 +10,7 @@ using System.Threading.Tasks;
 
 namespace OMA_Data.Core.Repositories
 {
-    public class TurbineRepository(OMAContext context) : GenericRepository<Turbine>(context), ITurbineRepository
+    public class DeviceRepository(OMAContext context) : GenericRepository<Device>(context), IDeviceRepository
     {
-        public virtual List<Turbine> GetTurbinesByIslandId(int id)
-        {
-            return _context.Turbines.Where(x => x.Island.IslandID == id).ToList();
-        }
     }
 }

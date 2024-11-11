@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OMA_Data.Core.Repositories
 {
-    public class SensorRepository(OMAContext context) : GenericRepository<Sensor>(context), ISensorRepository
+    public class DeviceActionRepository(OMAContext context) : GenericRepository<DeviceAction>(context), IDeviceActionRepository
     {
     }
 }

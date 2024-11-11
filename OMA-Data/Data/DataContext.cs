@@ -20,7 +20,9 @@ namespace OMA_Data.Data
         public IDroneRepository DroneRepository { get; private set; } = new DroneRepository(context);
         public IIslandRepository IslandRepository { get; private set; } = new IslandRepository(context);
         public ILogRepository LogRepository { get; private set; } = new LogRepository(context);
-        public ISensorRepository SensorRepository { get; private set; } = new SensorRepository(context);
+        public IDeviceRepository DeviceRepository { get; private set; } = new DeviceRepository(context);
+        public IDeviceActionRepository DeviceActionRepository { get; private set; } = new DeviceActionRepository(context);
+        public IDeviceDataRepository DeviceDataRepository { get; private set; } = new DeviceDataRepository(context);
         public ITaskRepository TaskRepository { get; private set; } = new TaskRepository(context);
         public ITurbineRepository TurbineRepository { get; private set; } = new TurbineRepository(context);
 

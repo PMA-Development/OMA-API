@@ -13,10 +13,11 @@ namespace OMA_Data.Entities
         public int IslandID { get; set; }
         [Required]
         public string Title { get; set; } = string.Empty;
+        public string ClientID { get; set; } = string.Empty;
         [Required]
         public string Abbreviation { get; set; } = string.Empty;
         [Required]
         [ForeignKey("TurbineFK")]
-        public Turbine Turbine { get; set; } = new();
+        public List<Turbine> Turbines { get; set; } = new();
     }
 }

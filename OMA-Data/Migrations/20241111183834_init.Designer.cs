@@ -12,8 +12,8 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241111110831_Changed_UserDTO_To_FullName")]
-    partial class Changed_UserDTO_To_FullName
+    [Migration("20241111183834_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,12 +92,12 @@ namespace OMA_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttributeID"));
 
+                    b.Property<int?>("DeviceDataID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SensorID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -105,9 +105,89 @@ namespace OMA_Data.Migrations
 
                     b.HasKey("AttributeID");
 
-                    b.HasIndex("SensorID");
+                    b.HasIndex("DeviceDataID");
 
                     b.ToTable("Attributes");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.Device", b =>
+                {
+                    b.Property<int>("DeviceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceId"));
+
+                    b.Property<string>("ClientID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DeviceFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DeviceId");
+
+                    b.HasIndex("DeviceFK");
+
+                    b.ToTable("Device");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.DeviceAction", b =>
+                {
+                    b.Property<int>("DeviceActionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceActionID"));
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DeviceActionID");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("DeviceAction");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.DeviceData", b =>
+                {
+                    b.Property<int>("DeviceDataID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceDataID"));
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DeviceDataID");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("DeviceData");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Drone", b =>
@@ -147,16 +227,15 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ClientID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TurbineFK")
-                        .HasColumnType("int");
-
                     b.HasKey("IslandID");
-
-                    b.HasIndex("TurbineFK");
 
                     b.ToTable("Islands");
                 });
@@ -180,34 +259,14 @@ namespace OMA_Data.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserFK")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserFK")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LogID");
 
                     b.HasIndex("UserFK");
 
                     b.ToTable("Logs");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.Sensor", b =>
-                {
-                    b.Property<int>("SensorID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SensorID"));
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SensorID");
-
-                    b.ToTable("Sensors");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Task", b =>
@@ -226,8 +285,8 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerFK")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OwnerFK")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -240,8 +299,8 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserFK")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("UserFK")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TaskID");
 
@@ -262,27 +321,29 @@ namespace OMA_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TurbineID"));
 
-                    b.Property<int>("SensorFK")
-                        .HasColumnType("int");
+                    b.Property<string>("ClientID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TurbineFK")
+                        .HasColumnType("int");
+
                     b.HasKey("TurbineID");
 
-                    b.HasIndex("SensorFK");
+                    b.HasIndex("TurbineFK");
 
                     b.ToTable("Turbine");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.User", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<Guid>("UserID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -331,9 +392,42 @@ namespace OMA_Data.Migrations
 
             modelBuilder.Entity("OMA_Data.Entities.Attribute", b =>
                 {
-                    b.HasOne("OMA_Data.Entities.Sensor", null)
+                    b.HasOne("OMA_Data.Entities.DeviceData", null)
                         .WithMany("Attributes")
-                        .HasForeignKey("SensorID");
+                        .HasForeignKey("DeviceDataID");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.Device", b =>
+                {
+                    b.HasOne("OMA_Data.Entities.Turbine", "Turbine")
+                        .WithMany("Devices")
+                        .HasForeignKey("DeviceFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Turbine");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.DeviceAction", b =>
+                {
+                    b.HasOne("OMA_Data.Entities.Device", "Device")
+                        .WithMany("DeviceAction")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.DeviceData", b =>
+                {
+                    b.HasOne("OMA_Data.Entities.Device", "Device")
+                        .WithMany("DeviceData")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Drone", b =>
@@ -345,17 +439,6 @@ namespace OMA_Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.Island", b =>
-                {
-                    b.HasOne("OMA_Data.Entities.Turbine", "Turbine")
-                        .WithMany()
-                        .HasForeignKey("TurbineFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Turbine");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Log", b =>
@@ -396,18 +479,35 @@ namespace OMA_Data.Migrations
 
             modelBuilder.Entity("OMA_Data.Entities.Turbine", b =>
                 {
-                    b.HasOne("OMA_Data.Entities.Sensor", "Sensor")
-                        .WithMany()
-                        .HasForeignKey("SensorFK")
+                    b.HasOne("OMA_Data.Entities.Island", "Island")
+                        .WithMany("Turbines")
+                        .HasForeignKey("TurbineFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Sensor");
+                    b.Navigation("Island");
                 });
 
-            modelBuilder.Entity("OMA_Data.Entities.Sensor", b =>
+            modelBuilder.Entity("OMA_Data.Entities.Device", b =>
+                {
+                    b.Navigation("DeviceAction");
+
+                    b.Navigation("DeviceData");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.DeviceData", b =>
                 {
                     b.Navigation("Attributes");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.Island", b =>
+                {
+                    b.Navigation("Turbines");
+                });
+
+            modelBuilder.Entity("OMA_Data.Entities.Turbine", b =>
+                {
+                    b.Navigation("Devices");
                 });
 #pragma warning restore 612, 618
         }

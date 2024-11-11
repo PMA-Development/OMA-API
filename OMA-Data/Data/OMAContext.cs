@@ -13,7 +13,9 @@ namespace OMA_Data.Data
         public DbSet<Turbine> Users { get; set; }   
         public DbSet<Log> Logs { get; set; }
         public DbSet<OMA_Data.Entities.Attribute> Attributes { get; set; }
-        public DbSet<Sensor> Sensors { get; set; }
+        public DbSet<DeviceData> DeviceData { get; set; }
+        public DbSet<Device> Device { get; set; }
+        public DbSet<DeviceAction> DeviceAction { get; set; }
         public DbSet<Turbine> Turbines { get; set; }
         public DbSet<OMA_Data.Entities.Task> Tasks { get; set; }
         public DbSet<Drone> Drones { get; set; }

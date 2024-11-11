@@ -6,13 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OMA_Data.DTOs
+namespace OMA_Data.Entities
 {
-    public class SensorDTO
+    public class DeviceData
     {
-        public int SensorID { get; set; }
+        public int DeviceDataID { get; set; }
+        [Required]
         public string Type { get; set; } = string.Empty;
-        public List<OMA_Data.Entities.Attribute> Attributes { get; set; } = [];
+        [Required]
+        public List<Attribute> Attributes { get; set; } = [];
+        [Required]
         public DateTime Timestamp { get; set; }
+        public Device Device { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace OMA_Data.DTOs
         public int DroneID { get; set; }
         public string Title { get; set; } = string.Empty;
         public bool Available { get; set; }
-        public OMA_Data.Entities.Task Task { get; set; } = new();
+        public int TaskID { get; set; } = new();
     }
 }

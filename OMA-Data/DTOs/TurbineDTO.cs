@@ -13,6 +13,8 @@ namespace OMA_Data.DTOs
     {
         public int TurbineID { get; set; }
         public string Title { get; set; } = string.Empty;
-        public Sensor Sensor { get; set; } = new();
+        public string ClientID { get; set; } = string.Empty;
+        public int IslandID { get; set; } = new();
+        public int DeviceID { get; set; }
     }
 }

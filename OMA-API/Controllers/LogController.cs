@@ -34,7 +34,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Log item = DTO.FromDTO();
+            Log item = await DTO.FromDTO();
             await _context.LogRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.LogID);
@@ -45,7 +45,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Log item = DTO.FromDTO();
+            Log item = await DTO.FromDTO();
             _context.LogRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

@@ -16,8 +16,8 @@ namespace OMA_Data.DTOs
         public string Type { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string FinishDescription { get; set; } = string.Empty;
-        public User Owner { get; set; } = new();
-        public User? User { get; set; } = new();
-        public Turbine Turbine { get; set; } = new();
+        public Guid OwnerID { get; set; } = new();
+        public Guid? UserID { get; set; } = new();
+        public int TurbineID { get; set; } = new();
     }
 }

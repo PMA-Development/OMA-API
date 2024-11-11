@@ -1,4 +1,5 @@
-﻿using OMA_Data.DTOs;
+﻿using OMA_Data.Core.Utils;
+using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,21 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class AlarmConfigExtensions
     {
+        #region InitializeRepo
+        private static IGenericRepository<Island> _genericIsland;
+        public static IGenericRepository<Island> GenericRepository
+        {
+            get { return _genericIsland; }
+        }
+        public static void InitRepo(IGenericRepository<Island> genericRepository)
+        {
+            _genericIsland = genericRepository;
+        }
+        #endregion
+
         public static IEnumerable<AlarmConfigDTO> ToDTOs(this IQueryable<AlarmConfig> source)
         {
+            
             List<AlarmConfig> items = source.ToList();
             List<AlarmConfigDTO> DTOs = [];
             foreach (AlarmConfig item in items)
@@ -21,7 +35,7 @@ namespace OMA_Data.ExtensionMethods
                     AlarmConfigID = item.AlarmConfigID,
                     MaxAirPressure = item.MaxAirPressure,
                     MinAirPressure = item.MinAirPressure,
-                    Island = item.Island,
+                    IslandID = item.Island.IslandID,
                     MaxHumidity = item.MaxHumidity,
                     MaxTemperature = item.MaxTemperature,
                     MinHumidity = item.MinHumidity,
@@ -42,7 +56,7 @@ namespace OMA_Data.ExtensionMethods
                     AlarmConfigID = item.AlarmConfigID,
                     MaxAirPressure = item.MaxAirPressure,
                     MinAirPressure = item.MinAirPressure,
-                    Island = item.Island,
+                    IslandID = item.Island.IslandID,
                     MaxHumidity = item.MaxHumidity,
                     MaxTemperature = item.MaxTemperature,
                     MinHumidity = item.MinHumidity,
@@ -52,14 +66,15 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static AlarmConfig FromDTO(this AlarmConfigDTO source)
+        public async static Task<AlarmConfig> FromDTO(this AlarmConfigDTO source)
         {
+
             AlarmConfig item = new()
             {
                 AlarmConfigID = source.AlarmConfigID,
                 MaxAirPressure = source.MaxAirPressure,
                 MinAirPressure = source.MinAirPressure,
-                Island = source.Island,
+                Island = await (_genericIsland.GetByIdAsync(source.IslandID)),
                 MaxHumidity = source.MaxHumidity,
                 MaxTemperature = source.MaxTemperature,
                 MinHumidity = source.MinHumidity,

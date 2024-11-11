@@ -21,7 +21,7 @@ namespace OMA_Data.ExtensionMethods
                     IslandID = item.IslandID,
                     Abbreviation = item.Abbreviation,
                     Title = item.Title,
-                    Turbine = item.Turbine
+                    ClientID = item.ClientID,
                 });
             }
             return DTOs;
@@ -38,7 +38,7 @@ namespace OMA_Data.ExtensionMethods
                     IslandID = item.IslandID,
                     Abbreviation = item.Abbreviation,
                     Title = item.Title,
-                    Turbine = item.Turbine
+                    ClientID = item.ClientID
                 });
             }
             return DTOs;
@@ -50,8 +50,7 @@ namespace OMA_Data.ExtensionMethods
             {
                 IslandID = source.IslandID,
                 Abbreviation = source.Abbreviation,
-                Title = source.Title,
-                Turbine = source.Turbine
+                Title = source.Title
             };
 
             return item;

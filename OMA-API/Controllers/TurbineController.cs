@@ -27,6 +27,13 @@ namespace OMA_API.Controllers
             List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
             return Results.Ok(items);
         }
+        [HttpGet(template: "get-Turbines-Island")]
+        [Produces<List<Turbine>>]
+        public IResult GetTurbinesByIslandID()
+        {
+            List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
 
         [HttpPost(template: "add-Turbine")]
         [Produces<int>]
@@ -34,7 +41,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Turbine item = DTO.FromDTO();
+            Turbine item = await DTO.FromDTO();
             await _context.TurbineRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.TurbineID);
@@ -45,7 +52,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Turbine item = DTO.FromDTO();
+            Turbine item = await DTO.FromDTO();
             _context.TurbineRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

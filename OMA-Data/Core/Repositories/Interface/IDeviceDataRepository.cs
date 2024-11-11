@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace OMA_Data.Core.Repositories.Interface
 {
-    public interface ITurbineRepository : IGenericRepository<Turbine>
+    public interface IDeviceDataRepository : IGenericRepository<DeviceData>
     {
-        List<Turbine> GetTurbinesByIslandId(int id);
     }
 }

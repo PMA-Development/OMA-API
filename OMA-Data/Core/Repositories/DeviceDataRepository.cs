@@ -10,11 +10,8 @@ using System.Threading.Tasks;
 
 namespace OMA_Data.Core.Repositories
 {
-    public class TurbineRepository(OMAContext context) : GenericRepository<Turbine>(context), ITurbineRepository
+    //TODO : THIS IS INFO NOT A REAL TODO.. THIS CLASS IS FORMERLY "SensorRepository"
+    public class DeviceDataRepository(OMAContext context) : GenericRepository<DeviceData>(context), IDeviceDataRepository
     {
-        public virtual List<Turbine> GetTurbinesByIslandId(int id)
-        {
-            return _context.Turbines.Where(x => x.Island.IslandID == id).ToList();
-        }
     }
 }

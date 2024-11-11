@@ -1,4 +1,5 @@
-﻿using OMA_Data.DTOs;
+﻿using OMA_Data.Core.Utils;
+using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,17 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class LogExtensions
     {
+        #region InitializeRepo
+        private static IGenericRepository<User> _genericUser;
+        public static IGenericRepository<User> GenericUser
+        {
+            get { return _genericUser; }
+        }
+        public static void InitRepo(IGenericRepository<User> genericUser)
+        {
+            _genericUser = genericUser;
+        }
+        #endregion
         public static IEnumerable<LogDTO> ToDTOs(this IQueryable<Log> source)
         {
             List<Log> items = source.ToList();
@@ -22,7 +34,7 @@ namespace OMA_Data.ExtensionMethods
                     Severity = item.Severity,
                     Description = item.Description,
                     Time = item.Time,
-                    User = item.User,
+                    UserID = item.User.UserID,
                 });
             }
             return DTOs;
@@ -40,13 +52,13 @@ namespace OMA_Data.ExtensionMethods
                     Severity = item.Severity,
                     Description = item.Description,
                     Time = item.Time,
-                    User = item.User,
+                    UserID = item.User.UserID,
                 });
             }
             return DTOs;
         }
 
-        public static Log FromDTO(this LogDTO source)
+        public static async Task<Log> FromDTO(this LogDTO source)
         {
             Log item = new()
             {
@@ -54,7 +66,7 @@ namespace OMA_Data.ExtensionMethods
                 Severity = source.Severity,
                 Description = source.Description,
                 Time = source.Time,
-                User = source.User,
+                User = await _genericUser.GetByIdAsync(source.UserID),
             };
 
             return item;

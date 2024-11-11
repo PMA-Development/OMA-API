@@ -18,6 +18,6 @@ namespace OMA_Data.DTOs
         public int MaxHumidity { get; set; }
         public int MinAirPressure { get; set; }
         public int MaxAirPressure { get; set; }
-        public Island Island { get; set; } = new();
+        public int IslandID { get; set; } = new();
     }
 }

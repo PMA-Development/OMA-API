@@ -15,6 +15,6 @@ namespace OMA_Data.DTOs
         public DateTime Time { get; set; }
         public string Severity { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public User User { get; set; } = new();
+        public Guid UserID { get; set; } = new();
     }
 }

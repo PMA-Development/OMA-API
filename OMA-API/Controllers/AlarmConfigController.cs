@@ -36,7 +36,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            AlarmConfig item = DTO.FromDTO();
+            AlarmConfig item = await DTO.FromDTO();
             await _context.AlarmConfigRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.AlarmConfigID);
@@ -47,7 +47,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            AlarmConfig item = DTO.FromDTO();
+            AlarmConfig item = await DTO.FromDTO();
             _context.AlarmConfigRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();
