@@ -20,6 +20,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Sensors")]
+        [Produces<List<Sensor>>]
+        public IResult GetSensors()
+        {
+            List<Sensor> items = _context.SensorRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Sensor")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] SensorDTO? DTO)

@@ -21,6 +21,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Task")]
+        [Produces<List<OMA_Data.Entities.Task>>]
+        public IResult GetTasks(int id)
+        {
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Task")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TaskDTO? DTO)

@@ -22,6 +22,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Users")]
+        [Produces<List<User>>]
+        public IResult GetUsers()
+        {
+            List<User> items = _context.UserRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-User")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] UserDTO? DTO)

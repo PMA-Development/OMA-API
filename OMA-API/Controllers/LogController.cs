@@ -20,6 +20,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Logs")]
+        [Produces<List<Log>>]
+        public IResult GetLogs()
+        {
+            List<Log> items = _context.LogRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Log")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] LogDTO? DTO)

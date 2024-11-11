@@ -20,6 +20,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Drones")]
+        [Produces<List<Drone>>]
+        public IResult GetDrones()
+        {
+            List<Drone> items = _context.DroneRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Drone")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] DroneDTO? DTO)

@@ -20,6 +20,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Alarms")]
+        [Produces<List<Alarm>>]
+        public IResult GetAlarms()
+        {
+            List<Alarm> items = _context.AlarmRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Alarm")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] AlarmDTO? DTO)

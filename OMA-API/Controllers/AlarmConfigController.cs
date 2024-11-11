@@ -22,6 +22,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-AlarmConfigs")]
+        [Produces<List<AlarmConfig>>]
+        public IResult GetAlarmConfigs()
+        {
+            List<AlarmConfig> items = _context.AlarmConfigRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-AlarmConfig")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] AlarmConfigDTO? DTO)

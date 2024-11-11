@@ -20,6 +20,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Islands")]
+        [Produces<List<Island>>]
+        public IResult GetIslands()
+        {
+            List<Island> items = _context.IslandRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Island")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] IslandDTO? DTO)

@@ -20,6 +20,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Turbines")]
+        [Produces<List<Turbine>>]
+        public IResult GetTurbines()
+        {
+            List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Turbine")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TurbineDTO? DTO)

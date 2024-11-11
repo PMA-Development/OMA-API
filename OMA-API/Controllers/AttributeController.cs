@@ -21,6 +21,14 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
+        [HttpGet(template: "get-Attributes")]
+        [Produces<List<Attribute>>]
+        public IResult GetAttributes()
+        {
+            List<Attribute> items = _context.AttributeRepository.GetAll().ToList();
+            return Results.Ok(items);
+        }
+
         [HttpPost(template: "add-Attribute")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] AttributeDTO? DTO)
