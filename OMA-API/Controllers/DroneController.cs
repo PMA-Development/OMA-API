@@ -12,15 +12,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
+        [HttpGet(template: "get-Drone")]
         [Produces<Drone>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> Get(int id)
         {
             Drone? item = await _context.DroneRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-Drone")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] DroneDTO? DTO)
         {
@@ -32,7 +32,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.DroneID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-Drone")]
         public async Task<IResult> Update([FromBody] DroneDTO? DTO)
         {
             if (DTO == null)
@@ -43,7 +43,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-Drone")]
         public async Task<IResult> Delete(int id)
         {
             Drone item = await _context.DroneRepository.GetByIdAsync(id);

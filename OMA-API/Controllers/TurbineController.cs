@@ -12,15 +12,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
+        [HttpGet(template: "get-Turbine")]
         [Produces<Turbine>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> Get(int id)
         {
             Turbine? item = await _context.TurbineRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-Turbine")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TurbineDTO? DTO)
         {
@@ -32,7 +32,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.TurbineID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-Turbine")]
         public async Task<IResult> Update([FromBody] TurbineDTO? DTO)
         {
             if (DTO == null)
@@ -43,7 +43,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-Turbine")]
         public async Task<IResult> Delete(int id)
         {
             Turbine item = await _context.TurbineRepository.GetByIdAsync(id);

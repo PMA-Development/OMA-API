@@ -12,15 +12,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
+        [HttpGet(template: "get-Sensor")]
         [Produces<Sensor>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> Get(int id)
         {
             Sensor? item = await _context.SensorRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-Sensor")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] SensorDTO? DTO)
         {
@@ -32,7 +32,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.SensorID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-Sensor")]
         public async Task<IResult> Update([FromBody] SensorDTO? DTO)
         {
             if (DTO == null)
@@ -43,7 +43,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-Sensorss")]
         public async Task<IResult> Delete(int id)
         {
             Sensor item = await _context.SensorRepository.GetByIdAsync(id);

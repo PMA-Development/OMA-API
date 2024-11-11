@@ -13,15 +13,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
-        [Produces<Sensor>]
-        public async Task<IResult> GetTask(int id)
+        [HttpGet(template: "get-Task")]
+        [Produces<OMA_Data.Entities.Task>]
+        public async Task<IResult> Get(int id)
         {
             OMA_Data.Entities.Task? item = await _context.TaskRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-Task")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TaskDTO? DTO)
         {
@@ -33,7 +33,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.TaskID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-Task")]
         public async Task<IResult> Update([FromBody] TaskDTO? DTO)
         {
             if (DTO == null)
@@ -44,7 +44,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-Task")]
         public async Task<IResult> Delete(int id)
         {
             OMA_Data.Entities.Task item = await _context.TaskRepository.GetByIdAsync(id);

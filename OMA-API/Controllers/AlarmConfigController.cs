@@ -14,15 +14,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
+        [HttpGet(template: "get-AlarmConfig")]
         [Produces<AlarmConfig>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> Get(int id)
         {
             AlarmConfig? item = await _context.AlarmConfigRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-AlarmConfig")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] AlarmConfigDTO? DTO)
         {
@@ -34,7 +34,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.AlarmConfigID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-AlarmConfig")]
         public async Task<IResult> Update([FromBody] AlarmConfigDTO? DTO)
         {
             if (DTO == null)
@@ -45,7 +45,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-AlarmConfig")]
         public async Task<IResult> Delete(int id)
         {
             AlarmConfig item = await _context.AlarmConfigRepository.GetByIdAsync(id);

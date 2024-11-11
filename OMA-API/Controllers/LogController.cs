@@ -12,15 +12,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
+        [HttpGet(template: "get-Log")]
         [Produces<Log>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> Get(int id)
         {
             Log? item = await _context.LogRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-Log")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] LogDTO? DTO)
         {
@@ -32,7 +32,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.LogID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-Log")]
         public async Task<IResult> Update([FromBody] LogDTO? DTO)
         {
             if (DTO == null)
@@ -43,7 +43,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-Log")]
         public async Task<IResult> Delete(int id)
         {
             Log item = await _context.LogRepository.GetByIdAsync(id);

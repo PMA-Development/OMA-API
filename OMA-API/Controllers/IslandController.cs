@@ -12,15 +12,15 @@ namespace OMA_API.Controllers
     {
         private readonly IDataContext _context = context;
 
-        [HttpGet(template: "get-item")]
+        [HttpGet(template: "get-Island")]
         [Produces<Island>]
-        public async Task<IResult> GetTask(int id)
+        public async Task<IResult> Get(int id)
         {
             Island? item = await _context.IslandRepository.GetByIdAsync(id);
             return Results.Ok(item);
         }
 
-        [HttpPost(template: "add-item")]
+        [HttpPost(template: "add-Island")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] IslandDTO? DTO)
         {
@@ -32,7 +32,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item.IslandID);
         }
 
-        [HttpPut(template: "update-item")]
+        [HttpPut(template: "update-Island")]
         public async Task<IResult> Update([FromBody] IslandDTO? DTO)
         {
             if (DTO == null)
@@ -43,7 +43,7 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-item")]
+        [HttpDelete(template: "delete-Island")]
         public async Task<IResult> Delete(int id)
         {
             Island item = await _context.IslandRepository.GetByIdAsync(id);
