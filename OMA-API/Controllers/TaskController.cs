@@ -21,7 +21,7 @@ namespace OMA_API.Controllers
             return Results.Ok(item);
         }
 
-        [HttpGet(template: "get-Task")]
+        [HttpGet(template: "get-Tasks")]
         [Produces<List<OMA_Data.Entities.Task>>]
         public IResult GetTasks(int id)
         {
