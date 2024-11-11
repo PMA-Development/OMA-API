@@ -16,7 +16,7 @@ namespace OMA_API.Controllers
 
         [HttpGet(template: "get-item")]
         [Produces<User>]
-        public async Task<IResult> GetUser(int id)
+        public async Task<IResult> GetTask(int id)
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
             return Results.Ok(item);
@@ -24,7 +24,7 @@ namespace OMA_API.Controllers
 
         [HttpPost(template: "add-item")]
         [Produces<int>]
-        public async Task<IResult> AddUser([FromBody] UserDTO? DTO)
+        public async Task<IResult> Add([FromBody] UserDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
@@ -35,7 +35,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpPut(template:"update-item")]
-        public async Task<IResult> UpdateUser([FromBody] UserDTO? DTO)
+        public async Task<IResult> Update([FromBody] UserDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
@@ -46,7 +46,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpDelete(template: "delete-item")]
-        public async Task<IResult> DeleteUser(int id)
+        public async Task<IResult> Delete(int id)
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
             if (item == null)

@@ -15,7 +15,7 @@ namespace OMA_API.Controllers
 
         [HttpGet(template: "get-item")]
         [Produces<Attribute>]
-        public async Task<IResult> GetAttribute(int id)
+        public async Task<IResult> GetTask(int id)
         {
             Attribute? item = await _context.AttributeRepository.GetByIdAsync(id);
             return Results.Ok(item);
@@ -23,7 +23,7 @@ namespace OMA_API.Controllers
 
         [HttpPost(template: "add-item")]
         [Produces<int>]
-        public async Task<IResult> AddAttribute([FromBody] AttributeDTO? DTO)
+        public async Task<IResult> Add([FromBody] AttributeDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
@@ -34,7 +34,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpPut(template: "update-item")]
-        public async Task<IResult> UpdateAttribute([FromBody] AttributeDTO? DTO)
+        public async Task<IResult> Update([FromBody] AttributeDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
@@ -45,7 +45,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpDelete(template: "delete-item")]
-        public async Task<IResult> DeleteAttribute(int id)
+        public async Task<IResult> Delete(int id)
         {
             Attribute item = await _context.AttributeRepository.GetByIdAsync(id);
             if (item == null)
