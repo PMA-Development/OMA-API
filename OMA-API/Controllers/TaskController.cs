@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -9,8 +10,11 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskController(IDataContext context) : Controller
+    public class TaskController(IDataContext context, IGenericRepository<User> userRepository, IGenericRepository<Turbine> turbineRepository) : Controller
     {
+
+        private readonly IGenericRepository<User> _userRepository = userRepository;
+        private readonly IGenericRepository<Turbine> _turbineRepository = turbineRepository;
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Task")]
@@ -37,7 +41,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            OMA_Data.Entities.Task item = await DTO.FromDTO();
+            OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository,turbineRepository);
             await _context.TaskRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.TaskID);
@@ -48,7 +52,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            OMA_Data.Entities.Task item = await DTO.FromDTO();
+            OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, turbineRepository);
             _context.TaskRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

@@ -22,6 +22,7 @@ namespace OMA_Data.ExtensionMethods
         {
             get { return _genericTurbine; }
         }
+
         public static void InitRepo(IGenericRepository<User> genericUser, IGenericRepository<Turbine> genericTurbine)
         {
             _genericUser = genericUser;
@@ -71,18 +72,21 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<OMA_Data.Entities.Task> FromDTO(this TaskDTO source)
+        public static async Task<OMA_Data.Entities.Task> FromDTO(
+            this TaskDTO source,
+            IGenericRepository<User> userRepository,
+            IGenericRepository<Turbine> turbineRepository)
         {
             OMA_Data.Entities.Task item = new()
             {
                 TaskID = source.TaskID,
                 Description = source.Description,
                 FinishDescription = source.FinishDescription,
-                Owner = await _genericUser.GetByIdAsync(source.OwnerID),
-                Title = source.Title,
-                Turbine = await _genericTurbine.GetByIdAsync(source.TurbineID),
                 Type = source.Type,
-                User = source.UserID != null ? await _genericUser.GetByIdAsync(source.UserID.Value) : null
+                Title = source.Title,
+                Owner = await userRepository.GetByIdAsync(source.OwnerID),
+                Turbine = await turbineRepository.GetByIdAsync(source.TurbineID),
+                User = source.UserID != null ? await userRepository.GetByIdAsync(source.UserID.Value) : null
             };
 
             return item;

@@ -1,6 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OMA_Data.Core.Repositories;
+using OMA_Data.Core.Repositories.Interface;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.Entities;
 using System;
@@ -47,6 +50,21 @@ namespace OMA_API
                 options.AddPolicy("HasAdmin", policy => policy.RequireRole("Admin"));
             });
 
+            
+            
+            builder.Services.AddScoped<IGenericRepository<Alarm>, GenericRepository<Alarm>>();
+            builder.Services.AddScoped<IGenericRepository<AlarmConfig>, GenericRepository<AlarmConfig>>();
+            builder.Services.AddScoped<IGenericRepository<OMA_Data.Entities.Attribute>, GenericRepository<OMA_Data.Entities.Attribute>>();
+            builder.Services.AddScoped<IGenericRepository<Device>, GenericRepository<Device>>();
+            builder.Services.AddScoped<IGenericRepository<DeviceAction>, GenericRepository<DeviceAction>>();
+            builder.Services.AddScoped<IGenericRepository<DeviceData>, GenericRepository<DeviceData>>();
+            builder.Services.AddScoped<IGenericRepository<Drone>, GenericRepository<Drone>>();
+            builder.Services.AddScoped<IGenericRepository<Island>, GenericRepository<Island>>();
+            builder.Services.AddScoped<IGenericRepository<Log>, GenericRepository<Log>>();
+            builder.Services.AddScoped<IGenericRepository<OMA_Data.Entities.Task>, GenericRepository<OMA_Data.Entities.Task>>();
+            builder.Services.AddScoped<IGenericRepository<Turbine>, GenericRepository<Turbine>>();
+            builder.Services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -56,6 +74,7 @@ namespace OMA_API
                 app.UseSwaggerUI();
             }
 
+         
             app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
             .RequireAuthorization("HasHotlineUser");
 
