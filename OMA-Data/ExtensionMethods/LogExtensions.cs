@@ -71,5 +71,18 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
+        public static LogDTO ToDTO(this Log source)
+        {
+            LogDTO item = new()
+            {
+                LogID = source.LogID,
+                Severity = source.Severity,
+                Description = source.Description,
+                Time = source.Time,
+                UserID = source.User.UserID,
+            };
+
+            return item;
+        }
     }
 }

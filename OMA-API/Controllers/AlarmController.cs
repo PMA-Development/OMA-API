@@ -13,19 +13,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Alarm")]
-        [Produces<Alarm>]
+        [Produces<AlarmDTO>]
         public async Task<IResult> Get(int id)
         {
             Alarm? item = await _context.AlarmRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            AlarmDTO alarmDTO = item.ToDTO();
+            return Results.Ok(alarmDTO);
         }
 
         [HttpGet(template: "get-Alarms")]
-        [Produces<List<Alarm>>]
+        [Produces<List<AlarmDTO>>]
         public IResult GetAlarms()
         {
             List<Alarm> items = _context.AlarmRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<AlarmDTO> alarmDTOs = items.ToDTOs().ToList();
+            return Results.Ok(alarmDTOs);
         }
 
         [HttpPost(template: "add-Alarm")]

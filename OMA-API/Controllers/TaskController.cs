@@ -14,19 +14,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Task")]
-        [Produces<OMA_Data.Entities.Task>]
+        [Produces<TaskDTO>]
         public async Task<IResult> Get(int id)
         {
             OMA_Data.Entities.Task? item = await _context.TaskRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            TaskDTO taskDTO = item.ToDTO();
+            return Results.Ok(taskDTO);
         }
 
         [HttpGet(template: "get-Tasks")]
-        [Produces<List<OMA_Data.Entities.Task>>]
+        [Produces<List<TaskDTO>>]
         public IResult GetTasks()
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            return Results.Ok(taskDTOs);
         }
 
         [HttpPost(template: "add-Task")]

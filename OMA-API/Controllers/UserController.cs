@@ -15,19 +15,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-User")]
-        [Produces<User>]
+        [Produces<UserDTO>]
         public async Task<IResult> Get(int id)
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            UserDTO userDTO = item.ToDTO();
+            return Results.Ok(userDTO);
         }
 
         [HttpGet(template: "get-Users")]
-        [Produces<List<User>>]
+        [Produces<List<UserDTO>>]
         public IResult GetUsers()
         {
             List<User> items = _context.UserRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<UserDTO> userDTOs = items.ToDTOs().ToList();
+            return Results.Ok(userDTOs);
         }
 
         [HttpPost(template: "add-User")]

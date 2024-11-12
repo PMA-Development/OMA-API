@@ -13,19 +13,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Island")]
-        [Produces<Island>]
+        [Produces<IslandDTO>]
         public async Task<IResult> Get(int id)
         {
             Island? item = await _context.IslandRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            IslandDTO islandDTO = item.ToDTO();
+            return Results.Ok(islandDTO);
         }
 
         [HttpGet(template: "get-Islands")]
-        [Produces<List<Island>>]
+        [Produces<List<IslandDTO>>]
         public IResult GetIslands()
         {
             List<Island> items = _context.IslandRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<IslandDTO> islandDTOs = items.ToDTOs().ToList();
+            return Results.Ok(islandDTOs);
         }
 
         [HttpPost(template: "add-Island")]

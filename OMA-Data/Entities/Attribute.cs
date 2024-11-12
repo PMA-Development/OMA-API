@@ -16,5 +16,6 @@ namespace OMA_Data.Entities
         public string Name { get; set; } = string.Empty;
         [Required]
         public string Value { get; set; } = string.Empty;
+        public DeviceData DeviceData { get; set; }
     }
 }

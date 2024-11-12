@@ -13,19 +13,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Device")]
-        [Produces<Device>]
+        [Produces<DeviceDTO>]
         public async Task<IResult> Get(int id)
         {
             Device? item = await _context.DeviceRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            DeviceDTO deviceDTO = item.ToDTO();
+            return Results.Ok(deviceDTO);
         }
 
         [HttpGet(template: "get-Devices")]
-        [Produces<List<Device>>]
+        [Produces<List<DeviceDTO>>]
         public IResult GetDevices()
         {
             List<Device> items = _context.DeviceRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<DeviceDTO> deviceDTOs = items.ToDTOs().ToList();
+            return Results.Ok(deviceDTOs);
         }
 
         [HttpPost(template: "add-Device")]

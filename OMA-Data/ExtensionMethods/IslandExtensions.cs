@@ -50,7 +50,20 @@ namespace OMA_Data.ExtensionMethods
             {
                 IslandID = source.IslandID,
                 Abbreviation = source.Abbreviation,
-                Title = source.Title
+                Title = source.Title,
+                ClientID = source.ClientID,
+            };
+
+            return item;
+        }
+        public static IslandDTO ToDTO(this Island source)
+        {
+            IslandDTO item = new()
+            {
+                IslandID = source.IslandID,
+                Abbreviation = source.Abbreviation,
+                Title = source.Title,
+                ClientID = source.ClientID,
             };
 
             return item;

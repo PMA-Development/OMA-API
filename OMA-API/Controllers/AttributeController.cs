@@ -14,19 +14,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Attribute")]
-        [Produces<Attribute>]
+        [Produces<AttributeDTO>]
         public async Task<IResult> Get(int id)
         {
             Attribute? item = await _context.AttributeRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            AttributeDTO attributeDTO = item.ToDTO();
+            return Results.Ok(attributeDTO);
         }
 
         [HttpGet(template: "get-Attributes")]
-        [Produces<List<Attribute>>]
+        [Produces<List<AttributeDTO>>]
         public IResult GetAttributes()
         {
             List<Attribute> items = _context.AttributeRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<AttributeDTO> attributeDTOs = items.ToDTOs().ToList();
+            return Results.Ok(attributeDTOs);
         }
 
         [HttpPost(template: "add-Attribute")]
@@ -35,7 +37,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Attribute item = DTO.FromDTO();
+            Attribute item = await DTO.FromDTO();
             await _context.AttributeRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.AttributeID);
@@ -46,7 +48,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Attribute item = DTO.FromDTO();
+            Attribute item = await DTO.FromDTO();
             _context.AttributeRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

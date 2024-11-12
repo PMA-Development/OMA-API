@@ -41,7 +41,6 @@ namespace OMA_Data.ExtensionMethods
                         TurbineID = item.TurbineID,
                         Title = item.Title,
                         IslandID = item.Island.IslandID,
-                        DeviceID = device.DeviceId,
                         ClientID = device.ClientID,
                     });
 
@@ -63,7 +62,6 @@ namespace OMA_Data.ExtensionMethods
                         TurbineID = item.TurbineID,
                         Title = item.Title,
                         IslandID = item.Island.IslandID,
-                        DeviceID = device.DeviceId,
                         ClientID = item.ClientID,
                     });
                 }
@@ -78,7 +76,20 @@ namespace OMA_Data.ExtensionMethods
                 TurbineID = source.TurbineID,
                 Title = source.Title,
                 Island = await _genericIsland.GetByIdAsync(source.IslandID),
-                Devices = _genericDevice.GetAll().Where(x => x.DeviceId == source.DeviceID).ToList()
+                Devices = _genericDevice.GetAll().Where(x => x.Turbine.TurbineID == source.TurbineID).ToList(),
+                ClientID = source.ClientID,
+            };
+
+            return item;
+        }
+        public static TurbineDTO ToDTO(this Turbine source)
+        {
+            TurbineDTO item = new()
+            {
+                TurbineID = source.TurbineID,
+                Title = source.Title,
+                IslandID = source.Island.IslandID,
+                ClientID = source.ClientID,
             };
 
             return item;

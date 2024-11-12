@@ -69,5 +69,18 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
+        
+        public static DroneDTO ToDTO(this Drone source)
+        {
+            DroneDTO item = new()
+            {
+                DroneID = source.DroneID,
+                Available = source.Available,
+                TaskID = source.Task.TaskID,
+                Title = source.Title
+            };
+
+            return item;
+        }
     }
 }

@@ -19,7 +19,9 @@ namespace OMA_Data.ExtensionMethods
                 DTOs.Add(new UserDTO
                 {
                     UserID = item.UserID,
-                    FullName = item.FullName
+                    FullName = item.FullName,
+                    Email = item.Email,
+                    Phone = item.Phone,
                 });
             }
             return DTOs;
@@ -34,7 +36,9 @@ namespace OMA_Data.ExtensionMethods
                 DTOs.Add(new UserDTO
                 {
                     UserID = item.UserID,
-                    FullName = item.FullName
+                    FullName = item.FullName,
+                    Email = item.Email,
+                    Phone = item.Phone,
                 });
             }
             return DTOs;
@@ -45,7 +49,21 @@ namespace OMA_Data.ExtensionMethods
             User item = new()
             {
                 UserID = source.UserID,
-                FullName = source.FullName
+                FullName = source.FullName,
+                Email = source.Email,
+                Phone = source.Phone,
+            };
+
+            return item;
+        }
+        public static UserDTO ToDTO(this User source)
+        {
+            UserDTO item = new()
+            {
+                UserID = source.UserID,
+                FullName = source.FullName,
+                Email = source.Email,
+                Phone = source.Phone,
             };
 
             return item;

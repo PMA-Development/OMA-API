@@ -12,7 +12,6 @@ namespace OMA_Data.DTOs
     {
         public int DeviceDataID { get; set; }
         public string Type { get; set; } = string.Empty;
-        public int AttributeID { get; set; }
         public DateTime Timestamp { get; set; }
         public int DeviceID { get; set; }
     }

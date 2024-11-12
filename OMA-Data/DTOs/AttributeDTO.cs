@@ -14,5 +14,6 @@ namespace OMA_Data.DTOs
         public int AttributeID { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Value { get; set; } = string.Empty;
+        public int DeviceDataID { get; set; }
     }
 }

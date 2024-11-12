@@ -34,17 +34,14 @@ namespace OMA_Data.ExtensionMethods
             List<DeviceDataDTO> DTOs = [];
             foreach (DeviceData item in items)
             {
-                foreach (var attribute in item.Attributes)
+                DTOs.Add(new DeviceDataDTO
                 {
-                    DTOs.Add(new DeviceDataDTO
-                    {
-                        DeviceDataID = item.DeviceDataID,
-                        AttributeID = attribute.AttributeID,
-                        Timestamp = item.Timestamp,
-                        Type = item.Type,
-                        DeviceID = item.Device.DeviceId,
-                    });
-                }
+                    DeviceDataID = item.DeviceDataID,
+                    Timestamp = item.Timestamp,
+                    Type = item.Type,
+                    DeviceID = item.Device.DeviceId,
+                });
+
             }
             return DTOs;
         }
@@ -55,17 +52,15 @@ namespace OMA_Data.ExtensionMethods
             List<DeviceDataDTO> DTOs = [];
             foreach (DeviceData item in source)
             {
-                foreach (var attribute in item.Attributes)
+
+                DTOs.Add(new DeviceDataDTO
                 {
-                    DTOs.Add(new DeviceDataDTO
-                    {
-                        DeviceDataID = item.DeviceDataID,
-                        AttributeID = attribute.AttributeID,
-                        Timestamp = item.Timestamp,
-                        Type = item.Type,
-                        DeviceID = item.Device.DeviceId,
-                    });
-                }
+                    DeviceDataID = item.DeviceDataID,
+                    Timestamp = item.Timestamp,
+                    Type = item.Type,
+                    DeviceID = item.Device.DeviceId,
+                });
+
             }
             return DTOs;
         }
@@ -75,10 +70,20 @@ namespace OMA_Data.ExtensionMethods
             DeviceData item = new()
             {
                 DeviceDataID = source.DeviceDataID,
-                Attributes = _genericAttribute.GetAll().Where(x => x.AttributeID == source.AttributeID).ToList(),
                 Timestamp = source.Timestamp,
                 Type = source.Type,
                 Device = await _genericDevice.GetByIdAsync(source.DeviceID),
+            };
+            return item;
+        }
+        public static DeviceDataDTO ToDTO(this DeviceData source)
+        {
+            DeviceDataDTO item = new()
+            {
+                DeviceDataID = source.DeviceDataID,
+                Timestamp = source.Timestamp,
+                Type = source.Type,
+                DeviceID = source.Device.DeviceId,
             };
             return item;
         }
