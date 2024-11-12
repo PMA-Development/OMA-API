@@ -22,8 +22,11 @@ namespace OMA_Data.ExtensionMethods
             _genericDevice = genericDevice;
         }
         #endregion
-        public static IEnumerable<DeviceActionDTO> ToDTOs(this IQueryable<DeviceAction> source)
+        public static IEnumerable<DeviceActionDTO>? ToDTOs(this IQueryable<DeviceAction> source)
         {
+            if (source == null)
+                return default;
+
             List<DeviceAction> items = source.ToList();
             List<DeviceActionDTO> DTOs = [];
             foreach (DeviceAction item in items)
@@ -40,8 +43,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<DeviceActionDTO> ToDTOs(this IEnumerable<DeviceAction> source)
+        public static IEnumerable<DeviceActionDTO>? ToDTOs(this IEnumerable<DeviceAction> source)
         {
+            if (source == null)
+                return default;
+
             List<DeviceActionDTO> DTOs = [];
             foreach (DeviceAction item in source)
             {
@@ -56,8 +62,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<DeviceAction> FromDTO(this DeviceActionDTO source)
+        public static async Task<DeviceAction?> FromDTO(this DeviceActionDTO source)
         {
+            if (source == null)
+                return default;
+
             DeviceAction item = new()
             {
                 DeviceActionID = source.DeviceActionID,
@@ -67,8 +76,11 @@ namespace OMA_Data.ExtensionMethods
             };
             return item;
         }
-        public static DeviceActionDTO ToDTO(this DeviceAction source)
+        public static DeviceActionDTO? ToDTO(this DeviceAction source)
         {
+            if (source == null)
+                return default;
+
             DeviceActionDTO item = new()
             {
                 DeviceActionID = source.DeviceActionID,

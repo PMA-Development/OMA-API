@@ -127,7 +127,7 @@ namespace OMA_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttributeID"));
 
-                    b.Property<int?>("DeviceDataID")
+                    b.Property<int>("DeviceDataID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -569,9 +569,13 @@ namespace OMA_Data.Migrations
 
             modelBuilder.Entity("OMA_Data.Entities.Attribute", b =>
                 {
-                    b.HasOne("OMA_Data.Entities.DeviceData", null)
+                    b.HasOne("OMA_Data.Entities.DeviceData", "DeviceData")
                         .WithMany("Attributes")
-                        .HasForeignKey("DeviceDataID");
+                        .HasForeignKey("DeviceDataID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeviceData");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Device", b =>

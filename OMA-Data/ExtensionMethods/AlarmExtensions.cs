@@ -29,8 +29,11 @@ namespace OMA_Data.ExtensionMethods
         }
         #endregion
 
-        public static IEnumerable<AlarmDTO> ToDTOs(this IQueryable<Alarm> source)
+        public static IEnumerable<AlarmDTO>? ToDTOs(this IQueryable<Alarm> source)
         {
+            if (source == null)
+                return default;
+
             List<Alarm> items = source.ToList();
             List<AlarmDTO> DTOs = [];
             foreach (Alarm item in items)
@@ -46,8 +49,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<AlarmDTO> ToDTOs(this IEnumerable<Alarm> source)
+        public static IEnumerable<AlarmDTO>? ToDTOs(this IEnumerable<Alarm> source)
         {
+            if (source == null)
+                return default;
+
             List<AlarmDTO> DTOs = [];
             foreach (Alarm item in source)
             {
@@ -61,8 +67,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Alarm> FromDTO(this AlarmDTO source)
+        public static async Task<Alarm?> FromDTO(this AlarmDTO source)
         {
+            if (source == null)
+                return default;
+
             Alarm item = new()
             {
                 AlarmID = source.AlarmID,
@@ -72,8 +81,11 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
-        public static AlarmDTO ToDTO(this Alarm source)
+        public static AlarmDTO? ToDTO(this Alarm source)
         {
+            if (source == null)
+                return default;
+
             AlarmDTO item = new()
             {
                 AlarmID = source.AlarmID,

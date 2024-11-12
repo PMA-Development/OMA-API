@@ -10,8 +10,11 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class UserExtensions
     {
-        public static IEnumerable<UserDTO> ToDTOs(this IQueryable<User> source)
+        public static IEnumerable<UserDTO>? ToDTOs(this IQueryable<User> source)
         {
+            if (source == null)
+                return default;
+
             List<User> items = source.ToList();
             List<UserDTO> DTOs = [];
             foreach (User item in items)
@@ -28,8 +31,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<UserDTO> ToDTOs(this IEnumerable<User> source)
+        public static IEnumerable<UserDTO>? ToDTOs(this IEnumerable<User> source)
         {
+            if (source == null)
+                return default;
+
             List<UserDTO> DTOs = [];
             foreach (User item in source)
             {
@@ -44,8 +50,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static User FromDTO(this UserDTO source)
+        public static User? FromDTO(this UserDTO source)
         {
+            if (source == null)
+                return default;
+
             User item = new()
             {
                 UserID = source.UserID,
@@ -56,8 +65,11 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
-        public static UserDTO ToDTO(this User source)
+        public static UserDTO? ToDTO(this User source)
         {
+            if (source == null)
+                return default;
+
             UserDTO item = new()
             {
                 UserID = source.UserID,

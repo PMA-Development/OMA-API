@@ -22,8 +22,11 @@ namespace OMA_Data.ExtensionMethods
             _genericUser = genericUser;
         }
         #endregion
-        public static IEnumerable<LogDTO> ToDTOs(this IQueryable<Log> source)
+        public static IEnumerable<LogDTO>? ToDTOs(this IQueryable<Log> source)
         {
+            if (source == null)
+                return default;
+
             List<Log> items = source.ToList();
             List<LogDTO> DTOs = [];
             foreach (Log item in items)
@@ -41,8 +44,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<LogDTO> ToDTOs(this IEnumerable<Log> source)
+        public static IEnumerable<LogDTO>? ToDTOs(this IEnumerable<Log> source)
         {
+            if (source == null)
+                return default;
+
             List<LogDTO> DTOs = [];
             foreach (Log item in source)
             {
@@ -58,8 +64,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Log> FromDTO(this LogDTO source)
+        public static async Task<Log?> FromDTO(this LogDTO source)
         {
+            if (source == null)
+                return default;
+
             Log item = new()
             {
                 LogID = source.LogID,
@@ -71,8 +80,11 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
-        public static LogDTO ToDTO(this Log source)
+        public static LogDTO? ToDTO(this Log source)
         {
+            if (source == null)
+                return default;
+
             LogDTO item = new()
             {
                 LogID = source.LogID,

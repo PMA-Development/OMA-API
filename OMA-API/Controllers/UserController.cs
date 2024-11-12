@@ -16,7 +16,7 @@ namespace OMA_API.Controllers
 
         [HttpGet(template: "get-User")]
         [Produces<UserDTO>]
-        public async Task<IResult> Get(int id)
+        public async Task<IResult> Get(Guid id)
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
             UserDTO userDTO = item.ToDTO();
@@ -56,7 +56,7 @@ namespace OMA_API.Controllers
         }
 
         [HttpDelete(template: "delete-User")]
-        public async Task<IResult> Delete(int id)
+        public async Task<IResult> Delete(Guid id)
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
             if (item == null)

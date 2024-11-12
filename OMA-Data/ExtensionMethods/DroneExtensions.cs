@@ -23,8 +23,11 @@ namespace OMA_Data.ExtensionMethods
         }
         #endregion
 
-        public static IEnumerable<DroneDTO> ToDTOs(this IQueryable<Drone> source)
+        public static IEnumerable<DroneDTO>? ToDTOs(this IQueryable<Drone> source)
         {
+            if (source == null)
+                return default;
+
             List<Drone> items = source.ToList();
             List<DroneDTO> DTOs = [];
             foreach (Drone item in items)
@@ -41,8 +44,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<DroneDTO> ToDTOs(this IEnumerable<Drone> source)
+        public static IEnumerable<DroneDTO>? ToDTOs(this IEnumerable<Drone> source)
         {
+            if (source == null)
+                return default;
+
             List<DroneDTO> DTOs = [];
             foreach (Drone item in source)
             {
@@ -57,8 +63,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Drone> FromDTO(this DroneDTO source)
+        public static async Task<Drone?> FromDTO(this DroneDTO source)
         {
+            if (source == null)
+                return default;
+
             Drone item = new()
             {
                 DroneID = source.DroneID,
@@ -70,8 +79,11 @@ namespace OMA_Data.ExtensionMethods
             return item;
         }
         
-        public static DroneDTO ToDTO(this Drone source)
+        public static DroneDTO? ToDTO(this Drone source)
         {
+            if (source == null)
+                return default;
+
             DroneDTO item = new()
             {
                 DroneID = source.DroneID,

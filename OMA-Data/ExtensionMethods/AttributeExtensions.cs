@@ -22,8 +22,11 @@ namespace OMA_Data.ExtensionMethods
             _genericDeviceData = genericDeviceData;
         }
         #endregion
-        public static IEnumerable<AttributeDTO> ToDTOs(this IQueryable<OMA_Data.Entities.Attribute> source)
+        public static IEnumerable<AttributeDTO>? ToDTOs(this IQueryable<OMA_Data.Entities.Attribute> source)
         {
+            if (source == null)
+                return default;
+
             List<OMA_Data.Entities.Attribute> items = source.ToList();
             List<AttributeDTO> DTOs = [];
             foreach (OMA_Data.Entities.Attribute item in items)
@@ -40,8 +43,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<AttributeDTO> ToDTOs(this IEnumerable<OMA_Data.Entities.Attribute> source)
+        public static IEnumerable<AttributeDTO>? ToDTOs(this IEnumerable<OMA_Data.Entities.Attribute> source)
         {
+            if (source == null)
+                return default;
+
             List<AttributeDTO> DTOs = [];
             foreach (OMA_Data.Entities.Attribute item in source)
             {
@@ -56,8 +62,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<OMA_Data.Entities.Attribute> FromDTO(this AttributeDTO source)
+        public static async Task<OMA_Data.Entities.Attribute>? FromDTO(this AttributeDTO source)
         {
+            if (source == null)
+                return default;
+
             OMA_Data.Entities.Attribute item = new()
             {
                 AttributeID = source.AttributeID,
@@ -69,8 +78,11 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
-        public static AttributeDTO ToDTO(this OMA_Data.Entities.Attribute source)
+        public static AttributeDTO? ToDTO(this OMA_Data.Entities.Attribute source)
         {
+            if (source == null)
+                return default;
+
             AttributeDTO item = new()
             {
                 AttributeID = source.AttributeID,

@@ -12,7 +12,7 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241111183834_init")]
+    [Migration("20241112123628_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -46,6 +46,20 @@ namespace OMA_Data.Migrations
                     b.HasIndex("TurbineFK");
 
                     b.ToTable("Alarms");
+
+                    b.HasData(
+                        new
+                        {
+                            AlarmID = 1,
+                            IslandFK = 1,
+                            TurbineFK = 1
+                        },
+                        new
+                        {
+                            AlarmID = 2,
+                            IslandFK = 2,
+                            TurbineFK = 6
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.AlarmConfig", b =>
@@ -82,6 +96,30 @@ namespace OMA_Data.Migrations
                     b.HasIndex("IslandFK");
 
                     b.ToTable("AlarmsConfig");
+
+                    b.HasData(
+                        new
+                        {
+                            AlarmConfigID = 1,
+                            IslandFK = 1,
+                            MaxAirPressure = 1050,
+                            MaxHumidity = 70,
+                            MaxTemperature = 30,
+                            MinAirPressure = 1000,
+                            MinHumidity = 30,
+                            MinTemperature = 15
+                        },
+                        new
+                        {
+                            AlarmConfigID = 2,
+                            IslandFK = 2,
+                            MaxAirPressure = 1050,
+                            MaxHumidity = 70,
+                            MaxTemperature = 30,
+                            MinAirPressure = 1000,
+                            MinHumidity = 30,
+                            MinTemperature = 15
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Attribute", b =>
@@ -92,7 +130,7 @@ namespace OMA_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttributeID"));
 
-                    b.Property<int?>("DeviceDataID")
+                    b.Property<int>("DeviceDataID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -213,6 +251,22 @@ namespace OMA_Data.Migrations
                     b.HasIndex("TaskFK");
 
                     b.ToTable("Drones");
+
+                    b.HasData(
+                        new
+                        {
+                            DroneID = 1,
+                            Available = true,
+                            TaskFK = 1,
+                            Title = "Drone One"
+                        },
+                        new
+                        {
+                            DroneID = 2,
+                            Available = false,
+                            TaskFK = 2,
+                            Title = "Drone Two"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Island", b =>
@@ -238,6 +292,22 @@ namespace OMA_Data.Migrations
                     b.HasKey("IslandID");
 
                     b.ToTable("Islands");
+
+                    b.HasData(
+                        new
+                        {
+                            IslandID = 1,
+                            Abbreviation = "IS1",
+                            ClientID = "ClientA",
+                            Title = "Island One"
+                        },
+                        new
+                        {
+                            IslandID = 2,
+                            Abbreviation = "IS2",
+                            ClientID = "ClientB",
+                            Title = "Island Two"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Log", b =>
@@ -311,6 +381,28 @@ namespace OMA_Data.Migrations
                     b.HasIndex("UserFK");
 
                     b.ToTable("Tasks");
+
+                    b.HasData(
+                        new
+                        {
+                            TaskID = 1,
+                            Description = "Description for Task One",
+                            FinishDescription = "Finish Task One",
+                            OwnerFK = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"),
+                            Title = "Task One",
+                            TurbineFK = 1,
+                            Type = "Type A"
+                        },
+                        new
+                        {
+                            TaskID = 2,
+                            Description = "Description for Task Two",
+                            FinishDescription = "Finish Task Two",
+                            OwnerFK = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"),
+                            Title = "Task Two",
+                            TurbineFK = 6,
+                            Type = "Type B"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Turbine", b =>
@@ -325,18 +417,90 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IslandFK")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TurbineFK")
-                        .HasColumnType("int");
-
                     b.HasKey("TurbineID");
 
-                    b.HasIndex("TurbineFK");
+                    b.HasIndex("IslandFK");
 
                     b.ToTable("Turbine");
+
+                    b.HasData(
+                        new
+                        {
+                            TurbineID = 1,
+                            ClientID = "ClientA",
+                            IslandFK = 1,
+                            Title = "Turbine 1 - Island 1"
+                        },
+                        new
+                        {
+                            TurbineID = 2,
+                            ClientID = "ClientA",
+                            IslandFK = 1,
+                            Title = "Turbine 2 - Island 1"
+                        },
+                        new
+                        {
+                            TurbineID = 3,
+                            ClientID = "ClientA",
+                            IslandFK = 1,
+                            Title = "Turbine 3 - Island 1"
+                        },
+                        new
+                        {
+                            TurbineID = 4,
+                            ClientID = "ClientA",
+                            IslandFK = 1,
+                            Title = "Turbine 4 - Island 1"
+                        },
+                        new
+                        {
+                            TurbineID = 5,
+                            ClientID = "ClientA",
+                            IslandFK = 1,
+                            Title = "Turbine 5 - Island 1"
+                        },
+                        new
+                        {
+                            TurbineID = 6,
+                            ClientID = "ClientB",
+                            IslandFK = 2,
+                            Title = "Turbine 1 - Island 2"
+                        },
+                        new
+                        {
+                            TurbineID = 7,
+                            ClientID = "ClientB",
+                            IslandFK = 2,
+                            Title = "Turbine 2 - Island 2"
+                        },
+                        new
+                        {
+                            TurbineID = 8,
+                            ClientID = "ClientB",
+                            IslandFK = 2,
+                            Title = "Turbine 3 - Island 2"
+                        },
+                        new
+                        {
+                            TurbineID = 9,
+                            ClientID = "ClientB",
+                            IslandFK = 2,
+                            Title = "Turbine 4 - Island 2"
+                        },
+                        new
+                        {
+                            TurbineID = 10,
+                            ClientID = "ClientB",
+                            IslandFK = 2,
+                            Title = "Turbine 5 - Island 2"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.User", b =>
@@ -360,6 +524,22 @@ namespace OMA_Data.Migrations
                     b.HasKey("UserID");
 
                     b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            UserID = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"),
+                            Email = "admin@example.com",
+                            FullName = "Admin User",
+                            Phone = "1234567890"
+                        },
+                        new
+                        {
+                            UserID = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"),
+                            Email = "hotlineuser@example.com",
+                            FullName = "Hotline User",
+                            Phone = "0987654321"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Alarm", b =>
@@ -392,9 +572,13 @@ namespace OMA_Data.Migrations
 
             modelBuilder.Entity("OMA_Data.Entities.Attribute", b =>
                 {
-                    b.HasOne("OMA_Data.Entities.DeviceData", null)
+                    b.HasOne("OMA_Data.Entities.DeviceData", "DeviceData")
                         .WithMany("Attributes")
-                        .HasForeignKey("DeviceDataID");
+                        .HasForeignKey("DeviceDataID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeviceData");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Device", b =>
@@ -481,7 +665,7 @@ namespace OMA_Data.Migrations
                 {
                     b.HasOne("OMA_Data.Entities.Island", "Island")
                         .WithMany("Turbines")
-                        .HasForeignKey("TurbineFK")
+                        .HasForeignKey("IslandFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

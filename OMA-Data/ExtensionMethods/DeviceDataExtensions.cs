@@ -28,8 +28,11 @@ namespace OMA_Data.ExtensionMethods
             _genericAttribute = genericAttribute;
         }
         #endregion
-        public static IEnumerable<DeviceDataDTO> ToDTOs(this IQueryable<DeviceData> source)
+        public static IEnumerable<DeviceDataDTO>? ToDTOs(this IQueryable<DeviceData> source)
         {
+            if (source == null)
+                return default;
+
             List<DeviceData> items = source.ToList();
             List<DeviceDataDTO> DTOs = [];
             foreach (DeviceData item in items)
@@ -47,8 +50,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<DeviceDataDTO> ToDTOs(this IEnumerable<DeviceData> source)
+        public static IEnumerable<DeviceDataDTO>? ToDTOs(this IEnumerable<DeviceData> source)
         {
+            if (source == null)
+                return default;
+
             List<DeviceDataDTO> DTOs = [];
             foreach (DeviceData item in source)
             {
@@ -65,8 +71,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<DeviceData> FromDTO(this DeviceDataDTO source)
+        public static async Task<DeviceData?> FromDTO(this DeviceDataDTO source)
         {
+            if (source == null)
+                return default;
+
             DeviceData item = new()
             {
                 DeviceDataID = source.DeviceDataID,
@@ -76,8 +85,11 @@ namespace OMA_Data.ExtensionMethods
             };
             return item;
         }
-        public static DeviceDataDTO ToDTO(this DeviceData source)
+        public static DeviceDataDTO? ToDTO(this DeviceData source)
         {
+            if (source == null)
+                return default;
+
             DeviceDataDTO item = new()
             {
                 DeviceDataID = source.DeviceDataID,

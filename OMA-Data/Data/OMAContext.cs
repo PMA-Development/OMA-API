@@ -32,6 +32,63 @@ namespace OMA_Data.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            #region AutoInclude
+            modelBuilder.Entity<Alarm>()
+                .Navigation(x => x.Turbine)
+                .AutoInclude();
+            modelBuilder.Entity<Alarm>()
+                .Navigation(x => x.Island)
+                .AutoInclude();
+            modelBuilder.Entity<AlarmConfig>()
+                .Navigation(x => x.Island)
+                .AutoInclude();
+            modelBuilder.Entity<Island>()
+                .Navigation(x => x.Turbines)
+                .AutoInclude();
+            modelBuilder.Entity<Turbine>()
+                .Navigation(x => x.Devices)
+                .AutoInclude();
+            modelBuilder.Entity<Turbine>()
+                .Navigation(x => x.Island)
+                .AutoInclude();
+            modelBuilder.Entity<Entities.Task>()
+                .Navigation(x => x.Owner)
+                .AutoInclude();
+            modelBuilder.Entity<Entities.Task>()
+                .Navigation(x => x.User)
+                .AutoInclude();
+            modelBuilder.Entity<Entities.Task>()
+                .Navigation(x => x.Turbine)
+                .AutoInclude();
+            modelBuilder.Entity<Log>()
+                .Navigation(x => x.User)
+                .AutoInclude();
+            modelBuilder.Entity<Drone>()
+                .Navigation(x => x.Task)
+                .AutoInclude();
+            modelBuilder.Entity<Device>()
+                .Navigation(x => x.Turbine)
+                .AutoInclude();
+            modelBuilder.Entity<Device>()
+                .Navigation(x => x.DeviceAction)
+                .AutoInclude();
+            modelBuilder.Entity<Device>()
+                .Navigation(x => x.DeviceData)
+                .AutoInclude();
+            modelBuilder.Entity<DeviceAction>()
+                .Navigation(x => x.Device)
+                .AutoInclude();
+            modelBuilder.Entity<DeviceData>()
+                .Navigation(x => x.Device)
+                .AutoInclude();
+            modelBuilder.Entity<DeviceData>()
+                .Navigation(x => x.Attributes)
+                .AutoInclude();
+            modelBuilder.Entity<Attribute>()
+                .Navigation(x => x.DeviceData)
+                .AutoInclude();
+            #endregion
+
             // Define shadow properties with consistent naming
             modelBuilder.Entity<Alarm>()
                 .Property<int>("IslandFK");

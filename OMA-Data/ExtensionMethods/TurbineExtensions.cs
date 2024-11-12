@@ -28,8 +28,11 @@ namespace OMA_Data.ExtensionMethods
             _genericDevice = genericDevice;
         }
         #endregion
-        public static IEnumerable<TurbineDTO> ToDTOs(this IQueryable<Turbine> source)
+        public static IEnumerable<TurbineDTO>? ToDTOs(this IQueryable<Turbine> source)
         {
+            if (source == null)
+                return default;
+
             List<Turbine> items = source.ToList();
             List<TurbineDTO> DTOs = [];
             foreach (Turbine item in items)
@@ -50,8 +53,11 @@ namespace OMA_Data.ExtensionMethods
         }
 
         //used by LINQ to Linq
-        public static IEnumerable<TurbineDTO> ToDTOs(this IEnumerable<Turbine> source)
+        public static IEnumerable<TurbineDTO>? ToDTOs(this IEnumerable<Turbine> source)
         {
+            if (source == null)
+                return default;
+
             List<TurbineDTO> DTOs = [];
             foreach (Turbine item in source)
             {
@@ -69,8 +75,11 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Turbine> FromDTO(this TurbineDTO source)
+        public static async Task<Turbine?> FromDTO(this TurbineDTO source)
         {
+            if (source == null)
+                return default;
+
             Turbine item = new()
             {
                 TurbineID = source.TurbineID,
@@ -82,8 +91,11 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
-        public static TurbineDTO ToDTO(this Turbine source)
+        public static TurbineDTO? ToDTO(this Turbine source)
         {
+            if (source == null)
+                return default;
+
             TurbineDTO item = new()
             {
                 TurbineID = source.TurbineID,

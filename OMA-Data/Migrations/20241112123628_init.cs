@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace OMA_Data.Migrations
 {
     /// <inheritdoc />
@@ -73,14 +75,14 @@ namespace OMA_Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TurbineFK = table.Column<int>(type: "int", nullable: false)
+                    IslandFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Turbine", x => x.TurbineID);
                     table.ForeignKey(
-                        name: "FK_Turbine_Islands_TurbineFK",
-                        column: x => x.TurbineFK,
+                        name: "FK_Turbine_Islands_IslandFK",
+                        column: x => x.IslandFK,
                         principalTable: "Islands",
                         principalColumn: "IslandID",
                         onDelete: ReferentialAction.Cascade);
@@ -262,7 +264,7 @@ namespace OMA_Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeviceDataID = table.Column<int>(type: "int", nullable: true)
+                    DeviceDataID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -271,7 +273,79 @@ namespace OMA_Data.Migrations
                         name: "FK_Attributes_DeviceData_DeviceDataID",
                         column: x => x.DeviceDataID,
                         principalTable: "DeviceData",
-                        principalColumn: "DeviceDataID");
+                        principalColumn: "DeviceDataID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Islands",
+                columns: new[] { "IslandID", "Abbreviation", "ClientID", "Title" },
+                values: new object[,]
+                {
+                    { 1, "IS1", "ClientA", "Island One" },
+                    { 2, "IS2", "ClientB", "Island Two" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "UserID", "Email", "FullName", "Phone" },
+                values: new object[,]
+                {
+                    { new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"), "admin@example.com", "Admin User", "1234567890" },
+                    { new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), "hotlineuser@example.com", "Hotline User", "0987654321" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AlarmsConfig",
+                columns: new[] { "AlarmConfigID", "IslandFK", "MaxAirPressure", "MaxHumidity", "MaxTemperature", "MinAirPressure", "MinHumidity", "MinTemperature" },
+                values: new object[,]
+                {
+                    { 1, 1, 1050, 70, 30, 1000, 30, 15 },
+                    { 2, 2, 1050, 70, 30, 1000, 30, 15 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Turbine",
+                columns: new[] { "TurbineID", "ClientID", "IslandFK", "Title" },
+                values: new object[,]
+                {
+                    { 1, "ClientA", 1, "Turbine 1 - Island 1" },
+                    { 2, "ClientA", 1, "Turbine 2 - Island 1" },
+                    { 3, "ClientA", 1, "Turbine 3 - Island 1" },
+                    { 4, "ClientA", 1, "Turbine 4 - Island 1" },
+                    { 5, "ClientA", 1, "Turbine 5 - Island 1" },
+                    { 6, "ClientB", 2, "Turbine 1 - Island 2" },
+                    { 7, "ClientB", 2, "Turbine 2 - Island 2" },
+                    { 8, "ClientB", 2, "Turbine 3 - Island 2" },
+                    { 9, "ClientB", 2, "Turbine 4 - Island 2" },
+                    { 10, "ClientB", 2, "Turbine 5 - Island 2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Alarms",
+                columns: new[] { "AlarmID", "IslandFK", "TurbineFK" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 2, 6 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tasks",
+                columns: new[] { "TaskID", "Description", "FinishDescription", "OwnerFK", "Title", "TurbineFK", "Type", "UserFK" },
+                values: new object[,]
+                {
+                    { 1, "Description for Task One", "Finish Task One", new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"), "Task One", 1, "Type A", null },
+                    { 2, "Description for Task Two", "Finish Task Two", new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), "Task Two", 6, "Type B", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Drones",
+                columns: new[] { "DroneID", "Available", "TaskFK", "Title" },
+                values: new object[,]
+                {
+                    { 1, true, 1, "Drone One" },
+                    { 2, false, 2, "Drone Two" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -335,9 +409,9 @@ namespace OMA_Data.Migrations
                 column: "UserFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Turbine_TurbineFK",
+                name: "IX_Turbine_IslandFK",
                 table: "Turbine",
-                column: "TurbineFK");
+                column: "IslandFK");
         }
 
         /// <inheritdoc />

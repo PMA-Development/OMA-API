@@ -18,7 +18,7 @@ namespace OMA_API.Controllers
         [Produces<AlarmConfigDTO>]
         public async Task<IResult> Get(int id)
         {
-            AlarmConfig? item = await _context.AlarmConfigRepository.GetByIdAsync(id);
+            AlarmConfig item = await _context.AlarmConfigRepository.GetByIdAsync(id);
             AlarmConfigDTO alarmConfigDTO = item.ToDTO();
             return Results.Ok(alarmConfigDTO);
         }
