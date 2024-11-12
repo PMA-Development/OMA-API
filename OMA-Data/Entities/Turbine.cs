@@ -17,6 +17,8 @@ namespace OMA_Data.Entities
         [Required]
         [ForeignKey("DeviceFK")]
         public List<Device> Devices { get; set; } = new();
+        [Required]
+        [ForeignKey("IslandFK")]
         public Island Island { get; set; }
     }
 }

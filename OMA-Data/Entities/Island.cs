@@ -17,7 +17,6 @@ namespace OMA_Data.Entities
         [Required]
         public string Abbreviation { get; set; } = string.Empty;
         [Required]
-        [ForeignKey("TurbineFK")]
         public List<Turbine> Turbines { get; set; } = new();
     }
 }
