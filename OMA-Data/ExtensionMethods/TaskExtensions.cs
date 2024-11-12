@@ -87,5 +87,21 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
+        public static TaskDTO ToDTO(this Entities.Task source)
+        {
+            TaskDTO item = new()
+            {
+                TaskID = source.TaskID,
+                Description = source.Description,
+                FinishDescription = source.FinishDescription,
+                OwnerID = source.Owner.UserID,
+                Title = source.Title,
+                TurbineID = source.Turbine.TurbineID,
+                Type = source.Type,
+                UserID = source.User?.UserID,
+            };
+
+            return item;
+        }
     }
 }

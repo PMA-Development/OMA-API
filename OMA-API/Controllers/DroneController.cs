@@ -13,19 +13,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Drone")]
-        [Produces<Drone>]
+        [Produces<DroneDTO>]
         public async Task<IResult> Get(int id)
         {
             Drone? item = await _context.DroneRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            DroneDTO droneDTO = item.ToDTO();
+            return Results.Ok(droneDTO);
         }
 
         [HttpGet(template: "get-Drones")]
-        [Produces<List<Drone>>]
+        [Produces<List<DroneDTO>>]
         public IResult GetDrones()
         {
             List<Drone> items = _context.DroneRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<DroneDTO> droneDTOs = items.ToDTOs().ToList();
+            return Results.Ok(droneDTOs);
         }
 
         [HttpPost(template: "add-Drone")]

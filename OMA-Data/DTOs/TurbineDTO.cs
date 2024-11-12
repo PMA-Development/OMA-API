@@ -15,6 +15,5 @@ namespace OMA_Data.DTOs
         public string Title { get; set; } = string.Empty;
         public string ClientID { get; set; } = string.Empty;
         public int IslandID { get; set; } = new();
-        public int DeviceID { get; set; }
     }
 }

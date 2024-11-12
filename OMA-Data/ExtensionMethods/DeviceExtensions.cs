@@ -85,5 +85,18 @@ namespace OMA_Data.ExtensionMethods
             };
             return item;
         }
+        
+        public static DeviceDTO ToDTO(this Device source)
+        {
+            DeviceDTO item = new()
+            {
+                DeviceId = source.DeviceId,
+                State = source.State,
+                Type = source.Type,
+                ClientID = source.ClientID,
+                TurbineID = source.Turbine.TurbineID,
+            };
+            return item;
+        }
     }
 }

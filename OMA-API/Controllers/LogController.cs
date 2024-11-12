@@ -13,19 +13,21 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Log")]
-        [Produces<Log>]
+        [Produces<LogDTO>]
         public async Task<IResult> Get(int id)
         {
             Log? item = await _context.LogRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            LogDTO logDTO = item.ToDTO();
+            return Results.Ok(logDTO);
         }
 
         [HttpGet(template: "get-Logs")]
-        [Produces<List<Log>>]
+        [Produces<List<LogDTO>>]
         public IResult GetLogs()
         {
             List<Log> items = _context.LogRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<LogDTO> logDTOs = items.ToDTOs().ToList();
+            return Results.Ok(logDTOs);
         }
 
         [HttpPost(template: "add-Log")]

@@ -72,5 +72,16 @@ namespace OMA_Data.ExtensionMethods
 
             return item;
         }
+        public static AlarmDTO ToDTO(this Alarm source)
+        {
+            AlarmDTO item = new()
+            {
+                AlarmID = source.AlarmID,
+                IslandID = source.Island.IslandID,
+                TurbineID = source.Turbine?.TurbineID
+            };
+
+            return item;
+        }
     }
 }

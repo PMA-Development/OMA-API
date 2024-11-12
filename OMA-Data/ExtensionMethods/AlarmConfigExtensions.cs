@@ -25,7 +25,7 @@ namespace OMA_Data.ExtensionMethods
 
         public static IEnumerable<AlarmConfigDTO> ToDTOs(this IQueryable<AlarmConfig> source)
         {
-            
+
             List<AlarmConfig> items = source.ToList();
             List<AlarmConfigDTO> DTOs = [];
             foreach (AlarmConfig item in items)
@@ -75,6 +75,23 @@ namespace OMA_Data.ExtensionMethods
                 MaxAirPressure = source.MaxAirPressure,
                 MinAirPressure = source.MinAirPressure,
                 Island = await (_genericIsland.GetByIdAsync(source.IslandID)),
+                MaxHumidity = source.MaxHumidity,
+                MaxTemperature = source.MaxTemperature,
+                MinHumidity = source.MinHumidity,
+                MinTemperature = source.MinTemperature
+            };
+
+            return item;
+        }
+        public static AlarmConfigDTO ToDTO(this AlarmConfig source)
+        {
+
+            AlarmConfigDTO item = new()
+            {
+                AlarmConfigID = source.AlarmConfigID,
+                MaxAirPressure = source.MaxAirPressure,
+                MinAirPressure = source.MinAirPressure,
+                IslandID = source.Island.IslandID,
                 MaxHumidity = source.MaxHumidity,
                 MaxTemperature = source.MaxTemperature,
                 MinHumidity = source.MinHumidity,

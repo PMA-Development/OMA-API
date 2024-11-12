@@ -13,26 +13,29 @@ namespace OMA_API.Controllers
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Turbine")]
-        [Produces<Turbine>]
+        [Produces<TurbineDTO>]
         public async Task<IResult> Get(int id)
         {
             Turbine? item = await _context.TurbineRepository.GetByIdAsync(id);
-            return Results.Ok(item);
+            TurbineDTO turbineDTO = item.ToDTO();
+            return Results.Ok(turbineDTO);
         }
 
         [HttpGet(template: "get-Turbines")]
-        [Produces<List<Turbine>>]
+        [Produces<List<TurbineDTO>>]
         public IResult GetTurbines()
         {
             List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
+            return Results.Ok(turbineDTOs);
         }
         [HttpGet(template: "get-Turbines-Island")]
-        [Produces<List<Turbine>>]
-        public IResult GetTurbinesByIslandID()
+        [Produces<List<TurbineDTO>>]
+        public IResult GetTurbinesByIslandID(int id)
         {
-            List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
-            return Results.Ok(items);
+            List<Turbine> items = _context.TurbineRepository.GetAll().Where(x => x.Island.IslandID == id).ToList();
+            List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
+            return Results.Ok(turbineDTOs);
         }
 
         [HttpPost(template: "add-Turbine")]
