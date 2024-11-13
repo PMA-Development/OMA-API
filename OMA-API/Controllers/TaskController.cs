@@ -34,6 +34,15 @@ namespace OMA_API.Controllers
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
             return Results.Ok(taskDTOs);
         }
+        
+        [HttpGet(template: "get-User-Tasks")]
+        [Produces<List<TaskDTO>>]
+        public IResult GetTasksByUserID(Guid id)
+        {
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id).ToList();
+            List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            return Results.Ok(taskDTOs);
+        }
 
         [HttpPost(template: "add-Task")]
         [Produces<int>]
