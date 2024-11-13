@@ -65,6 +65,9 @@ namespace OMA_API
             builder.Services.AddScoped<IGenericRepository<Turbine>, GenericRepository<Turbine>>();
             builder.Services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
 
+            //TODO : CHANGE CORS
+            builder.Services.AddCors(options => { options.AddPolicy("AllowCors", policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()); });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -74,7 +77,8 @@ namespace OMA_API
                 app.UseSwaggerUI();
             }
 
-         
+            app.UseCors("AllowCors");
+
             app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
             .RequireAuthorization("HasHotlineUser");
 

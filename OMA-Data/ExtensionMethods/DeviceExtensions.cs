@@ -11,29 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class DeviceExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Turbine> _genericTurbine;
-        private static IGenericRepository<DeviceData> _genericDeviceData;
-        private static IGenericRepository<DeviceAction> _genericDeviceAction;
-        public static IGenericRepository<Turbine> GenericTurbine
-        {
-            get { return _genericTurbine; }
-        }
-        public static IGenericRepository<DeviceData> GenericDeviceData
-        {
-            get { return _genericDeviceData; }
-        }
-        public static IGenericRepository<DeviceAction> GenericDeviceAction
-        {
-            get { return _genericDeviceAction; }
-        }
-        public static void InitRepo(IGenericRepository<Turbine> genericTurbine, IGenericRepository<DeviceData> genericDeviceData, IGenericRepository<DeviceAction> genericDeviceAction)
-        {
-            _genericTurbine = genericTurbine;
-            _genericDeviceData = genericDeviceData;
-            _genericDeviceAction = genericDeviceAction;
-        }
-        #endregion
         public static IEnumerable<DeviceDTO>? ToDTOs(this IQueryable<Device> source)
         {
             if (source == null)
@@ -77,7 +54,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Device?> FromDTO(this DeviceDTO source)
+        public static async Task<Device?> FromDTO(this DeviceDTO source, IGenericRepository<DeviceData> genericDeviceData, IGenericRepository<DeviceAction> genericDeviceAction, IGenericRepository<Turbine> genericTurbine)
         {
             if (source == null)
                 return default;
@@ -88,9 +65,9 @@ namespace OMA_Data.ExtensionMethods
                 State = source.State,
                 Type = source.Type,
                 ClientID = source.ClientID,
-                DeviceData = _genericDeviceData.GetAll().Where(x => x.Device.DeviceId == source.DeviceId)?.ToList(),
-                DeviceAction = _genericDeviceAction.GetAll().Where(x => x.Device.DeviceId == source.DeviceId)?.ToList(),
-                Turbine = await _genericTurbine.GetByIdAsync(source.TurbineID)
+                DeviceData = genericDeviceData.GetAll().Where(x => x.Device.DeviceId == source.DeviceId)?.ToList(),
+                DeviceAction = genericDeviceAction.GetAll().Where(x => x.Device.DeviceId == source.DeviceId)?.ToList(),
+                Turbine = await genericTurbine.GetByIdAsync(source.TurbineID)
             };
             return item;
         }

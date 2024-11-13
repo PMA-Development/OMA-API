@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OMA_Data.Entities;
+using OMA_Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -151,8 +152,8 @@ namespace OMA_Data.Data
 
 
             modelBuilder.Entity<Task>().HasData(
-                new { TaskID = 1, Title = "Task One", Type = "Type A", Description = "Description for Task One", FinishDescription = "Finish Task One", TurbineFK = 1, OwnerFK = Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4") },
-                new { TaskID = 2, Title = "Task Two", Type = "Type B", Description = "Description for Task Two", FinishDescription = "Finish Task Two", TurbineFK = 6, OwnerFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29") }
+                new { TaskID = 1, Title = "Task One", Type = "Type A", Description = "Description for Task One", FinishDescription = "Finish Task One", TurbineFK = 1, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4") },
+                new { TaskID = 2, Title = "Task Two", Type = "Type B", Description = "Description for Task Two", FinishDescription = "Finish Task Two", TurbineFK = 6, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29") }
             );
 
 

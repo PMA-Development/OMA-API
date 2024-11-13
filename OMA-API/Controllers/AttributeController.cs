@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -9,8 +10,10 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AttributeController(IDataContext context) : Controller
+    public class AttributeController(IDataContext context, IGenericRepository<DeviceData> genericDeviceAction) : Controller
     {
+        private readonly IGenericRepository<DeviceData> _genericDeviceData = genericDeviceAction;
+
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Attribute")]
@@ -37,7 +40,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Attribute item = await DTO.FromDTO();
+            Attribute item = await DTO.FromDTO(_genericDeviceData);
             await _context.AttributeRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.AttributeID);
@@ -48,7 +51,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Attribute item = await DTO.FromDTO();
+            Attribute item = await DTO.FromDTO(_genericDeviceData);
             _context.AttributeRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

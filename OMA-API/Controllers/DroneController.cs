@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +9,9 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DroneController(IDataContext context) : Controller
+    public class DroneController(IDataContext context, IGenericRepository<OMA_Data.Entities.Task> genericTask) : Controller
     {
+        private readonly IGenericRepository<OMA_Data.Entities.Task> _genericTask = genericTask;
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Drone")]
@@ -36,7 +38,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Drone item = await DTO.FromDTO();
+            Drone item = await DTO.FromDTO(_genericTask);
             await _context.DroneRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.DroneID);
@@ -47,7 +49,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Drone item = await DTO.FromDTO();
+            Drone item = await DTO.FromDTO(_genericTask);
             _context.DroneRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

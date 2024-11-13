@@ -11,17 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class IslandExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Turbine> _genericTurbine;
-        public static IGenericRepository<Turbine> GenericTurbine
-        {
-            get { return _genericTurbine; }
-        }
-        public static void InitRepo(IGenericRepository<Turbine> genericTurbine)
-        {
-            _genericTurbine = genericTurbine;
-        }
-        #endregion
         public static IEnumerable<IslandDTO>? ToDTOs(this IQueryable<Island> source)
         {
             if (source == null)
@@ -62,7 +51,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static Island? FromDTO(this IslandDTO source)
+        public static Island? FromDTO(this IslandDTO source, IGenericRepository<Turbine> genericTurbine)
         {
             if (source == null)
                 return default;
@@ -73,7 +62,7 @@ namespace OMA_Data.ExtensionMethods
                 Abbreviation = source.Abbreviation,
                 Title = source.Title,
                 ClientID = source.ClientID,
-                Turbines = _genericTurbine.GetAll().Where(x => x.Island.IslandID == source.IslandID).ToList(),
+                Turbines = genericTurbine.GetAll().Where(x => x.Island.IslandID == source.IslandID).ToList(),
             };
 
             return item;

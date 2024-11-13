@@ -11,23 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class DeviceDataExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Device> _genericDevice;
-        private static IGenericRepository<Entities.Attribute> _genericAttribute;
-        public static IGenericRepository<Device> GenericDevice
-        {
-            get { return _genericDevice; }
-        }
-        public static IGenericRepository<Entities.Attribute> GenericAttribute
-        {
-            get { return _genericAttribute; }
-        }
-        public static void InitRepo(IGenericRepository<Device> genericDevice, IGenericRepository<Entities.Attribute> genericAttribute)
-        {
-            _genericDevice = genericDevice;
-            _genericAttribute = genericAttribute;
-        }
-        #endregion
         public static IEnumerable<DeviceDataDTO>? ToDTOs(this IQueryable<DeviceData> source)
         {
             if (source == null)
@@ -71,7 +54,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<DeviceData?> FromDTO(this DeviceDataDTO source)
+        public static async Task<DeviceData?> FromDTO(this DeviceDataDTO source, IGenericRepository<Device> genericDevice)
         {
             if (source == null)
                 return default;
@@ -81,7 +64,7 @@ namespace OMA_Data.ExtensionMethods
                 DeviceDataID = source.DeviceDataID,
                 Timestamp = source.Timestamp,
                 Type = source.Type,
-                Device = await _genericDevice.GetByIdAsync(source.DeviceID),
+                Device = await genericDevice.GetByIdAsync(source.DeviceID),
             };
             return item;
         }

@@ -11,17 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class DroneExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Entities.Task> _genericTask;
-        public static IGenericRepository<Entities.Task> GenericTask
-        {
-            get { return _genericTask; }
-        }
-        public static void InitRepo(IGenericRepository<Entities.Task> genericTask)
-        {
-            _genericTask = genericTask;
-        }
-        #endregion
 
         public static IEnumerable<DroneDTO>? ToDTOs(this IQueryable<Drone> source)
         {
@@ -63,7 +52,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Drone?> FromDTO(this DroneDTO source)
+        public static async Task<Drone?> FromDTO(this DroneDTO source, IGenericRepository<Entities.Task> genericTask)
         {
             if (source == null)
                 return default;
@@ -72,7 +61,7 @@ namespace OMA_Data.ExtensionMethods
             {
                 DroneID = source.DroneID,
                 Available = source.Available,
-                Task = await _genericTask.GetByIdAsync(source.TaskID),
+                Task = await genericTask.GetByIdAsync(source.TaskID),
                 Title = source.Title
             };
 

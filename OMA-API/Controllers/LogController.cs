@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +9,10 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LogController(IDataContext context) : Controller
+    public class LogController(IDataContext context, IGenericRepository<User> genericUser) : Controller
     {
+        private readonly IGenericRepository<User> _genericUser = genericUser;
+
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Log")]
@@ -36,7 +39,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Log item = await DTO.FromDTO();
+            Log item = await DTO.FromDTO(_genericUser);
             await _context.LogRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.LogID);
@@ -47,7 +50,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Log item = await DTO.FromDTO();
+            Log item = await DTO.FromDTO(_genericUser);
             _context.LogRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

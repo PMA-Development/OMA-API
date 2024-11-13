@@ -12,7 +12,7 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241112123628_init")]
+    [Migration("20241113085127_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -355,6 +355,9 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("OwnerFK")
                         .HasColumnType("uniqueidentifier");
 
@@ -388,6 +391,7 @@ namespace OMA_Data.Migrations
                             TaskID = 1,
                             Description = "Description for Task One",
                             FinishDescription = "Finish Task One",
+                            Level = 1,
                             OwnerFK = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"),
                             Title = "Task One",
                             TurbineFK = 1,
@@ -398,6 +402,7 @@ namespace OMA_Data.Migrations
                             TaskID = 2,
                             Description = "Description for Task Two",
                             FinishDescription = "Finish Task Two",
+                            Level = 1,
                             OwnerFK = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"),
                             Title = "Task Two",
                             TurbineFK = 6,

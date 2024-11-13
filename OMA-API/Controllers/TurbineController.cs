@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +9,10 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TurbineController(IDataContext context) : Controller
+    public class TurbineController(IDataContext context, IGenericRepository<Island> genericIsland, IGenericRepository<Device> genericDevice) : Controller
     {
+        private readonly IGenericRepository<Island> _genericIsland = genericIsland;
+        private readonly IGenericRepository<Device> _genericDevice = genericDevice;
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Turbine")]
@@ -44,7 +47,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Turbine item = await DTO.FromDTO();
+            Turbine item = await DTO.FromDTO(_genericIsland, _genericDevice);
             await _context.TurbineRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.TurbineID);
@@ -55,7 +58,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Turbine item = await DTO.FromDTO();
+            Turbine item = await DTO.FromDTO(_genericIsland, _genericDevice);
             _context.TurbineRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

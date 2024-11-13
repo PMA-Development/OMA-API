@@ -41,7 +41,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository,turbineRepository);
+            OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
             await _context.TaskRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.TaskID);
@@ -52,7 +52,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, turbineRepository);
+            OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
             _context.TaskRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

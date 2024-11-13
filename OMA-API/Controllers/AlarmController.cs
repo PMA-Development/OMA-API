@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +9,10 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AlarmController(IDataContext context) : Controller
+    public class AlarmController(IDataContext context, IGenericRepository<Island> genericIsland, IGenericRepository<Turbine> genericTurbine) : Controller
     {
+        private readonly IGenericRepository<Island> _genericIsland = genericIsland;
+        private readonly IGenericRepository<Turbine> _genericTurbine = genericTurbine;
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Alarm")]
@@ -36,7 +39,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Alarm item = await DTO.FromDTO();
+            Alarm item = await DTO.FromDTO(genericIsland, genericTurbine);
             await _context.AlarmRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.AlarmID);
@@ -47,7 +50,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Alarm item = await DTO.FromDTO();
+            Alarm item = await DTO.FromDTO(genericIsland, genericTurbine);
             _context.AlarmRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

@@ -11,23 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class TurbineExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Island> _genericIsland;
-        private static IGenericRepository<Device> _genericDevice;
-        public static IGenericRepository<Island> GenericIsland
-        {
-            get { return _genericIsland; }
-        }
-        public static IGenericRepository<Device> GenericDevice
-        {
-            get { return _genericDevice; }
-        }
-        public static void InitRepo(IGenericRepository<Island> genericIsland, IGenericRepository<Device> genericDevice)
-        {
-            _genericIsland = genericIsland;
-            _genericDevice = genericDevice;
-        }
-        #endregion
         public static IEnumerable<TurbineDTO>? ToDTOs(this IQueryable<Turbine> source)
         {
             if (source == null)
@@ -37,17 +20,14 @@ namespace OMA_Data.ExtensionMethods
             List<TurbineDTO> DTOs = [];
             foreach (Turbine item in items)
             {
-                foreach (Device device in item.Devices)
+                DTOs.Add(new TurbineDTO
                 {
-                    DTOs.Add(new TurbineDTO
-                    {
-                        TurbineID = item.TurbineID,
-                        Title = item.Title,
-                        IslandID = item.Island.IslandID,
-                        ClientID = device.ClientID,
-                    });
+                    TurbineID = item.TurbineID,
+                    Title = item.Title,
+                    IslandID = item.Island.IslandID,
+                    ClientID = item.ClientID,
+                });
 
-                }
             }
             return DTOs;
         }
@@ -61,21 +41,18 @@ namespace OMA_Data.ExtensionMethods
             List<TurbineDTO> DTOs = [];
             foreach (Turbine item in source)
             {
-                foreach (Device device in item.Devices)
+                DTOs.Add(new TurbineDTO
                 {
-                    DTOs.Add(new TurbineDTO
-                    {
-                        TurbineID = item.TurbineID,
-                        Title = item.Title,
-                        IslandID = item.Island.IslandID,
-                        ClientID = item.ClientID,
-                    });
-                }
+                    TurbineID = item.TurbineID,
+                    Title = item.Title,
+                    IslandID = item.Island.IslandID,
+                    ClientID = item.ClientID,
+                });
             }
             return DTOs;
         }
 
-        public static async Task<Turbine?> FromDTO(this TurbineDTO source)
+        public static async Task<Turbine?> FromDTO(this TurbineDTO source, IGenericRepository<Island> genericIsland, IGenericRepository<Device> genericDevice)
         {
             if (source == null)
                 return default;
@@ -84,8 +61,8 @@ namespace OMA_Data.ExtensionMethods
             {
                 TurbineID = source.TurbineID,
                 Title = source.Title,
-                Island = await _genericIsland.GetByIdAsync(source.IslandID),
-                Devices = _genericDevice.GetAll().Where(x => x.Turbine.TurbineID == source.TurbineID).ToList(),
+                Island = await genericIsland.GetByIdAsync(source.IslandID),
+                Devices = genericDevice.GetAll().Where(x => x.Turbine.TurbineID == source.TurbineID).ToList(),
                 ClientID = source.ClientID,
             };
 

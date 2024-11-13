@@ -11,17 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class AttributeExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<DeviceData> _genericDeviceData;
-        public static IGenericRepository<DeviceData> GenericDeviceData
-        {
-            get { return _genericDeviceData; }
-        }
-        public static void InitRepo(IGenericRepository<DeviceData> genericDeviceData)
-        {
-            _genericDeviceData = genericDeviceData;
-        }
-        #endregion
         public static IEnumerable<AttributeDTO>? ToDTOs(this IQueryable<OMA_Data.Entities.Attribute> source)
         {
             if (source == null)
@@ -62,7 +51,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<OMA_Data.Entities.Attribute>? FromDTO(this AttributeDTO source)
+        public static async Task<OMA_Data.Entities.Attribute>? FromDTO(this AttributeDTO source, IGenericRepository<DeviceData> genericDeviceData)
         {
             if (source == null)
                 return default;
@@ -71,7 +60,7 @@ namespace OMA_Data.ExtensionMethods
             {
                 AttributeID = source.AttributeID,
                 Name = source.Name,
-                DeviceData = await _genericDeviceData.GetByIdAsync(source.DeviceDataID),
+                DeviceData = await genericDeviceData.GetByIdAsync(source.DeviceDataID),
                 Value = source.Value,
 
             };

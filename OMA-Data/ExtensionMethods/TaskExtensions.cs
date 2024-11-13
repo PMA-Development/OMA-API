@@ -11,25 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class TaskExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<User> _genericUser;
-        private static IGenericRepository<Turbine> _genericTurbine;
-        public static IGenericRepository<User> GenericUser
-        {
-            get { return _genericUser; }
-        }
-        public static IGenericRepository<Turbine> GenericTurbine
-        {
-            get { return _genericTurbine; }
-        }
-
-        public static void InitRepo(IGenericRepository<User> genericUser, IGenericRepository<Turbine> genericTurbine)
-        {
-            _genericUser = genericUser;
-            _genericTurbine = genericTurbine;
-        }
-        #endregion
-
         public static IEnumerable<TaskDTO> ToDTOs(this IQueryable<OMA_Data.Entities.Task> source)
         {
             List<OMA_Data.Entities.Task> items = source.ToList();
@@ -45,7 +26,8 @@ namespace OMA_Data.ExtensionMethods
                     Title = item.Title,
                     TurbineID = item.Turbine.TurbineID,
                     Type = item.Type,
-                    UserID = item.User.UserID
+                    UserID = item.User.UserID,
+                    Level = item.Level,
                 });
             }
             return DTOs;
@@ -66,7 +48,8 @@ namespace OMA_Data.ExtensionMethods
                     Title = item.Title,
                     TurbineID = item.Turbine.TurbineID,
                     Type = item.Type,
-                    UserID = item.User.UserID
+                    UserID = item.User.UserID,
+                    Level = item.Level,
                 });
             }
             return DTOs;
@@ -86,7 +69,8 @@ namespace OMA_Data.ExtensionMethods
                 Title = source.Title,
                 Owner = await userRepository.GetByIdAsync(source.OwnerID),
                 Turbine = await turbineRepository.GetByIdAsync(source.TurbineID),
-                User = source.UserID != null ? await userRepository.GetByIdAsync(source.UserID.Value) : null
+                User = source.UserID != null ? await userRepository.GetByIdAsync(source.UserID.Value) : null,
+                Level = source.Level,
             };
 
             return item;
@@ -103,6 +87,7 @@ namespace OMA_Data.ExtensionMethods
                 TurbineID = source.Turbine.TurbineID,
                 Type = source.Type,
                 UserID = source.User?.UserID,
+                Level = source.Level,
             };
 
             return item;

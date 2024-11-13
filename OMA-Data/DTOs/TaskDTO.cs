@@ -1,4 +1,5 @@
 ﻿using OMA_Data.Entities;
+using OMA_Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,7 @@ namespace OMA_Data.DTOs
         public string Title { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public LevelEnum Level { get; set; }
         public string FinishDescription { get; set; } = string.Empty;
         public Guid OwnerID { get; set; } = new();
         public Guid? UserID { get; set; } = new();

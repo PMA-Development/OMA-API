@@ -11,23 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class AlarmExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Island> _genericIsland;
-        private static IGenericRepository<Turbine> _genericTurbine;
-        public static IGenericRepository<Island> GenericIsland
-        {
-            get { return _genericIsland; }
-        }
-        public static IGenericRepository<Turbine> GenericTurbine
-        {
-            get { return _genericTurbine; }
-        }
-        public static void InitRepo(IGenericRepository<Island> genericIsland, IGenericRepository<Turbine> genericTurbine)
-        {
-            _genericIsland = genericIsland;
-            _genericTurbine = genericTurbine;
-        }
-        #endregion
 
         public static IEnumerable<AlarmDTO>? ToDTOs(this IQueryable<Alarm> source)
         {
@@ -67,7 +50,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Alarm?> FromDTO(this AlarmDTO source)
+        public static async Task<Alarm?> FromDTO(this AlarmDTO source, IGenericRepository<Island> genericIsland, IGenericRepository<Turbine> genericTurbine)
         {
             if (source == null)
                 return default;
@@ -75,8 +58,8 @@ namespace OMA_Data.ExtensionMethods
             Alarm item = new()
             {
                 AlarmID = source.AlarmID,
-                Island = await _genericIsland.GetByIdAsync(source.IslandID),
-                Turbine = source.TurbineID != null ? await _genericTurbine.GetByIdAsync(source.TurbineID.Value) : null
+                Island = await genericIsland.GetByIdAsync(source.IslandID),
+                Turbine = source.TurbineID != null ? await genericTurbine.GetByIdAsync(source.TurbineID.Value) : null
             };
 
             return item;

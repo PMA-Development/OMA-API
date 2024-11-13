@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +9,10 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IslandController(IDataContext context) : Controller
+    public class IslandController(IDataContext context, IGenericRepository<Turbine> genericTurbine) : Controller
     {
+        private readonly IGenericRepository<Turbine> _genericTurbine = genericTurbine;
+
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Island")]
@@ -36,7 +39,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Island item = DTO.FromDTO();
+            Island item = DTO.FromDTO(_genericTurbine);
             await _context.IslandRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.IslandID);
@@ -47,7 +50,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Island item = DTO.FromDTO();
+            Island item = DTO.FromDTO(_genericTurbine);
             _context.IslandRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

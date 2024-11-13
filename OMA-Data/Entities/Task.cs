@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OMA_Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,7 @@ namespace OMA_Data.Entities
         public string Title { get; set; } = string.Empty;
         [Required]
         public string Type { get; set; } = string.Empty;
+        public LevelEnum Level { get; set; } = LevelEnum.Hotline1;
         [Required]
         public string Description { get; set; } = string.Empty;
         [Required]

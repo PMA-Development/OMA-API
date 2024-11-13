@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Repositories;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +10,9 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeviceActionController(IDataContext context) : Controller
+    public class DeviceActionController(IDataContext context, IGenericRepository<Device> genericDevice) : Controller
     {
+        private readonly IGenericRepository<Device> _genericDevice = genericDevice;
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-DeviceAction")]
@@ -36,30 +39,30 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            DeviceAction item = await DTO.FromDTO();
+            DeviceAction item = await DTO.FromDTO(_genericDevice);
             await _context.DeviceActionRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.DeviceActionID);
         }
 
-        [HttpPut(template: "update-Device")]
-        public async Task<IResult> Update([FromBody] DeviceDTO? DTO)
+        [HttpPut(template: "update-DeviceAction")]
+        public async Task<IResult> Update([FromBody] DeviceActionDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
-            Device item = await DTO.FromDTO();
-            _context.DeviceRepository.Update(item);
+            DeviceAction item = await DTO.FromDTO(_genericDevice);
+            _context.DeviceActionRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();
         }
 
-        [HttpDelete(template: "delete-Device")]
+        [HttpDelete(template: "delete-DeviceAction")]
         public async Task<IResult> Delete(int id)
         {
-            Device item = await _context.DeviceRepository.GetByIdAsync(id);
+            DeviceAction item = await _context.DeviceActionRepository.GetByIdAsync(id);
             if (item == null)
                 return Results.NoContent();
-            _context.DeviceRepository.Delete(item);
+            _context.DeviceActionRepository.Delete(item);
             await _context.CommitAsync();
             return Results.Ok();
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
@@ -8,8 +9,12 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeviceController(IDataContext context) : Controller
+    public class DeviceController(IDataContext context, IGenericRepository<DeviceData> genericDeviceData, IGenericRepository<DeviceAction> genericDeviceAction, IGenericRepository<Turbine> genericTurbine) : Controller
     {
+        private readonly IGenericRepository<DeviceData> _genericDeviceData = genericDeviceData;
+        private readonly IGenericRepository<DeviceAction> _genericDeviceAction = genericDeviceAction;
+        private readonly IGenericRepository<Turbine> _genericTurbine = genericTurbine;
+
         private readonly IDataContext _context = context;
 
         [HttpGet(template: "get-Device")]
@@ -36,7 +41,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Device item = await DTO.FromDTO();
+            Device item = await DTO.FromDTO(_genericDeviceData, _genericDeviceAction, _genericTurbine);
             await _context.DeviceRepository.Add(item);
             await _context.CommitAsync();
             return Results.Ok(item.DeviceId);
@@ -47,7 +52,7 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
-            Device item = await DTO.FromDTO();
+            Device item = await DTO.FromDTO(_genericDeviceData, _genericDeviceAction, _genericTurbine);
             _context.DeviceRepository.Update(item);
             await _context.CommitAsync();
             return Results.Ok();

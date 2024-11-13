@@ -11,17 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class LogExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<User> _genericUser;
-        public static IGenericRepository<User> GenericUser
-        {
-            get { return _genericUser; }
-        }
-        public static void InitRepo(IGenericRepository<User> genericUser)
-        {
-            _genericUser = genericUser;
-        }
-        #endregion
         public static IEnumerable<LogDTO>? ToDTOs(this IQueryable<Log> source)
         {
             if (source == null)
@@ -64,7 +53,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Log?> FromDTO(this LogDTO source)
+        public static async Task<Log?> FromDTO(this LogDTO source, IGenericRepository<User> genericUser)
         {
             if (source == null)
                 return default;
@@ -75,7 +64,7 @@ namespace OMA_Data.ExtensionMethods
                 Severity = source.Severity,
                 Description = source.Description,
                 Time = source.Time,
-                User = await _genericUser.GetByIdAsync(source.UserID),
+                User = await genericUser.GetByIdAsync(source.UserID),
             };
 
             return item;

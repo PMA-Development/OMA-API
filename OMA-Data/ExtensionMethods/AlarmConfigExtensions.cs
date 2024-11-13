@@ -11,17 +11,6 @@ namespace OMA_Data.ExtensionMethods
 {
     public static class AlarmConfigExtensions
     {
-        #region InitializeRepo
-        private static IGenericRepository<Island> _genericIsland;
-        public static IGenericRepository<Island> GenericRepository
-        {
-            get { return _genericIsland; }
-        }
-        public static void InitRepo(IGenericRepository<Island> genericRepository)
-        {
-            _genericIsland = genericRepository;
-        }
-        #endregion
 
         public static IEnumerable<AlarmConfigDTO>? ToDTOs(this IQueryable<AlarmConfig> source)
         {
@@ -71,7 +60,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public async static Task<AlarmConfig?> FromDTO(this AlarmConfigDTO source)
+        public async static Task<AlarmConfig?> FromDTO(this AlarmConfigDTO source, IGenericRepository<Island> genericIsland)
         {
             if (source == null)
                 return default;
@@ -81,7 +70,7 @@ namespace OMA_Data.ExtensionMethods
                 AlarmConfigID = source.AlarmConfigID,
                 MaxAirPressure = source.MaxAirPressure,
                 MinAirPressure = source.MinAirPressure,
-                Island = await (_genericIsland.GetByIdAsync(source.IslandID)),
+                Island = await (genericIsland.GetByIdAsync(source.IslandID)),
                 MaxHumidity = source.MaxHumidity,
                 MaxTemperature = source.MaxTemperature,
                 MinHumidity = source.MinHumidity,
