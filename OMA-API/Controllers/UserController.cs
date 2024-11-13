@@ -33,7 +33,6 @@ namespace OMA_API.Controllers
         }
 
         [HttpPost(template: "add-User")]
-        [Produces<int>]
         public async Task<IResult> Add([FromBody] UserDTO? DTO)
         {
             if (DTO == null)
@@ -41,7 +40,7 @@ namespace OMA_API.Controllers
             User item = DTO.FromDTO();
             await _context.UserRepository.Add(item);
             await _context.CommitAsync();
-            return Results.Ok(item.UserID);
+            return Results.Ok();
         }
 
         [HttpPut(template: "update-User")]

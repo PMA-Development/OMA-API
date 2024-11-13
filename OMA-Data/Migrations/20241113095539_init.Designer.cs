@@ -12,7 +12,7 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241113085127_init")]
+    [Migration("20241113095539_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -511,7 +511,6 @@ namespace OMA_Data.Migrations
             modelBuilder.Entity("OMA_Data.Entities.User", b =>
                 {
                     b.Property<Guid>("UserID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")

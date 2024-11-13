@@ -508,7 +508,6 @@ namespace OMA_Data.Migrations
             modelBuilder.Entity("OMA_Data.Entities.User", b =>
                 {
                     b.Property<Guid>("UserID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
