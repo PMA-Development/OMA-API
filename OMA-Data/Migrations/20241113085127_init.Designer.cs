@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OMA_Data.Data;
 
@@ -11,9 +12,11 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    partial class OMAContextModelSnapshot : ModelSnapshot
+    [Migration("20241113085127_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,7 +372,7 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserFK")
+                    b.Property<Guid?>("UserFK")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TaskID");
@@ -392,8 +395,7 @@ namespace OMA_Data.Migrations
                             OwnerFK = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"),
                             Title = "Task One",
                             TurbineFK = 1,
-                            Type = "Type A",
-                            UserFK = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4")
+                            Type = "Type A"
                         },
                         new
                         {
@@ -404,8 +406,7 @@ namespace OMA_Data.Migrations
                             OwnerFK = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"),
                             Title = "Task Two",
                             TurbineFK = 6,
-                            Type = "Type B",
-                            UserFK = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29")
+                            Type = "Type B"
                         });
                 });
 
@@ -510,6 +511,7 @@ namespace OMA_Data.Migrations
             modelBuilder.Entity("OMA_Data.Entities.User", b =>
                 {
                     b.Property<Guid>("UserID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -655,9 +657,7 @@ namespace OMA_Data.Migrations
 
                     b.HasOne("OMA_Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserFK")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("UserFK");
 
                     b.Navigation("Owner");
 
