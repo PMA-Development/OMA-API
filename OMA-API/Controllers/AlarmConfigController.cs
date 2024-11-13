@@ -21,7 +21,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             AlarmConfig item = await _context.AlarmConfigRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Alarm configuration not found.");
+
             AlarmConfigDTO alarmConfigDTO = item.ToDTO();
+            if (alarmConfigDTO == null)
+                return Results.BadRequest("Failed to format alarm configuration.");
+
             return Results.Ok(alarmConfigDTO);
         }
 
@@ -30,7 +36,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> GetAlarmConfigs()
         {
             List<AlarmConfig> items = _context.AlarmConfigRepository.GetAll().ToList();
+            if (items == null)
+                return Results.NotFound("Alarm configurations not found.");
+
             List<AlarmConfigDTO> alarmConfigDTOs = items.ToDTOs().ToList();
+            if (alarmConfigDTOs == null)
+                return Results.BadRequest("Failed to format alarm configurations.");
+
             return Results.Ok(alarmConfigDTOs);
         }
 
@@ -40,9 +52,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             AlarmConfig item = await DTO.FromDTO(_genericIsland);
-            await _context.AlarmConfigRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format alarm configurations.");
+
+            try
+            {
+                await _context.AlarmConfigRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add alarm configurations.");
+            }
+
             return Results.Ok(item.AlarmConfigID);
         }
 
@@ -52,8 +76,17 @@ namespace OMA_API.Controllers
             if (DTO == null)
                 return Results.NoContent();
             AlarmConfig item = await DTO.FromDTO(_genericIsland);
-            _context.AlarmConfigRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format alarm configurations.");
+            try
+            {
+                _context.AlarmConfigRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update alarm configurations.");
+            }
             return Results.Ok();
         }
 
@@ -62,9 +95,16 @@ namespace OMA_API.Controllers
         {
             AlarmConfig item = await _context.AlarmConfigRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.AlarmConfigRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.BadRequest("Alarm configurations not found.");
+            try
+            {
+                _context.AlarmConfigRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete alarm configurations.");
+            }
             return Results.Ok();
         }
     }

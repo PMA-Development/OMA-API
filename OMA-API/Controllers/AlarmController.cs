@@ -20,7 +20,11 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             Alarm? item = await _context.AlarmRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Alarm not found.");
             AlarmDTO? alarmDTO = item.ToDTO();
+            if (alarmDTO == null)
+                return Results.BadRequest("Failed to get alarm.");
             return Results.Ok(alarmDTO);
         }
 
@@ -29,7 +33,13 @@ namespace OMA_API.Controllers
         public IResult GetAlarms()
         {
             List<Alarm> items = _context.AlarmRepository.GetAll().ToList();
+            if (items == null)
+                return Results.NotFound("Alarms not found.");
+
             List<AlarmDTO> alarmDTOs = items.ToDTOs().ToList();
+            if (alarmDTOs == null)
+                return Results.BadRequest("Failed to get alarms.");
+
             return Results.Ok(alarmDTOs);
         }
 
@@ -39,9 +49,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Alarm item = await DTO.FromDTO(genericIsland, genericTurbine);
-            await _context.AlarmRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format alarm.");
+
+            try
+            {
+                await _context.AlarmRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add alarm.");
+            }
+
             return Results.Ok(item.AlarmID);
         }
 
@@ -50,9 +72,19 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Alarm item = await DTO.FromDTO(genericIsland, genericTurbine);
-            _context.AlarmRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format alarm.");
+            try
+            {
+                _context.AlarmRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update alarm.");
+            }
             return Results.Ok();
         }
 
@@ -61,9 +93,19 @@ namespace OMA_API.Controllers
         {
             Alarm? item = await _context.AlarmRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.AlarmRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.BadRequest("Alarm not found.");
+
+            try
+            {
+                _context.AlarmRepository.Delete(item);
+                await _context.CommitAsync();
+
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete alarm.");
+
+            }
             return Results.Ok();
         }
     }
