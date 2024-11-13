@@ -23,7 +23,7 @@ namespace OMA_Data.Core.Utils
         }
         public virtual IQueryable<T> GetAll()
         {
-            return _dbContext;
+            return _dbContext.AsNoTracking();
         }
 
         public virtual async Task<bool> Add(T entity)
