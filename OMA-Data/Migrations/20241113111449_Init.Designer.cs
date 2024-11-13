@@ -12,13 +12,8 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-<<<<<<<< HEAD:OMA-Data/Migrations/20241113110816_Init.Designer.cs
-    [Migration("20241113110816_Init")]
+    [Migration("20241113111449_Init")]
     partial class Init
-========
-    [Migration("20241113095539_init")]
-    partial class init
->>>>>>>> 4657c183540232d46e4c20c1c388f7e73c012fab:OMA-Data/Migrations/20241113095539_init.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
