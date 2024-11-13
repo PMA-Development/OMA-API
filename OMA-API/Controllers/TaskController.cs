@@ -44,6 +44,7 @@ namespace OMA_API.Controllers
             return Results.Ok(taskDTOs);
         }
 
+        //TODO: there is a problem when i try to add a Task that does not have an assigned User
         [HttpPost(template: "add-Task")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TaskDTO? DTO)
