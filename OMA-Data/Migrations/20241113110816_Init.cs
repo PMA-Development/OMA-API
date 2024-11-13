@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OMA_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -169,7 +169,7 @@ namespace OMA_Data.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FinishDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OwnerFK = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserFK = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserFK = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TurbineFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -191,7 +191,8 @@ namespace OMA_Data.Migrations
                         name: "FK_Tasks_User_UserFK",
                         column: x => x.UserFK,
                         principalTable: "User",
-                        principalColumn: "UserID");
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -336,8 +337,8 @@ namespace OMA_Data.Migrations
                 columns: new[] { "TaskID", "Description", "FinishDescription", "Level", "OwnerFK", "Title", "TurbineFK", "Type", "UserFK" },
                 values: new object[,]
                 {
-                    { 1, "Description for Task One", "Finish Task One", 1, new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"), "Task One", 1, "Type A", null },
-                    { 2, "Description for Task Two", "Finish Task Two", 1, new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), "Task Two", 6, "Type B", null }
+                    { 1, "Description for Task One", "Finish Task One", 1, new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"), "Task One", 1, "Type A", new Guid("c6936336-4a10-4445-b373-60f6a37a58c4") },
+                    { 2, "Description for Task Two", "Finish Task Two", 1, new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), "Task Two", 6, "Type B", new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29") }
                 });
 
             migrationBuilder.InsertData(

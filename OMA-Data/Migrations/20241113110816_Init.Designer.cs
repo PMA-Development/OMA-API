@@ -12,8 +12,8 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241113085127_init")]
-    partial class init
+    [Migration("20241113110816_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -372,7 +372,7 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserFK")
+                    b.Property<Guid>("UserFK")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TaskID");
@@ -395,7 +395,8 @@ namespace OMA_Data.Migrations
                             OwnerFK = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4"),
                             Title = "Task One",
                             TurbineFK = 1,
-                            Type = "Type A"
+                            Type = "Type A",
+                            UserFK = new Guid("c6936336-4a10-4445-b373-60f6a37a58c4")
                         },
                         new
                         {
@@ -406,7 +407,8 @@ namespace OMA_Data.Migrations
                             OwnerFK = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29"),
                             Title = "Task Two",
                             TurbineFK = 6,
-                            Type = "Type B"
+                            Type = "Type B",
+                            UserFK = new Guid("cf9844c4-55aa-4eef-bba2-9b97771a8c29")
                         });
                 });
 
@@ -657,7 +659,9 @@ namespace OMA_Data.Migrations
 
                     b.HasOne("OMA_Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserFK");
+                        .HasForeignKey("UserFK")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Owner");
 
