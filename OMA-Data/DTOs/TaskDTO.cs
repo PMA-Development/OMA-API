@@ -18,6 +18,7 @@ namespace OMA_Data.DTOs
         public string Description { get; set; } = string.Empty;
         public LevelEnum Level { get; set; }
         public string FinishDescription { get; set; } = string.Empty;
+        public bool IsCompleted { get; set; }
         public Guid OwnerID { get; set; } = new();
         public Guid? UserID { get; set; } = new();
         public int TurbineID { get; set; } = new();

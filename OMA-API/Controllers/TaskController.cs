@@ -12,7 +12,7 @@ namespace OMA_API.Controllers
     [ApiController]
     public class TaskController(IDataContext context, IGenericRepository<User> userRepository, IGenericRepository<Turbine> turbineRepository) : Controller
     {
-
+        //TODO: Add get Non Iscompleted Tasks
         private readonly IGenericRepository<User> _userRepository = userRepository;
         private readonly IGenericRepository<Turbine> _turbineRepository = turbineRepository;
         private readonly IDataContext _context = context;

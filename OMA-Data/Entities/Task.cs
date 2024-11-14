@@ -19,8 +19,8 @@ namespace OMA_Data.Entities
         public LevelEnum Level { get; set; } = LevelEnum.Hotline1;
         [Required]
         public string Description { get; set; } = string.Empty;
-        [Required]
         public string FinishDescription { get; set; } = string.Empty;
+        public bool IsCompleted { get; set; }
         [Required]
         [ForeignKey("OwnerFK")]
         public User Owner { get; set; } = new();
