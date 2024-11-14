@@ -22,7 +22,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             OMA_Data.Entities.Task? item = await _context.TaskRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Task not found.");
+
             TaskDTO taskDTO = item.ToDTO();
+            if (taskDTO== null)
+                return Results.BadRequest("Failed to format task.");
+
             return Results.Ok(taskDTO);
         }
 
@@ -31,7 +37,13 @@ namespace OMA_API.Controllers
         public IResult GetTasks()
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().ToList();
+            if (items == null)
+                return Results.NotFound("Tasks not found.");
+
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            if (taskDTOs == null)
+                return Results.BadRequest("Failed to format tasks.");
+
             return Results.Ok(taskDTOs);
         }
         
@@ -40,7 +52,13 @@ namespace OMA_API.Controllers
         public IResult GetTasksByUserID(Guid id)
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id).ToList();
+            if (items == null)
+                return Results.NotFound("User assigned tasks not found.");
+
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            if (taskDTOs == null)
+                return Results.BadRequest("Failed to format tasks.");
+
             return Results.Ok(taskDTOs);
         }
 
@@ -51,9 +69,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
-            await _context.TaskRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format task.");
+
+            try
+            {
+                await _context.TaskRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add task.");
+            }
+
             return Results.Ok(item.TaskID);
         }
 
@@ -62,9 +92,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
-            _context.TaskRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format task.");
+
+            try
+            {
+                _context.TaskRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update task.");
+            }
+
             return Results.Ok();
         }
 
@@ -73,9 +115,17 @@ namespace OMA_API.Controllers
         {
             OMA_Data.Entities.Task item = await _context.TaskRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.TaskRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Task not found.");
+
+            try
+            {
+                _context.TaskRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete task.");
+            }
             return Results.Ok();
         }
     }

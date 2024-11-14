@@ -21,7 +21,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             Attribute? item = await _context.AttributeRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.BadRequest("Attribute not found.");
+
             AttributeDTO attributeDTO = item.ToDTO();
+            if (attributeDTO == null)
+                return Results.BadRequest("Failed to format attribute.");
+
             return Results.Ok(attributeDTO);
         }
 
@@ -30,7 +36,13 @@ namespace OMA_API.Controllers
         public IResult GetAttributes()
         {
             List<Attribute> items = _context.AttributeRepository.GetAll().ToList();
+            if (items == null)
+                return Results.BadRequest("Attributes not found.");
+
             List<AttributeDTO> attributeDTOs = items.ToDTOs().ToList();
+            if (attributeDTOs == null)
+                return Results.BadRequest("Failed to format attributes.");
+
             return Results.Ok(attributeDTOs);
         }
 
@@ -40,9 +52,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Attribute item = await DTO.FromDTO(_genericDeviceData);
-            await _context.AttributeRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format attribute.");
+
+            try
+            {
+                await _context.AttributeRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add attribute.");
+            }
+
             return Results.Ok(item.AttributeID);
         }
 
@@ -51,9 +75,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Attribute item = await DTO.FromDTO(_genericDeviceData);
-            _context.AttributeRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format attribute.");
+
+            try
+            {
+                _context.AttributeRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update attribute.");
+            }
             return Results.Ok();
         }
 
@@ -62,9 +97,17 @@ namespace OMA_API.Controllers
         {
             Attribute item = await _context.AttributeRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.AttributeRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.BadRequest("Failed to format attribute.");
+
+            try
+            {
+                _context.AttributeRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete attribute.");
+            }
             return Results.Ok();
         }
     }
