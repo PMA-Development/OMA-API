@@ -20,7 +20,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             Island? item = await _context.IslandRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Island not found.");
+
             IslandDTO islandDTO = item.ToDTO();
+            if (islandDTO == null)
+                return Results.BadRequest("Failed to format island.");
+
             return Results.Ok(islandDTO);
         }
 
@@ -29,7 +35,13 @@ namespace OMA_API.Controllers
         public IResult GetIslands()
         {
             List<Island> items = _context.IslandRepository.GetAll().ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Islands not found.");
+
             List<IslandDTO> islandDTOs = items.ToDTOs().ToList();
+            if (islandDTOs.Count == 0)
+                return Results.BadRequest("Failed to format islands.");
+
             return Results.Ok(islandDTOs);
         }
 
@@ -48,9 +60,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Island item = DTO.FromDTO(_genericTurbine);
-            await _context.IslandRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format island.");
+
+            try
+            {
+                await _context.IslandRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add island.");
+            }
             return Results.Ok(item.IslandID);
         }
 
@@ -59,9 +82,22 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Island item = DTO.FromDTO(_genericTurbine);
-            _context.IslandRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format island.");
+
+            try
+            {
+                _context.IslandRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update island.");
+
+            }
+
             return Results.Ok();
         }
 
@@ -70,9 +106,18 @@ namespace OMA_API.Controllers
         {
             Island item = await _context.IslandRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.IslandRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Island not found.");
+
+            try
+            {
+                _context.IslandRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete island.");
+            }
+
             return Results.Ok();
         }
     }

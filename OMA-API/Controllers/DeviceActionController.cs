@@ -20,7 +20,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             DeviceAction? item = await _context.DeviceActionRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Device action not found.");
+
             DeviceActionDTO deviceActionDTO = item.ToDTO();
+            if (deviceActionDTO == null)
+                return Results.BadRequest("Failed to format device action.");
+
             return Results.Ok(deviceActionDTO);
         }
 
@@ -28,8 +34,14 @@ namespace OMA_API.Controllers
         [Produces<List<DeviceActionDTO>>]
         public IResult GetDevices()
         {
-            List<DeviceAction> items = _context.DeviceActionRepository.GetAll().ToList();
+            List<DeviceAction> items = _context.DeviceActionRepository.GetAll().ToList(); 
+            if (items.Count == 0)
+                return Results.NotFound("Device actions not found.");
+
             List<DeviceActionDTO> deviceActionDTOs = items.ToDTOs().ToList();
+            if (deviceActionDTOs.Count == 0)
+                return Results.BadRequest("Failed to format device actions.");
+
             return Results.Ok(deviceActionDTOs);
         }
 
@@ -39,9 +51,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             DeviceAction item = await DTO.FromDTO(_genericDevice);
-            await _context.DeviceActionRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format device action.");
+
+            try
+            {
+                await _context.DeviceActionRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add device action.");
+            }
+
             return Results.Ok(item.DeviceActionID);
         }
 
@@ -50,20 +74,39 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             DeviceAction item = await DTO.FromDTO(_genericDevice);
-            _context.DeviceActionRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format device action.");
+
+            try
+            {
+                _context.DeviceActionRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update device action.");
+            }
             return Results.Ok();
         }
 
         [HttpDelete(template: "delete-DeviceAction")]
         public async Task<IResult> Delete(int id)
         {
-            DeviceAction item = await _context.DeviceActionRepository.GetByIdAsync(id);
+            DeviceAction item = await _context.DeviceActionRepository.GetByIdAsync(id); 
             if (item == null)
-                return Results.NoContent();
-            _context.DeviceActionRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Device action not found.");
+
+            try
+            {
+                _context.DeviceActionRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete device action.");
+            }
             return Results.Ok();
         }
     }

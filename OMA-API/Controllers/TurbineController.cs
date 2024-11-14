@@ -20,7 +20,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             Turbine? item = await _context.TurbineRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Turbine not found.");
+
             TurbineDTO turbineDTO = item.ToDTO();
+            if (turbineDTO == null)
+                return Results.BadRequest("Failed to format turbine.");
+
             return Results.Ok(turbineDTO);
         }
 
@@ -29,7 +35,13 @@ namespace OMA_API.Controllers
         public IResult GetTurbines()
         {
             List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Turbines not found.");
+
             List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
+            if (turbineDTOs.Count == 0)
+                return Results.BadRequest("Failed to format turbines.");
+
             return Results.Ok(turbineDTOs);
         }
         [HttpGet(template: "get-Turbines-Island")]
@@ -37,7 +49,13 @@ namespace OMA_API.Controllers
         public IResult GetTurbinesByIslandID(int id)
         {
             List<Turbine> items = _context.TurbineRepository.GetAll().Where(x => x.Island.IslandID == id).ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Island turbines not found.");
+
             List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
+            if (turbineDTOs.Count == 0)
+                return Results.BadRequest("Failed to format island turbines.");
+
             return Results.Ok(turbineDTOs);
         }
 
@@ -48,8 +66,19 @@ namespace OMA_API.Controllers
             if (DTO == null)
                 return Results.NoContent();
             Turbine item = await DTO.FromDTO(_genericIsland, _genericDevice);
-            await _context.TurbineRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format turbine.");
+
+            try
+            {
+                await _context.TurbineRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add turbine.");
+            }
+
             return Results.Ok(item.TurbineID);
         }
 
@@ -58,9 +87,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Turbine item = await DTO.FromDTO(_genericIsland, _genericDevice);
+            if (item == null)
+                return Results.BadRequest("Failed to format turbine.");
+
+            try
+            {
             _context.TurbineRepository.Update(item);
             await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update turbine.");
+            }
             return Results.Ok();
         }
 
@@ -69,9 +109,18 @@ namespace OMA_API.Controllers
         {
             Turbine item = await _context.TurbineRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
+                return Results.NotFound("Turbine not found.");
+
+            try
+            {
             _context.TurbineRepository.Delete(item);
             await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete turbine.");
+            }
+
             return Results.Ok();
         }
     }

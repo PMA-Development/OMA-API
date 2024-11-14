@@ -20,7 +20,12 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             Log? item = await _context.LogRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Log not found.");
+
             LogDTO logDTO = item.ToDTO();
+            if (logDTO == null)
+                return Results.BadRequest("Failed to format log.");
             return Results.Ok(logDTO);
         }
 
@@ -29,7 +34,13 @@ namespace OMA_API.Controllers
         public IResult GetLogs()
         {
             List<Log> items = _context.LogRepository.GetAll().ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Logs not found.");
+
             List<LogDTO> logDTOs = items.ToDTOs().ToList();
+            if (logDTOs.Count == 0)
+                return Results.BadRequest("Failed to format logs.");
+
             return Results.Ok(logDTOs);
         }
 
@@ -39,9 +50,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Log item = await DTO.FromDTO(_genericUser);
-            await _context.LogRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format log.");
+
+            try
+            {
+                await _context.LogRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add log.");
+            }
             return Results.Ok(item.LogID);
         }
 
@@ -50,9 +72,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Log item = await DTO.FromDTO(_genericUser);
-            _context.LogRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format log.");
+
+            try
+            {
+                _context.LogRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update log.");
+            }
             return Results.Ok();
         }
 
@@ -61,9 +94,17 @@ namespace OMA_API.Controllers
         {
             Log item = await _context.LogRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.LogRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Log not found.");
+
+            try
+            {
+                _context.LogRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete log.");
+            }
             return Results.Ok();
         }
     }

@@ -18,8 +18,14 @@ namespace OMA_API.Controllers
         [Produces<DroneDTO>]
         public async Task<IResult> Get(int id)
         {
-            Drone? item = await _context.DroneRepository.GetByIdAsync(id);
+            Drone? item = await _context.DroneRepository.GetByIdAsync(id); 
+            if (item == null)
+                return Results.NotFound("Drone not found.");
+
             DroneDTO droneDTO = item.ToDTO();
+            if (droneDTO == null)
+                return Results.BadRequest("Failed to format Drone.");
+
             return Results.Ok(droneDTO);
         }
 
@@ -28,7 +34,13 @@ namespace OMA_API.Controllers
         public IResult GetDrones()
         {
             List<Drone> items = _context.DroneRepository.GetAll().ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Drones not found.");
+
             List<DroneDTO> droneDTOs = items.ToDTOs().ToList();
+            if (droneDTOs.Count == 0)
+                return Results.BadRequest("Failed to format drones.");
+
             return Results.Ok(droneDTOs);
         }
 
@@ -38,9 +50,22 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Drone item = await DTO.FromDTO(_genericTask);
-            await _context.DroneRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format drone.");
+
+            try
+            {
+                await _context.DroneRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add drone.");
+
+            }
+
             return Results.Ok(item.DroneID);
         }
 
@@ -49,9 +74,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Drone item = await DTO.FromDTO(_genericTask);
+            if (item == null)
+                return Results.BadRequest("Failed to format drone.");
+
+            try
+            {
             _context.DroneRepository.Update(item);
             await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update drone.");
+            }
+
             return Results.Ok();
         }
 
@@ -60,9 +97,18 @@ namespace OMA_API.Controllers
         {
             Drone item = await _context.DroneRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
+                return Results.NotFound("Drone not found.");
+
+            try
+            {
             _context.DroneRepository.Delete(item);
             await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete drone.");
+            }
+
             return Results.Ok();
         }
     }

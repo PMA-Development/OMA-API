@@ -12,7 +12,6 @@ namespace OMA_API.Controllers
     [ApiController]
     public class TaskController(IDataContext context, IGenericRepository<User> userRepository, IGenericRepository<Turbine> turbineRepository) : Controller
     {
-        //TODO: Add get Non Iscompleted Tasks
         private readonly IGenericRepository<User> _userRepository = userRepository;
         private readonly IGenericRepository<Turbine> _turbineRepository = turbineRepository;
         private readonly IDataContext _context = context;
@@ -22,38 +21,82 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             OMA_Data.Entities.Task? item = await _context.TaskRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Task not found.");
+
             TaskDTO taskDTO = item.ToDTO();
+            if (taskDTO== null)
+                return Results.BadRequest("Failed to format task.");
+
             return Results.Ok(taskDTO);
         }
 
-        [HttpGet(template: "get-Tasks")]
+        [HttpGet(template: "get-Completed-Tasks")]
         [Produces<List<TaskDTO>>]
-        public IResult GetTasks()
+        public IResult GetCompletedTasks()
         {
-            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().ToList();
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.IsCompleted == true).ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Tasks not found.");
+
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            if (taskDTOs.Count == 0)
+                return Results.BadRequest("Failed to format tasks.");
+
             return Results.Ok(taskDTOs);
         }
-        
+
+        [HttpGet(template: "get-Uncompleted-Tasks")]
+        [Produces<List<TaskDTO>>]
+        public IResult GetUncompletedTasks()
+        {
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.IsCompleted == false).ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Tasks not found.");
+
+            List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            if (taskDTOs.Count == 0)
+                return Results.BadRequest("Failed to format tasks.");
+
+            return Results.Ok(taskDTOs);
+        }
+
         [HttpGet(template: "get-User-Tasks")]
         [Produces<List<TaskDTO>>]
         public IResult GetTasksByUserID(Guid id)
         {
-            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id).ToList();
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id && x.IsCompleted == false).ToList();
+            if (items.Count == 0)
+                return Results.NotFound("User assigned tasks not found.");
+
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            if (taskDTOs.Count == 0)
+                return Results.BadRequest("Failed to format tasks.");
+
             return Results.Ok(taskDTOs);
         }
 
-        //TODO: there is a problem when i try to add a Task that does not have an assigned User
         [HttpPost(template: "add-Task")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TaskDTO? DTO)
         {
             if (DTO == null)
                 return Results.NoContent();
+
             OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
-            await _context.TaskRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format task.");
+
+            try
+            {
+                await _context.TaskRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add task.");
+            }
+
             return Results.Ok(item.TaskID);
         }
 
@@ -62,9 +105,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
-            _context.TaskRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format task.");
+
+            try
+            {
+                _context.TaskRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update task.");
+            }
+
             return Results.Ok();
         }
 
@@ -73,9 +128,17 @@ namespace OMA_API.Controllers
         {
             OMA_Data.Entities.Task item = await _context.TaskRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.TaskRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Task not found.");
+
+            try
+            {
+                _context.TaskRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete task.");
+            }
             return Results.Ok();
         }
     }

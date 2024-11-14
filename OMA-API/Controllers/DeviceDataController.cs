@@ -19,7 +19,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             DeviceData? item = await _context.DeviceDataRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Device data not found.");
+
             DeviceDataDTO deviceDataDTO = item.ToDTO();
+            if (deviceDataDTO == null)
+                return Results.BadRequest("Failed to format device data.");
+
             return Results.Ok(deviceDataDTO);
         }
 
@@ -28,7 +34,13 @@ namespace OMA_API.Controllers
         public IResult GetDeviceDatas()
         {
             List<DeviceData> items = _context.DeviceDataRepository.GetAll().ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Device datas not found.");
+
             List<DeviceDataDTO> deviceDataDTOs = items.ToDTOs().ToList();
+            if (deviceDataDTOs.Count == 0)
+                return Results.BadRequest("Failed to format device datas.");
+
             return Results.Ok(deviceDataDTOs);
         }
 
@@ -38,9 +50,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             DeviceData item = await DTO.FromDTO(_genericDevice);
-            await _context.DeviceDataRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format device data.");
+
+            try
+            {
+                await _context.DeviceDataRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add device data.");
+
+            }
             return Results.Ok(item.DeviceDataID);
         }
 
@@ -49,20 +73,41 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             DeviceData item = await DTO.FromDTO(_genericDevice);
-            _context.DeviceDataRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format device data.");
+
+            try
+            {
+                _context.DeviceDataRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update device data.");
+            }
+
             return Results.Ok();
         }
 
         [HttpDelete(template: "delete-DeviceData")]
         public async Task<IResult> Delete(int id)
         {
-            DeviceData item = await _context.DeviceDataRepository.GetByIdAsync(id);
+            DeviceData item = await _context.DeviceDataRepository.GetByIdAsync(id); 
             if (item == null)
-                return Results.NoContent();
-            _context.DeviceDataRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Device data not found.");
+
+            try
+            {
+                _context.DeviceDataRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete device data.");
+
+            }
             return Results.Ok();
         }
     }
