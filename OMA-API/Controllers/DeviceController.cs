@@ -22,7 +22,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(int id)
         {
             Device? item = await _context.DeviceRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("Device not found.");
+
             DeviceDTO deviceDTO = item.ToDTO();
+            if (deviceDTO == null)
+                return Results.BadRequest("Failed to format device.");
+
             return Results.Ok(deviceDTO);
         }
 
@@ -30,8 +36,14 @@ namespace OMA_API.Controllers
         [Produces<List<DeviceDTO>>]
         public IResult GetDevices()
         {
-            List<Device> items = _context.DeviceRepository.GetAll().ToList();
+            List<Device> items = _context.DeviceRepository.GetAll().ToList(); 
+            if (items == null)
+                return Results.NotFound("Devices not found.");
+
             List<DeviceDTO> deviceDTOs = items.ToDTOs().ToList();
+            if (deviceDTOs == null)
+                return Results.BadRequest("Failed to format device.");
+
             return Results.Ok(deviceDTOs);
         }
 
@@ -41,9 +53,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Device item = await DTO.FromDTO(_genericDeviceData, _genericDeviceAction, _genericTurbine);
-            await _context.DeviceRepository.Add(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format device.");
+
+            try
+            {
+                await _context.DeviceRepository.Add(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add device.");
+            }
             return Results.Ok(item.DeviceId);
         }
 
@@ -52,9 +75,20 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             Device item = await DTO.FromDTO(_genericDeviceData, _genericDeviceAction, _genericTurbine);
-            _context.DeviceRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format device.");
+
+            try
+            {
+                _context.DeviceRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update device.");
+            }
             return Results.Ok();
         }
 
@@ -63,9 +97,17 @@ namespace OMA_API.Controllers
         {
             Device item = await _context.DeviceRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.DeviceRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("Device not found.");
+
+            try
+            {
+                _context.DeviceRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to device.");
+            }
             return Results.Ok();
         }
     }

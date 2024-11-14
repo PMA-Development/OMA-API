@@ -19,7 +19,13 @@ namespace OMA_API.Controllers
         public async Task<IResult> Get(Guid id)
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
+            if (item == null)
+                return Results.NotFound("User not found.");
+
             UserDTO userDTO = item.ToDTO();
+            if (userDTO == null)
+                return Results.BadRequest("Failed to format user.");
+
             return Results.Ok(userDTO);
         }
 
@@ -28,7 +34,13 @@ namespace OMA_API.Controllers
         public IResult GetUsers()
         {
             List<User> items = _context.UserRepository.GetAll().ToList();
+            if (items == null)
+                return Results.NotFound("Users not found.");
+
             List<UserDTO> userDTOs = items.ToDTOs().ToList();
+            if (userDTOs == null)
+                return Results.BadRequest("Failed to format users.");
+
             return Results.Ok(userDTOs);
         }
 
@@ -37,9 +49,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             User item = DTO.FromDTO();
+            if (item == null)
+                return Results.BadRequest("Failed to format user.");
+
+            try
+            {
             await _context.UserRepository.Add(item);
             await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to add user.");
+            }
+
             return Results.Ok();
         }
 
@@ -48,9 +72,21 @@ namespace OMA_API.Controllers
         {
             if (DTO == null)
                 return Results.NoContent();
+
             User item = DTO.FromDTO();
-            _context.UserRepository.Update(item);
-            await _context.CommitAsync();
+            if (item == null)
+                return Results.BadRequest("Failed to format user.");
+
+            try
+            {
+                _context.UserRepository.Update(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to update user.");
+            }
+
             return Results.Ok();
         }
 
@@ -59,9 +95,18 @@ namespace OMA_API.Controllers
         {
             User? item = await _context.UserRepository.GetByIdAsync(id);
             if (item == null)
-                return Results.NoContent();
-            _context.UserRepository.Delete(item);
-            await _context.CommitAsync();
+                return Results.NotFound("User not found.");
+
+            try
+            {
+                _context.UserRepository.Delete(item);
+                await _context.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest("Failed to delete user.");
+            }
+
             return Results.Ok();
         }
     }
