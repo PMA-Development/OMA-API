@@ -20,11 +20,15 @@ namespace OMA_Data.Entities
         [Required]
         public string Description { get; set; } = string.Empty;
         public string FinishDescription { get; set; } = string.Empty;
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted { get; set; } = false;
+
+        [ForeignKey("User")]
+        public Guid? UserFk { get; set; }
+
         [Required]
         [ForeignKey("OwnerFK")]
         public User Owner { get; set; } = new();
-        [ForeignKey("UserFK")]
+        
         public User? User { get; set; } = new();
         [Required]
         [ForeignKey("TurbineFK")]

@@ -90,11 +90,11 @@ namespace OMA_Data.Data
             #endregion
 
             //Need this to avoid Cascade Delete on Tasks, now it just deletes the UserFk
-            modelBuilder.Entity<Task>()
-               .HasOne(t => t.User)
-               .WithMany()
-               .HasForeignKey("UserFK")
-               .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Task>()
+            //   .HasOne(t => t.User)
+            //   .WithMany()
+            //   .HasForeignKey("UserFK")
+            //   .OnDelete(DeleteBehavior.Restrict);
 
             
             modelBuilder.Entity<Alarm>()
@@ -112,8 +112,7 @@ namespace OMA_Data.Data
                 .Property<int>("TurbineFK");
             modelBuilder.Entity<Task>()
                 .Property<Guid>("OwnerFK");
-            modelBuilder.Entity<Task>()
-                .Property<Guid>("UserFK");
+
 
             modelBuilder.Entity<Turbine>()
                 .Property<int>("IslandFK");
@@ -160,8 +159,8 @@ namespace OMA_Data.Data
 
 
             modelBuilder.Entity<Task>().HasData(
-                new { TaskID = 1, Title = "Task One", Type = "Type A", Description = "Description for Task One", FinishDescription = "Finish Task One", TurbineFK = 1, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4"), UserFK = Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4") },
-                new { TaskID = 2, Title = "Task Two", Type = "Type B", Description = "Description for Task Two", FinishDescription = "Finish Task Two", TurbineFK = 6, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), UserFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29") }
+                new { TaskID = 1, Title = "Task One", IsCompleted = false, Type = "Type A", Description = "Description for Task One", FinishDescription = "Finish Task One", TurbineFK = 1, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4"), UserFK = Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4") },
+                new { TaskID = 2, Title = "Task Two", IsCompleted = false, Type = "Type B", Description = "Description for Task Two", FinishDescription = "Finish Task Two", TurbineFK = 6, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), UserFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29") }
             );
 
 
