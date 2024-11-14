@@ -12,7 +12,6 @@ namespace OMA_API.Controllers
     [ApiController]
     public class TaskController(IDataContext context, IGenericRepository<User> userRepository, IGenericRepository<Turbine> turbineRepository) : Controller
     {
-        //TODO: Add get Non Iscompleted Tasks
         private readonly IGenericRepository<User> _userRepository = userRepository;
         private readonly IGenericRepository<Turbine> _turbineRepository = turbineRepository;
         private readonly IDataContext _context = context;
@@ -32,11 +31,11 @@ namespace OMA_API.Controllers
             return Results.Ok(taskDTO);
         }
 
-        [HttpGet(template: "get-Tasks")]
+        [HttpGet(template: "get-Completed-Tasks")]
         [Produces<List<TaskDTO>>]
-        public IResult GetTasks()
+        public IResult GetCompletedTasks()
         {
-            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().ToList();
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.IsCompleted == true).ToList();
             if (items.Count == 0)
                 return Results.NotFound("Tasks not found.");
 
@@ -46,12 +45,27 @@ namespace OMA_API.Controllers
 
             return Results.Ok(taskDTOs);
         }
-        
+
+        [HttpGet(template: "get-Uncompleted-Tasks")]
+        [Produces<List<TaskDTO>>]
+        public IResult GetUncompletedTasks()
+        {
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.IsCompleted == false).ToList();
+            if (items.Count == 0)
+                return Results.NotFound("Tasks not found.");
+
+            List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
+            if (taskDTOs.Count == 0)
+                return Results.BadRequest("Failed to format tasks.");
+
+            return Results.Ok(taskDTOs);
+        }
+
         [HttpGet(template: "get-User-Tasks")]
         [Produces<List<TaskDTO>>]
         public IResult GetTasksByUserID(Guid id)
         {
-            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id).ToList();
+            List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id && x.IsCompleted == false).ToList();
             if (items.Count == 0)
                 return Results.NotFound("User assigned tasks not found.");
 
