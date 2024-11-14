@@ -10,5 +10,6 @@ namespace OMA_Data.Core.Repositories.Interface
 {
     public interface IIslandRepository : IGenericRepository<Island>
     {
+        List<Entities.Task> GetTaskForIsland(int id);
     }
 }
