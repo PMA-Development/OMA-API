@@ -34,11 +34,11 @@ namespace OMA_API.Controllers
         public IResult GetDrones()
         {
             List<Drone> items = _context.DroneRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Drones not found.");
 
             List<DroneDTO> droneDTOs = items.ToDTOs().ToList();
-            if (droneDTOs == null)
+            if (droneDTOs.Count == 0)
                 return Results.BadRequest("Failed to format drones.");
 
             return Results.Ok(droneDTOs);

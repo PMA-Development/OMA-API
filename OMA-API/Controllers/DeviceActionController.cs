@@ -35,11 +35,11 @@ namespace OMA_API.Controllers
         public IResult GetDevices()
         {
             List<DeviceAction> items = _context.DeviceActionRepository.GetAll().ToList(); 
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Device actions not found.");
 
             List<DeviceActionDTO> deviceActionDTOs = items.ToDTOs().ToList();
-            if (deviceActionDTOs == null)
+            if (deviceActionDTOs.Count == 0)
                 return Results.BadRequest("Failed to format device actions.");
 
             return Results.Ok(deviceActionDTOs);

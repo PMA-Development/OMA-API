@@ -36,11 +36,11 @@ namespace OMA_API.Controllers
         public async Task<IResult> GetAlarmConfigs()
         {
             List<AlarmConfig> items = _context.AlarmConfigRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Alarm configurations not found.");
 
             List<AlarmConfigDTO> alarmConfigDTOs = items.ToDTOs().ToList();
-            if (alarmConfigDTOs == null)
+            if (alarmConfigDTOs.Count == 0)
                 return Results.BadRequest("Failed to format alarm configurations.");
 
             return Results.Ok(alarmConfigDTOs);

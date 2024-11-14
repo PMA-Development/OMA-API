@@ -35,11 +35,11 @@ namespace OMA_API.Controllers
         public IResult GetTurbines()
         {
             List<Turbine> items = _context.TurbineRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Turbines not found.");
 
             List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
-            if (turbineDTOs == null)
+            if (turbineDTOs.Count == 0)
                 return Results.BadRequest("Failed to format turbines.");
 
             return Results.Ok(turbineDTOs);
@@ -49,11 +49,11 @@ namespace OMA_API.Controllers
         public IResult GetTurbinesByIslandID(int id)
         {
             List<Turbine> items = _context.TurbineRepository.GetAll().Where(x => x.Island.IslandID == id).ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Island turbines not found.");
 
             List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
-            if (turbineDTOs == null)
+            if (turbineDTOs.Count == 0)
                 return Results.BadRequest("Failed to format island turbines.");
 
             return Results.Ok(turbineDTOs);

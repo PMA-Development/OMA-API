@@ -34,11 +34,11 @@ namespace OMA_API.Controllers
         public IResult GetLogs()
         {
             List<Log> items = _context.LogRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Logs not found.");
 
             List<LogDTO> logDTOs = items.ToDTOs().ToList();
-            if (logDTOs == null)
+            if (logDTOs.Count == 0)
                 return Results.BadRequest("Failed to format logs.");
 
             return Results.Ok(logDTOs);

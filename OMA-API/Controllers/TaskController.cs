@@ -37,11 +37,11 @@ namespace OMA_API.Controllers
         public IResult GetTasks()
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Tasks not found.");
 
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
-            if (taskDTOs == null)
+            if (taskDTOs.Count == 0)
                 return Results.BadRequest("Failed to format tasks.");
 
             return Results.Ok(taskDTOs);
@@ -52,17 +52,16 @@ namespace OMA_API.Controllers
         public IResult GetTasksByUserID(Guid id)
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id).ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("User assigned tasks not found.");
 
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
-            if (taskDTOs == null)
+            if (taskDTOs.Count == 0)
                 return Results.BadRequest("Failed to format tasks.");
 
             return Results.Ok(taskDTOs);
         }
 
-        //TODO: there is a problem when i try to add a Task that does not have an assigned User
         [HttpPost(template: "add-Task")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] TaskDTO? DTO)

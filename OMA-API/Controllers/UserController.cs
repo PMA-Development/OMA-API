@@ -34,11 +34,11 @@ namespace OMA_API.Controllers
         public IResult GetUsers()
         {
             List<User> items = _context.UserRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Users not found.");
 
             List<UserDTO> userDTOs = items.ToDTOs().ToList();
-            if (userDTOs == null)
+            if (userDTOs.Count == 0)
                 return Results.BadRequest("Failed to format users.");
 
             return Results.Ok(userDTOs);

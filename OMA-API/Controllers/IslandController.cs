@@ -35,11 +35,11 @@ namespace OMA_API.Controllers
         public IResult GetIslands()
         {
             List<Island> items = _context.IslandRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Islands not found.");
 
             List<IslandDTO> islandDTOs = items.ToDTOs().ToList();
-            if (islandDTOs == null)
+            if (islandDTOs.Count == 0)
                 return Results.BadRequest("Failed to format islands.");
 
             return Results.Ok(islandDTOs);

@@ -37,11 +37,11 @@ namespace OMA_API.Controllers
         public IResult GetDevices()
         {
             List<Device> items = _context.DeviceRepository.GetAll().ToList(); 
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Devices not found.");
 
             List<DeviceDTO> deviceDTOs = items.ToDTOs().ToList();
-            if (deviceDTOs == null)
+            if (deviceDTOs.Count == 0)
                 return Results.BadRequest("Failed to format device.");
 
             return Results.Ok(deviceDTOs);

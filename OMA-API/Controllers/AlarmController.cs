@@ -33,11 +33,11 @@ namespace OMA_API.Controllers
         public IResult GetAlarms()
         {
             List<Alarm> items = _context.AlarmRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.NotFound("Alarms not found.");
 
             List<AlarmDTO> alarmDTOs = items.ToDTOs().ToList();
-            if (alarmDTOs == null)
+            if (alarmDTOs.Count == 0)
                 return Results.BadRequest("Failed to get alarms.");
 
             return Results.Ok(alarmDTOs);

@@ -36,11 +36,11 @@ namespace OMA_API.Controllers
         public IResult GetAttributes()
         {
             List<Attribute> items = _context.AttributeRepository.GetAll().ToList();
-            if (items == null)
+            if (items.Count == 0)
                 return Results.BadRequest("Attributes not found.");
 
             List<AttributeDTO> attributeDTOs = items.ToDTOs().ToList();
-            if (attributeDTOs == null)
+            if (attributeDTOs.Count == 0)
                 return Results.BadRequest("Failed to format attributes.");
 
             return Results.Ok(attributeDTOs);
