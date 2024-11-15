@@ -84,7 +84,7 @@ namespace OMA_API.Controllers
             AlarmConfig item = await DTO.FromDTO(_genericIsland);
             if (item == null)
             {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add alarmConfig with id: {DTO.AlarmConfigID}, but failed to format it.");
+                await _logService.AddLog(LogLevel.Error, $"Attempted to add alarmConfig, but failed to format it.");
                 return Results.BadRequest("Failed to format alarm configurations.");
             }
 
@@ -95,11 +95,11 @@ namespace OMA_API.Controllers
             }
             catch (Exception)
             {
-                await _logService.AddLog(LogLevel.Critical, $"Attempted to add alarmConfig with id: {item.AlarmConfigID}, but failed to add the alarmConfig to the database.");
+                await _logService.AddLog(LogLevel.Critical, $"Attempted to add alarmConfig, but failed to add the alarmConfig to the database.");
                 return Results.BadRequest("Failed to add alarm configurations.");
             }
 
-            await _logService.AddLog(LogLevel.Information, $"Succeded in adding alarmConfig with id: {item.AlarmConfigID}.");
+            await _logService.AddLog(LogLevel.Information, $"Succeded in adding alarmConfig.");
             return Results.Ok(item.AlarmConfigID);
         }
 
