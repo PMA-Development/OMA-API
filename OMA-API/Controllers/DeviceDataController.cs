@@ -61,19 +61,28 @@ namespace OMA_API.Controllers
             return Results.Ok(deviceDataDTOs);
         }
 
+        //TODO: this has to be moved to the attribute controller
         [HttpGet(template: "get-DeviceDataByTurbineId")]
         [Produces<List<DeviceDataDTO>>]
         public async Task<IResult> DeviceDataByTurbineId(int Id)
         {
             List<DeviceData> items = await _context.DeviceDataRepository.GetDeviceDataForTurbineAsync(Id);
             if (items.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData for turbine with id: {Id}, but failed to find any.");
                 return Results.NotFound("Device data not found.");
+            }
+                
 
             List<DeviceDataDTO> deviceDataDTOs = items.ToDTOs().ToList();
 
             if (deviceDataDTOs == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData for turbine with id: {Id}, but failed to format them.");
                 return Results.BadRequest("Failed to format device data.");
-            
+            }
+
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all deviceData for turbine with id: {Id}");
             return Results.Ok(deviceDataDTOs);
 
         }
