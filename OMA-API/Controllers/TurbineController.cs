@@ -5,6 +5,8 @@ using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using OMA_Data.ExtensionMethods;
+using OMQ_Mqtt;
+using OMQ_Mqtt.Models;
 
 namespace OMA_API.Controllers
 {
@@ -28,7 +30,7 @@ namespace OMA_API.Controllers
                 return Results.NotFound("Turbine not found.");
             }
 
-            TurbineDTO turbineDTO = item.ToDTO();
+            TurbineDTO turbineDTO = item.ToDTO()!;
             if (turbineDTO == null)
             {
                 await _logService.AddLog(LogLevel.Error, $"attempted to get turbine with id: {id}, but failed to format the turbine");
@@ -50,7 +52,7 @@ namespace OMA_API.Controllers
                 return Results.NotFound("Turbines not found.");
             }
 
-            List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
+            List<TurbineDTO> turbineDTOs = items.ToDTOs()!.ToList();
             if (turbineDTOs.Count == 0)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to get all turbines, but failed to format them.");
@@ -71,7 +73,7 @@ namespace OMA_API.Controllers
                 return Results.NotFound("Island turbines not found.");
             }
 
-            List<TurbineDTO> turbineDTOs = items.ToDTOs().ToList();
+            List<TurbineDTO> turbineDTOs = items.ToDTOs()!.ToList();
             if (turbineDTOs.Count == 0)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to get all turbines with island id: {id}, but failed to format them.");
@@ -123,7 +125,7 @@ namespace OMA_API.Controllers
                 return Results.NoContent();
             }
 
-            Turbine item = await DTO.FromDTO(_genericIsland, _genericDevice);
+            Turbine? item = await DTO.FromDTO(_genericIsland, _genericDevice);
             if (item == null)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to update turbine with id: {DTO.TurbineID}, but failed to format it.");
@@ -167,6 +169,28 @@ namespace OMA_API.Controllers
             }
 
             await _logService.AddLog(LogLevel.Error, $"Succeded in deleting turbine with id: {id}.");
+            return Results.Ok();
+        }
+
+
+        [HttpPost(template: "action-Turbine")]
+        public async Task<IResult> actionChangeState([FromBody] TurbineDTO? DTO, string action, int value)
+        {
+            if (DTO == null)
+                return Results.NoContent();
+            Turbine? item = await DTO.FromDTO(_genericIsland, _genericDevice);
+            if (item == null)
+                return Results.BadRequest("Failed to format turbine.");
+
+            if (!MqttScopedProcessingService.AllowedActions.Contains(action))
+                return Results.BadRequest("Action not allowed!");
+
+            foreach (var device in _context.DeviceRepository.GetByTurbineId(item.TurbineID))
+            {
+                ActionRequest actionRequest = new ActionRequest { Action = action, ClientId = device.ClientID, Value = value };
+                MqttScopedProcessingService.ActionQueue.Enqueue(actionRequest);
+            }
+
             return Results.Ok();
         }
     }

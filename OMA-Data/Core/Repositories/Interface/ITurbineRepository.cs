@@ -11,5 +11,6 @@ namespace OMA_Data.Core.Repositories.Interface
     public interface ITurbineRepository : IGenericRepository<Turbine>
     {
         List<Turbine> GetTurbinesByIslandId(int id);
+        Turbine? GetByClintId(string id);
     }
 }
