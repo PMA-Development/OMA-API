@@ -13,8 +13,9 @@ namespace OMA_API.Services
 
         public async System.Threading.Tasks.Task AddLog(LogLevel logLevel, string description) 
         {
-            var userID = _httpContext.HttpContext!.User.Identity.GetUserId();
-            User user = await _context.UserRepository.GetByIdAsync(Guid.Parse(userID));
+            //TODO : Implent the below code when done testing.
+            //var userID = _httpContext.HttpContext!.User.Identity.GetUserId();
+            User user = await _context.UserRepository.GetByIdAsync(Guid.Parse("c6936336-4a10-4445-b373-60f6a37a58c4"));
 
             await _context.LogRepository.Add(new Log() { User = user, Severity = logLevel.ToString(), Description = description});
 
