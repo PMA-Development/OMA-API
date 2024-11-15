@@ -10,5 +10,6 @@ namespace OMA_Data.Core.Repositories.Interface
 {
     public interface IAttributeRepository : IGenericRepository<OMA_Data.Entities.Attribute>
     {
+        Task<List<Entities.Attribute>> GetAttributeForTurbineAsync(int Id);
     }
 }

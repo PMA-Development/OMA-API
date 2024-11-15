@@ -62,6 +62,33 @@ namespace OMA_API.Controllers
             return Results.Ok(attributeDTOs);
         }
 
+
+        //TODO: this has to be moved to the attribute controller
+        [HttpGet(template: "get-AttributeDataByTurbineId")]
+        [Produces<List<AttributeDTO>>]
+        public async Task<IResult> AttributeByTurbineId(int Id)
+        {
+            List<Attribute> items = await _context.AttributeRepository.GetAttributeForTurbineAsync(Id);
+            if (items.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all Attribute's for turbine with id: {Id}, but failed to find any.");
+                return Results.NotFound("Device data not found.");
+            }
+
+
+            List<AttributeDTO> attributeDTO = items.ToDTOs().ToList();
+
+            if (attributeDTO == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all Attribute's for turbine with id: {Id}, but failed to format them.");
+                return Results.BadRequest("Failed to format device data.");
+            }
+
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all Attribute's for turbine with id: {Id}");
+            return Results.Ok(attributeDTO);
+
+        }
+
         [HttpPost(template: "add-Attribute")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] AttributeDTO? DTO)
