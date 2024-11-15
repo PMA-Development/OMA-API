@@ -87,7 +87,7 @@ namespace OMA_Data.ExtensionMethods
                 FinishDescription = source.FinishDescription,
                 OwnerID = source.Owner.UserID,
                 Title = source.Title,
-                IsCompleted = !source.IsCompleted,
+                IsCompleted = source.IsCompleted,
                 TurbineID = source.Turbine.TurbineID,
                 Type = source.Type,
                 UserID = source.User?.UserID,
