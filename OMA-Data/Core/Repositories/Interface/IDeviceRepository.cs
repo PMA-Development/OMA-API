@@ -10,5 +10,7 @@ namespace OMA_Data.Core.Repositories.Interface
 {
     public interface IDeviceRepository : IGenericRepository<Device>
     {
+        Device? GetByClintId(string id);
+        List<Device> GetByTurbineId(int id);
     }
 }
