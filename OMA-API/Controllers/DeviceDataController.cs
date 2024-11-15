@@ -61,6 +61,23 @@ namespace OMA_API.Controllers
             return Results.Ok(deviceDataDTOs);
         }
 
+        [HttpGet(template: "get-DeviceDataByTurbineId")]
+        [Produces<List<DeviceDataDTO>>]
+        public async Task<IResult> DeviceDataByTurbineId(int Id)
+        {
+            List<DeviceData> items = await _context.DeviceDataRepository.GetDeviceDataForTurbineAsync(Id);
+            if (items.Count == 0)
+                return Results.NotFound("Device data not found.");
+
+            List<DeviceDataDTO> deviceDataDTOs = items.ToDTOs().ToList();
+
+            if (deviceDataDTOs == null)
+                return Results.BadRequest("Failed to format device data.");
+            
+            return Results.Ok(deviceDataDTOs);
+
+        }
+
         [HttpPost(template: "add-DeviceData")]
         [Produces<int>]
         public async Task<IResult> Add([FromBody] DeviceDataDTO? DTO)
