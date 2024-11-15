@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
@@ -9,11 +10,12 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IslandController(IDataContext context, IGenericRepository<Turbine> genericTurbine) : Controller
+    public class IslandController(IDataContext context, IGenericRepository<Turbine> genericTurbine, ILoggingService logService) : Controller
     {
         private readonly IGenericRepository<Turbine> _genericTurbine = genericTurbine;
 
         private readonly IDataContext _context = context;
+        private readonly ILoggingService _logService = logService;
 
         [HttpGet(template: "get-Island")]
         [Produces<IslandDTO>]

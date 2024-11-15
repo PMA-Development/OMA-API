@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
@@ -10,11 +11,12 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskController(IDataContext context, IGenericRepository<User> userRepository, IGenericRepository<Turbine> turbineRepository) : Controller
+    public class TaskController(IDataContext context, IGenericRepository<User> userRepository, ILoggingService logService, IGenericRepository<Turbine> turbineRepository) : Controller
     {
         private readonly IGenericRepository<User> _userRepository = userRepository;
         private readonly IGenericRepository<Turbine> _turbineRepository = turbineRepository;
         private readonly IDataContext _context = context;
+        private readonly ILoggingService _logService = logService;
 
         [HttpGet(template: "get-Task")]
         [Produces<TaskDTO>]
@@ -22,57 +24,85 @@ namespace OMA_API.Controllers
         {
             OMA_Data.Entities.Task? item = await _context.TaskRepository.GetByIdAsync(id);
             if (item == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get task with id: {id}, but failed to find it.");
                 return Results.NotFound("Task not found.");
+            }
 
             TaskDTO taskDTO = item.ToDTO();
             if (taskDTO== null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"attempted to get task with id: {id}, but failed to format the Task");
                 return Results.BadRequest("Failed to format task.");
+            }
 
+            await _logService.AddLog(LogLevel.Information, $"Succeded in getting task with id: {id}");
             return Results.Ok(taskDTO);
         }
 
         [HttpGet(template: "get-Completed-Tasks")]
         [Produces<List<TaskDTO>>]
-        public IResult GetCompletedTasks()
+        public async Task<IResult> GetCompletedTasks()
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.IsCompleted == true).ToList();
             if (items.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all completed tasks, but failed to find any.");
                 return Results.NotFound("Tasks not found.");
+            }
 
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
             if (taskDTOs.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all completed tasks, but failed to format them.");
                 return Results.BadRequest("Failed to format tasks.");
+            }
 
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all completed tasks.");
             return Results.Ok(taskDTOs);
         }
 
         [HttpGet(template: "get-Uncompleted-Tasks")]
         [Produces<List<TaskDTO>>]
-        public IResult GetUncompletedTasks()
+        public async Task<IResult> GetUncompletedTasks()
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.IsCompleted == false).ToList();
             if (items.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all uncompleted tasks, but failed to find any.");
                 return Results.NotFound("Tasks not found.");
+            }
 
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
             if (taskDTOs.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all uncompleted tasks, but failed to format them.");
                 return Results.BadRequest("Failed to format tasks.");
+            }
 
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all alarmConfigs.");
             return Results.Ok(taskDTOs);
         }
 
         [HttpGet(template: "get-User-Tasks")]
         [Produces<List<TaskDTO>>]
-        public IResult GetTasksByUserID(Guid id)
+        public async Task<IResult> GetTasksByUserID(Guid id)
         {
             List<OMA_Data.Entities.Task> items = _context.TaskRepository.GetAll().Where(x => x.User.UserID == id && x.IsCompleted == false).ToList();
             if (items.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get tasks by user, but failed to find any.");
                 return Results.NotFound("User assigned tasks not found.");
+            }
 
             List<TaskDTO> taskDTOs = items.ToDTOs().ToList();
             if (taskDTOs.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all tasks by user, but failed to format them.");
                 return Results.BadRequest("Failed to format tasks.");
+            }
 
+            await _logService.AddLog(LogLevel.Information, $"Succeded in getting all tasks by user id.");
             return Results.Ok(taskDTOs);
         }
 
@@ -81,11 +111,17 @@ namespace OMA_API.Controllers
         public async Task<IResult> Add([FromBody] TaskDTO? DTO)
         {
             if (DTO == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to add task, but failed in parsing task to API.");
                 return Results.NoContent();
+            }
 
             OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
             if (item == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to add task, but failed to format it.");
                 return Results.BadRequest("Failed to format task.");
+            }
 
             try
             {
@@ -94,9 +130,11 @@ namespace OMA_API.Controllers
             }
             catch (Exception)
             {
+                await _logService.AddLog(LogLevel.Critical, $"Attempted to add task, but failed to add the task to the database.");
                 return Results.BadRequest("Failed to add task.");
             }
 
+            await _logService.AddLog(LogLevel.Information, $"Succeded in adding task.");
             return Results.Ok(item.TaskID);
         }
 
@@ -104,11 +142,17 @@ namespace OMA_API.Controllers
         public async Task<IResult> Update([FromBody] TaskDTO? DTO)
         {
             if (DTO == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to update task, but failed in parsing task to API.");
                 return Results.NoContent();
+            }
 
             OMA_Data.Entities.Task item = await DTO.FromDTO(_userRepository, _turbineRepository);
             if (item == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to update task with id: {DTO.TaskID}, but failed to format it.");
                 return Results.BadRequest("Failed to format task.");
+            }
 
             try
             {
@@ -117,9 +161,11 @@ namespace OMA_API.Controllers
             }
             catch (Exception)
             {
+                await _logService.AddLog(LogLevel.Critical, $"Attempted to update task with id: {item.TaskID}, but failed to update the task to the database.");
                 return Results.BadRequest("Failed to update task.");
             }
 
+            await _logService.AddLog(LogLevel.Information, $"Succeded in updating task with id: {item.TaskID}.");
             return Results.Ok();
         }
 
@@ -128,7 +174,10 @@ namespace OMA_API.Controllers
         {
             OMA_Data.Entities.Task item = await _context.TaskRepository.GetByIdAsync(id);
             if (item == null)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to delete task with id: {id}, but failed to find it.");
                 return Results.NotFound("Task not found.");
+            }
 
             try
             {
@@ -137,8 +186,11 @@ namespace OMA_API.Controllers
             }
             catch (Exception)
             {
+                await _logService.AddLog(LogLevel.Critical, $"Attempted to delete task with id: {id}, but failed to delete the task in the database.");
                 return Results.BadRequest("Failed to delete task.");
             }
+
+            await _logService.AddLog(LogLevel.Error, $"Succeded in deleting task with id: {id}.");
             return Results.Ok();
         }
     }

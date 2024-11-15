@@ -12,7 +12,7 @@ namespace OMA_Data.Entities
     {
         public int LogID { get; set; }
         [Required]
-        public DateTime Time { get; set; }
+        public DateTime Time { get; set; } = DateTime.Now;
         [Required]
         public string Severity { get; set; } = string.Empty;
         [Required]

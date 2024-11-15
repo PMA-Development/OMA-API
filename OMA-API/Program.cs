@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OMA_API.Services;
+using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Repositories;
 using OMA_Data.Core.Repositories.Interface;
 using OMA_Data.Core.Utils;
@@ -64,6 +66,9 @@ namespace OMA_API
             builder.Services.AddScoped<IGenericRepository<OMA_Data.Entities.Task>, GenericRepository<OMA_Data.Entities.Task>>();
             builder.Services.AddScoped<IGenericRepository<Turbine>, GenericRepository<Turbine>>();
             builder.Services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+            builder.Services.AddScoped<ILoggingService, LoggingService>();
+
+            builder.Services.AddHttpContextAccessor();
 
             //TODO : CHANGE CORS
             builder.Services.AddCors(options => { options.AddPolicy("AllowCors", policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()); });
