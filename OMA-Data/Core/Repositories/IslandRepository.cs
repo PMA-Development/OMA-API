@@ -12,5 +12,9 @@ namespace OMA_Data.Core.Repositories
 {
     public class IslandRepository(OMAContext context) : GenericRepository<Island>(context), IIslandRepository
     {
+        public virtual Island? GetByClintId(string id)
+        {
+            return _dbContext.Where(s => s.ClientID == id).FirstOrDefault();
+        }
     }
 }

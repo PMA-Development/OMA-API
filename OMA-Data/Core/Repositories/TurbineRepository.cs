@@ -16,5 +16,10 @@ namespace OMA_Data.Core.Repositories
         {
             return _context.Turbines.Where(x => x.Island.IslandID == id).ToList();
         }
+
+        public virtual Turbine? GetByClintId(string id)
+        {
+            return _dbContext.Where(s => s.ClientID == id).FirstOrDefault();
+        }
     }
 }

@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OMA_Data.Core.Repositories;
 using OMA_Data.Core.Repositories.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OMA_Data.Data
 {
