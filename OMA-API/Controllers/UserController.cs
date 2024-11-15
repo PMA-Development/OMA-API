@@ -12,7 +12,7 @@ namespace OMA_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IDataContext context, LoggingService logService)  : Controller
+    public class UserController(IDataContext context, ILoggingService logService)  : Controller
     {
         private readonly IDataContext _context = context;
         private readonly ILoggingService _logService = logService;

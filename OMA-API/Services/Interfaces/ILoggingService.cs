@@ -5,4 +5,3 @@
         Task AddLog(LogLevel logLevel, string description);
     }
 }
-}
