@@ -89,7 +89,7 @@ namespace OMA_Data.Data
                 .AutoInclude();
             #endregion
 
-            //Need this to avoid Cascade Delete on Tasks, now it just deletes the UserFk
+            //might need this to avoid Cascade Delete on Tasks, now it just deletes the UserFk
             //modelBuilder.Entity<Task>()
             //   .HasOne(t => t.User)
             //   .WithMany()
@@ -116,6 +116,15 @@ namespace OMA_Data.Data
 
             modelBuilder.Entity<Turbine>()
                 .Property<int>("IslandFK");
+
+            modelBuilder.Entity<DeviceData>()
+                .Property<int>("DeviceFK");
+
+            modelBuilder.Entity<DeviceData>()
+                .HasOne(d => d.Device)
+                .WithMany(d => d.DeviceData)
+                .HasForeignKey("DeviceFK") 
+                .IsRequired();
 
             modelBuilder.Entity<Island>().HasData(
                 new { IslandID = 1, Title = "Island One", ClientID = "ClientA", Abbreviation = "IS1" },
@@ -163,6 +172,22 @@ namespace OMA_Data.Data
                 new { TaskID = 2, Title = "Task Two", IsCompleted = false, Type = "Type B", Description = "Description for Task Two", FinishDescription = "Finish Task Two", TurbineFK = 6, Level = LevelEnum.Hotline1 ,OwnerFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29"), UserFK = Guid.Parse("cf9844c4-55aa-4eef-bba2-9b97771a8c29") }
             );
 
+            modelBuilder.Entity<Device>().HasData(
+                new { DeviceId = 1, Type = "Sensor", ClientID = "ClientA", State = StateEnum.On, IslandFK = 1, TurbineID = 1 },
+                new { DeviceId = 2, Type = "Actuator", ClientID = "ClientB", State = StateEnum.On, IslandFK = 1, TurbineID = 1 }
+            );
+
+            modelBuilder.Entity<DeviceData>().HasData(
+                new { DeviceDataID = 1, Type = "TemperatureData", Timestamp = DateTime.Now.AddMinutes(-30), DeviceFK = 1 },
+                new { DeviceDataID = 2, Type = "PressureData", Timestamp = DateTime.Now.AddMinutes(-20), DeviceFK = 2 },
+                new { DeviceDataID = 3, Type = "HumidityData", Timestamp = DateTime.Now.AddMinutes(-10), DeviceFK = 1 }
+            );
+
+            modelBuilder.Entity<Attribute>().HasData(
+                new { AttributeID = 1, Name = "Temperature", Value = "22.5", DeviceDataID = 1 },
+                new { AttributeID = 2, Name = "Pressure", Value = "1013", DeviceDataID = 2 },
+                new { AttributeID = 3, Name = "Humidity", Value = "45%", DeviceDataID = 3 }
+            );
 
         }
     }

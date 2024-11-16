@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
@@ -84,6 +85,7 @@ namespace OMA_API.Controllers
             return Results.Ok(taskDTOs);
         }
 
+        
         [HttpGet(template: "get-User-Tasks")]
         [Produces<List<TaskDTO>>]
         public async Task<IResult> GetTasksByUserID(Guid id)
