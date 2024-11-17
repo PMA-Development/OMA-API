@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
@@ -9,6 +10,7 @@ using Attribute = OMA_Data.Entities.Attribute;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AttributeController(IDataContext context, IGenericRepository<DeviceData> genericDeviceAction, ILoggingService logService) : Controller

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services;
 using OMA_API.Services.Interfaces;
@@ -10,6 +11,7 @@ using System.Net;
 using Task = System.Threading.Tasks.Task;
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IDataContext context, ILoggingService logService)  : Controller

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
@@ -8,6 +10,7 @@ using OMA_Data.ExtensionMethods;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DroneController(IDataContext context, IGenericRepository<OMA_Data.Entities.Task> genericTask, ILoggingService logService) : Controller
@@ -92,6 +95,37 @@ namespace OMA_API.Controllers
             await _logService.AddLog(LogLevel.Information, $"Succeded in adding drone.");
             return Results.Ok(item.DroneID);
         }
+        //TODO: Maybe??? use this for drones. not sure yet
+        //[HttpPut(template: "make-DroneAvailable/{droneId}")]
+        //public async Task<IResult> MakeDroneAvailable(int droneId)
+        //{
+
+        //    var drone = await _context.DroneRepository.GetByIdAsync(droneId);
+
+        //    if (drone == null)
+        //    {
+        //        await _logService.AddLog(LogLevel.Warning, $"Attempted to make drone available, but no drone found with id: {droneId}.");
+        //        return Results.NotFound($"Drone with id {droneId} not found.");
+        //    }
+
+        //    try
+        //    {
+
+        //        drone.Available = true;
+        //        drone.Task = null; 
+
+        //        _context.DroneRepository.Update(drone);
+        //        await _context.CommitAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await _logService.AddLog(LogLevel.Critical, $"Failed to make drone with id: {droneId} available. Error: {ex.Message}");
+        //        return Results.BadRequest("Failed to make drone available.");
+        //    }
+
+        //    await _logService.AddLog(LogLevel.Information, $"Successfully made drone with id: {droneId} available.");
+        //    return Results.Ok();
+        //}
 
         [HttpPut(template: "update-Drone")]
         public async Task<IResult> Update([FromBody] DroneDTO? DTO)

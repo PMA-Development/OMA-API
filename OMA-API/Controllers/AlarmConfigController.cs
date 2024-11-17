@@ -15,7 +15,7 @@ using OMA_API.Services;
 
 namespace OMA_API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AlarmConfigController(IDataContext context, IGenericRepository<Island> genericIsland, ILoggingService logService) : Controller

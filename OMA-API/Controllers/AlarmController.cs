@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
@@ -9,6 +10,7 @@ using OMA_Data.ExtensionMethods;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AlarmController(IDataContext context, IGenericRepository<Island> genericIsland, ILoggingService logService, IGenericRepository<Turbine> genericTurbine) : Controller

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
@@ -10,6 +11,7 @@ using OMQ_Mqtt.Models;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TurbineController(IDataContext context, IGenericRepository<Island> genericIsland, ILoggingService logService, IGenericRepository<Device> genericDevice) : Controller

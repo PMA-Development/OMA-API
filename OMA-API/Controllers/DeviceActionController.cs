@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Repositories;
 using OMA_Data.Core.Utils;
@@ -9,6 +10,7 @@ using OMA_Data.ExtensionMethods;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceActionController(IDataContext context, IGenericRepository<Device> genericDevice, ILoggingService logService) : Controller
