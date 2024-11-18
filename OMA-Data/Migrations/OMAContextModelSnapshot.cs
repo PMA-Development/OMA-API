@@ -143,6 +143,29 @@ namespace OMA_Data.Migrations
                     b.HasIndex("DeviceDataID");
 
                     b.ToTable("Attributes");
+
+                    b.HasData(
+                        new
+                        {
+                            AttributeID = 1,
+                            DeviceDataID = 1,
+                            Name = "Temperature",
+                            Value = "22.5"
+                        },
+                        new
+                        {
+                            AttributeID = 2,
+                            DeviceDataID = 2,
+                            Name = "Pressure",
+                            Value = "1013"
+                        },
+                        new
+                        {
+                            AttributeID = 3,
+                            DeviceDataID = 3,
+                            Name = "Humidity",
+                            Value = "45%"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Device", b =>
@@ -157,10 +180,10 @@ namespace OMA_Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DeviceFK")
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
-                    b.Property<int>("State")
+                    b.Property<int>("TurbineID")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -169,9 +192,27 @@ namespace OMA_Data.Migrations
 
                     b.HasKey("DeviceId");
 
-                    b.HasIndex("DeviceFK");
+                    b.HasIndex("TurbineID");
 
                     b.ToTable("Device");
+
+                    b.HasData(
+                        new
+                        {
+                            DeviceId = 1,
+                            ClientID = "ClientA",
+                            State = 1,
+                            TurbineID = 1,
+                            Type = "Sensor"
+                        },
+                        new
+                        {
+                            DeviceId = 2,
+                            ClientID = "ClientB",
+                            State = 1,
+                            TurbineID = 1,
+                            Type = "Actuator"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.DeviceAction", b =>
@@ -208,7 +249,7 @@ namespace OMA_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceDataID"));
 
-                    b.Property<int>("DeviceId")
+                    b.Property<int>("DeviceFK")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Timestamp")
@@ -220,9 +261,32 @@ namespace OMA_Data.Migrations
 
                     b.HasKey("DeviceDataID");
 
-                    b.HasIndex("DeviceId");
+                    b.HasIndex("DeviceFK");
 
                     b.ToTable("DeviceData");
+
+                    b.HasData(
+                        new
+                        {
+                            DeviceDataID = 1,
+                            DeviceFK = 1,
+                            Timestamp = new DateTime(2024, 11, 15, 17, 50, 0, 314, DateTimeKind.Local).AddTicks(4985),
+                            Type = "TemperatureData"
+                        },
+                        new
+                        {
+                            DeviceDataID = 2,
+                            DeviceFK = 2,
+                            Timestamp = new DateTime(2024, 11, 15, 18, 0, 0, 314, DateTimeKind.Local).AddTicks(5001),
+                            Type = "PressureData"
+                        },
+                        new
+                        {
+                            DeviceDataID = 3,
+                            DeviceFK = 1,
+                            Timestamp = new DateTime(2024, 11, 15, 18, 10, 0, 314, DateTimeKind.Local).AddTicks(5002),
+                            Type = "HumidityData"
+                        });
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Drone", b =>
@@ -591,7 +655,7 @@ namespace OMA_Data.Migrations
                 {
                     b.HasOne("OMA_Data.Entities.Turbine", "Turbine")
                         .WithMany("Devices")
-                        .HasForeignKey("DeviceFK")
+                        .HasForeignKey("TurbineID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -613,7 +677,7 @@ namespace OMA_Data.Migrations
                 {
                     b.HasOne("OMA_Data.Entities.Device", "Device")
                         .WithMany("DeviceData")
-                        .HasForeignKey("DeviceId")
+                        .HasForeignKey("DeviceFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

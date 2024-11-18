@@ -144,14 +144,14 @@ namespace OMA_Data.Migrations
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<int>(type: "int", nullable: false),
-                    DeviceFK = table.Column<int>(type: "int", nullable: false)
+                    TurbineID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Device", x => x.DeviceId);
                     table.ForeignKey(
-                        name: "FK_Device_Turbine_DeviceFK",
-                        column: x => x.DeviceFK,
+                        name: "FK_Device_Turbine_TurbineID",
+                        column: x => x.TurbineID,
                         principalTable: "Turbine",
                         principalColumn: "TurbineID",
                         onDelete: ReferentialAction.Cascade);
@@ -224,14 +224,14 @@ namespace OMA_Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeviceId = table.Column<int>(type: "int", nullable: false)
+                    DeviceFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceData", x => x.DeviceDataID);
                     table.ForeignKey(
-                        name: "FK_DeviceData_Device_DeviceId",
-                        column: x => x.DeviceId,
+                        name: "FK_DeviceData_Device_DeviceFK",
+                        column: x => x.DeviceFK,
                         principalTable: "Device",
                         principalColumn: "DeviceId",
                         onDelete: ReferentialAction.Cascade);
@@ -332,6 +332,15 @@ namespace OMA_Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Device",
+                columns: new[] { "DeviceId", "ClientID", "State", "TurbineID", "Type" },
+                values: new object[,]
+                {
+                    { 1, "ClientA", 1, 1, "Sensor" },
+                    { 2, "ClientB", 1, 1, "Actuator" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Tasks",
                 columns: new[] { "TaskID", "Description", "FinishDescription", "IsCompleted", "Level", "OwnerFK", "Title", "TurbineFK", "Type", "UserFk" },
                 values: new object[,]
@@ -341,12 +350,32 @@ namespace OMA_Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "DeviceData",
+                columns: new[] { "DeviceDataID", "DeviceFK", "Timestamp", "Type" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2024, 11, 15, 17, 50, 0, 314, DateTimeKind.Local).AddTicks(4985), "TemperatureData" },
+                    { 2, 2, new DateTime(2024, 11, 15, 18, 0, 0, 314, DateTimeKind.Local).AddTicks(5001), "PressureData" },
+                    { 3, 1, new DateTime(2024, 11, 15, 18, 10, 0, 314, DateTimeKind.Local).AddTicks(5002), "HumidityData" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Drones",
                 columns: new[] { "DroneID", "Available", "TaskFK", "Title" },
                 values: new object[,]
                 {
                     { 1, true, 1, "Drone One" },
                     { 2, false, 2, "Drone Two" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Attributes",
+                columns: new[] { "AttributeID", "DeviceDataID", "Name", "Value" },
+                values: new object[,]
+                {
+                    { 1, 1, "Temperature", "22.5" },
+                    { 2, 2, "Pressure", "1013" },
+                    { 3, 3, "Humidity", "45%" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -370,9 +399,9 @@ namespace OMA_Data.Migrations
                 column: "DeviceDataID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Device_DeviceFK",
+                name: "IX_Device_TurbineID",
                 table: "Device",
-                column: "DeviceFK");
+                column: "TurbineID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceAction_DeviceId",
@@ -380,9 +409,9 @@ namespace OMA_Data.Migrations
                 column: "DeviceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeviceData_DeviceId",
+                name: "IX_DeviceData_DeviceFK",
                 table: "DeviceData",
-                column: "DeviceId");
+                column: "DeviceFK");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drones_TaskFK",

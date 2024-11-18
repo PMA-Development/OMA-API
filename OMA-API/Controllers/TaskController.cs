@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
@@ -9,6 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TaskController(IDataContext context, IGenericRepository<User> userRepository, ILoggingService logService, IGenericRepository<Turbine> turbineRepository) : Controller
@@ -84,6 +87,7 @@ namespace OMA_API.Controllers
             return Results.Ok(taskDTOs);
         }
 
+        
         [HttpGet(template: "get-User-Tasks")]
         [Produces<List<TaskDTO>>]
         public async Task<IResult> GetTasksByUserID(Guid id)
@@ -105,6 +109,68 @@ namespace OMA_API.Controllers
             await _logService.AddLog(LogLevel.Information, $"Succeded in getting all tasks by user id.");
             return Results.Ok(taskDTOs);
         }
+
+
+        //TODO: Maybe??? use this for drones. not sure yet
+        //[HttpPut(template: "assign-TaskToFirstAvailableDrone")]
+        //public async Task<IResult> AssignTaskToFirstAvailableDrone([FromQuery] int taskId)
+        //{
+        //    if (taskId <= 0)
+        //    {
+        //        await _logService.AddLog(LogLevel.Error, "Attempted to assign a task to a drone, but the task ID was invalid.");
+        //        return Results.BadRequest("Invalid task ID.");
+        //    }
+
+     
+        //    var task = await _context.TaskRepository.GetByIdAsync(taskId);
+
+        //    if (task == null)
+        //    {
+        //        await _logService.AddLog(LogLevel.Warning, $"No task found with id: {taskId}.");
+        //        return Results.NotFound($"Task with id {taskId} not found.");
+        //    }
+
+        //    if (task.IsCompleted)
+        //    {
+        //        await _logService.AddLog(LogLevel.Warning, $"Task with id: {taskId} is already completed");
+        //        return Results.BadRequest("Task is already completed");
+        //    }
+
+ 
+        //    var availableDrone = await _context.DroneRepository
+        //                                       .GetAll()
+        //                                       .Where(d => d.Available)
+        //                                       .OrderBy(d => d.DroneID)
+        //                                       .FirstOrDefaultAsync();
+
+        //    if (availableDrone == null)
+        //    {
+        //        await _logService.AddLog(LogLevel.Warning, "No available drones found.");
+        //        return Results.NotFound("No available drones found.");
+        //    }
+
+        //    try
+        //    {
+        //        availableDrone.Task = task;
+        //        availableDrone.Available = false;
+
+        //        _context.DroneRepository.Update(availableDrone);
+        //        await _context.CommitAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await _logService.AddLog(LogLevel.Critical, $"Failed to assign task with id: {taskId} to drone with id: {availableDrone.DroneID}. Error: {ex.Message}");
+        //        return Results.BadRequest("Failed to assign task to drone.");
+        //    }
+
+        //    await _logService.AddLog(LogLevel.Information, $"Assigned task with id: {taskId} to drone with id: {availableDrone.DroneID}.");
+        //    return Results.Ok("Drone's been Reserved/Send");
+        //}
+
+
+
+
+
 
         [HttpPost(template: "add-Task")]
         [Produces<int>]

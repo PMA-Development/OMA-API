@@ -17,6 +17,7 @@ namespace OMA_Data.Entities
         public StateEnum State { get; set; }
         [Required]
         public Turbine Turbine { get; set; }
+
         public List<DeviceAction?> DeviceAction { get; set; }
         public List<DeviceData?> DeviceData { get; set; }
     }

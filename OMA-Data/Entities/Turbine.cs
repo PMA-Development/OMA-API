@@ -15,7 +15,7 @@ namespace OMA_Data.Entities
         public string Title { get; set; } = string.Empty;
         public string ClientID { get; set; } = string.Empty;
         [Required]
-        [ForeignKey("DeviceFK")]
+        //[ForeignKey("DeviceFK")]
         public List<Device> Devices { get; set; } = new();
         [Required]
         [ForeignKey("IslandFK")]
