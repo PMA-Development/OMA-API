@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OMA_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -245,7 +245,7 @@ namespace OMA_Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Available = table.Column<bool>(type: "bit", nullable: false),
-                    TaskFK = table.Column<int>(type: "int", nullable: false)
+                    TaskFK = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,8 +254,7 @@ namespace OMA_Data.Migrations
                         name: "FK_Drones_Tasks_TaskFK",
                         column: x => x.TaskFK,
                         principalTable: "Tasks",
-                        principalColumn: "TaskID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TaskID");
                 });
 
             migrationBuilder.CreateTable(

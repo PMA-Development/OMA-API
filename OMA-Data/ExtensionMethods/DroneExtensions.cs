@@ -25,7 +25,7 @@ namespace OMA_Data.ExtensionMethods
                 {
                     DroneID = item.DroneID,
                     Available = item.Available,
-                    TaskID = item.Task.TaskID,
+                    TaskID = item.Task?.TaskID,
                     Title = item.Title
                 });
             }
@@ -45,7 +45,7 @@ namespace OMA_Data.ExtensionMethods
                 {
                     DroneID = item.DroneID,
                     Available = item.Available,
-                    TaskID = item.Task.TaskID,
+                    TaskID = item.Task?.TaskID,
                     Title = item.Title
                 });
             }
@@ -61,7 +61,7 @@ namespace OMA_Data.ExtensionMethods
             {
                 DroneID = source.DroneID,
                 Available = source.Available,
-                Task = await genericTask.GetByIdAsync(source.TaskID),
+                Task = source.TaskID == 0 ? null : await genericTask.GetByIdAsync((int)source.TaskID!),
                 Title = source.Title
             };
 
@@ -77,7 +77,7 @@ namespace OMA_Data.ExtensionMethods
             {
                 DroneID = source.DroneID,
                 Available = source.Available,
-                TaskID = source.Task.TaskID,
+                TaskID = source.Task?.TaskID,
                 Title = source.Title
             };
 

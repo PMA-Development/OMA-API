@@ -106,7 +106,7 @@ namespace OMA_Data.Data
                 .Property<int>("IslandFK");
 
             modelBuilder.Entity<Drone>()
-                .Property<int>("TaskFK");
+                .Property<int?>("TaskFK");
 
             modelBuilder.Entity<Task>()
                 .Property<int>("TurbineFK");

@@ -12,8 +12,8 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241114074528_Init")]
-    partial class Init
+    [Migration("20241118080457_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,7 +239,7 @@ namespace OMA_Data.Migrations
                     b.Property<bool>("Available")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TaskFK")
+                    b.Property<int?>("TaskFK")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -627,9 +627,7 @@ namespace OMA_Data.Migrations
                 {
                     b.HasOne("OMA_Data.Entities.Task", "Task")
                         .WithMany()
-                        .HasForeignKey("TaskFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TaskFK");
 
                     b.Navigation("Task");
                 });

@@ -236,7 +236,7 @@ namespace OMA_Data.Migrations
                     b.Property<bool>("Available")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TaskFK")
+                    b.Property<int?>("TaskFK")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -624,9 +624,7 @@ namespace OMA_Data.Migrations
                 {
                     b.HasOne("OMA_Data.Entities.Task", "Task")
                         .WithMany()
-                        .HasForeignKey("TaskFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TaskFK");
 
                     b.Navigation("Task");
                 });
