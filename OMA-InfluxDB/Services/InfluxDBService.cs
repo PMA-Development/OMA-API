@@ -125,8 +125,8 @@ namespace OMA_InfluxDB.Services
 
                 var fluxQuery = $"from(bucket: \"{_bucket}\")"
                    + $" |> range(start: 0)"
-                   + $" |> filter(fn: (r) => r._measurement == \"{_measurement}\")"
-                   + $" |> filter(fn: (r) => r[\"Type\"] != \"\")"  // Exclude empty "Type"
+                   + $" |> filter(fn: (r) => (r._measurement == \"{_measurement}\" and r.Type != \"\"))"
+                   + $" |> filter(fn: (r) => r[\"_field\"] == \"property_Temperature\" or r[\"_field\"] == \"property_Humidity\" or r[\"_field\"] == \"property_Voltage\" or r[\"_field\"] == \"property_AMP\")"
                    + $" |> group(columns: [\"_measurement\", \"Type\", \"Id\"])"
                    + $" |> last()";
 

@@ -7,9 +7,11 @@ using OMA_InfluxDB.Models;
 using OMA_Data.Entities;
 using OMA_Data.ExtensionMethods;
 using OMA_InfluxDB.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OMA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceDataController(IDataContext context, IGenericRepository<Device> genericDevice, ILoggingService logService, IInfluxDBService influxDB) : Controller
