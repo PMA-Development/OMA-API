@@ -6,6 +6,8 @@ using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.Entities;
+using OMA_InfluxDB;
+using OMA_InfluxDB.Services;
 using OMQ_Mqtt;
 using Serilog;
 using System.Security.Claims;
@@ -63,6 +65,8 @@ namespace OMA_API
 
             builder.Services.AddHostedService<MqttScopedServiceHostedService>();
             builder.Services.AddScoped<IMqttScopedProcessingService, MqttScopedProcessingService>();
+
+            builder.Services.AddScoped<IInfluxDBService, InfluxDBService>();
 
             builder.Services.AddScoped<IGenericRepository<Alarm>, GenericRepository<Alarm>>();
             builder.Services.AddScoped<IGenericRepository<AlarmConfig>, GenericRepository<AlarmConfig>>();

@@ -12,5 +12,6 @@ namespace OMA_Data.Core.Repositories.Interface
     {
         Device? GetByClintId(string id);
         List<Device> GetByTurbineId(int id);
+
     }
 }

@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OMA-Data\OMA-Data.csproj" />
+    <ProjectReference Include="..\OMA-InfluxDB\OMA-InfluxDB.csproj" />
     <ProjectReference Include="..\OMQ-Mqtt\OMQ-Mqtt.csproj" />
   </ItemGroup>
 

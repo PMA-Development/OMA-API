@@ -22,8 +22,16 @@ namespace OMA_Data.Core.Repositories
             .SelectMany(t => t.Devices)               
             .SelectMany(d => d.DeviceData)            
             .ToListAsync();
+        }
 
-
+        public List<DeviceData> GetAllLatestByDevices()
+        {
+            return _context.DeviceData.Include(x => x.Device).GroupBy(dd => dd.Device.DeviceId).Select(g => g.OrderByDescending(dd => dd.Timestamp).FirstOrDefault()).ToList()!;
+        }
+        public async Task<bool> AddRangeAsync(List<DeviceData> entitis)
+        {
+            await _context.DeviceData.AddRangeAsync(entitis);
+            return true;
         }
     }
 }

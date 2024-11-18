@@ -22,10 +22,10 @@ namespace OMA_InfluxDB.Converters
             //
             var customEntity = new SensorEntity
             {
-                Id = Convert.ToString(fluxRecord.GetValueByKey("id"))!,
-                DcpClientId = Convert.ToString(fluxRecord.GetValueByKey("dcp_client_id"))!,
-                TurbineId = Convert.ToString(fluxRecord.GetValueByKey("turbine_id"))!,
-                Type = Convert.ToString(fluxRecord.GetValueByKey("type"))!,
+                Id = Convert.ToString(fluxRecord.GetValueByKey("Id"))!,
+                DcpClientId = Convert.ToString(fluxRecord.GetValueByKey("DcpClientId"))!,
+                TurbineId = Convert.ToString(fluxRecord.GetValueByKey("TurbineId"))!,
+                Type = Convert.ToString(fluxRecord.GetValueByKey("Type"))!,
                 Timestamp = fluxRecord.GetTime().GetValueOrDefault().ToDateTimeUtc(),
                 Attributes = new List<SensorAttributeEntity>()
             };
@@ -40,7 +40,7 @@ namespace OMA_InfluxDB.Converters
                     var attribute = new SensorAttributeEntity
                     {
                         Name = key.Replace("property_", string.Empty),
-                        Value = Convert.ToString(value) ?? string.Empty,
+                        Value = double.Parse(Convert.ToString(value)!),
                     };
 
                     customEntity.Attributes.Add(attribute);
@@ -59,10 +59,10 @@ namespace OMA_InfluxDB.Converters
 
             var customEntity = new SensorEntity
             {
-                Id = Convert.ToString(fluxRecord.GetValueByKey("id"))!,
-                DcpClientId = Convert.ToString(fluxRecord.GetValueByKey("dcp_client_id"))!,
-                TurbineId = Convert.ToString(fluxRecord.GetValueByKey("turbine_id"))!,
-                Type = Convert.ToString(fluxRecord.GetValueByKey("type"))!,
+                Id = Convert.ToString(fluxRecord.GetValueByKey("Id"))!,
+                DcpClientId = Convert.ToString(fluxRecord.GetValueByKey("DcpClientId"))!,
+                TurbineId = Convert.ToString(fluxRecord.GetValueByKey("TurbineId"))!,
+                Type = Convert.ToString(fluxRecord.GetValueByKey("Type"))!,
                 Timestamp = fluxRecord.GetTime().GetValueOrDefault().ToDateTimeUtc(),
                 Attributes = new List<SensorAttributeEntity>()
             };
@@ -73,7 +73,7 @@ namespace OMA_InfluxDB.Converters
                     var attribute = new SensorAttributeEntity
                     {
                         Name = key.Replace("property_", string.Empty),
-                        Value = Convert.ToString(value) ?? string.Empty
+                        Value = double.Parse(Convert.ToString(value)!)
                     };
 
                     customEntity.Attributes.Add(attribute);
@@ -94,10 +94,10 @@ namespace OMA_InfluxDB.Converters
             //
             var point = PointData
                 .Measurement("sensor")
-                .Tag("id", ce.Id.ToString())
-                .Field("dcp_client_id", ce.DcpClientId)
-                .Field("turbine_id", ce.TurbineId)
-                .Field("type", ce.Type)
+                .Tag("Id", ce.Id.ToString())
+                .Field("DcpClientId", ce.DcpClientId)
+                .Tag("Type", ce.Type)
+                .Tag("TurbineId", ce.TurbineId)
                 .Timestamp((DateTimeOffset)ce.Timestamp!, precision);
 
             //
@@ -120,12 +120,6 @@ namespace OMA_InfluxDB.Converters
             {
                 case "id":
                     return "id";
-                case "Type":
-                    return "type";
-                case "DcpClientId":
-                    return "dcp_client_id";
-                case "TurbineId":
-                    return "turbine_id";
                 default:
                     return memberInfo.Name;
             }
@@ -153,6 +147,10 @@ namespace OMA_InfluxDB.Converters
                 case "Value":
                     return MemberType.NamedFieldValue;
                 case "Id":
+                    return MemberType.Tag;
+                case "Type":
+                    return MemberType.Tag;
+                case "TurbineId":
                     return MemberType.Tag;
                 default:
                     return MemberType.Field;

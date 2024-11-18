@@ -15,7 +15,7 @@ namespace OMA_Data.Core.Repositories
     {
         public virtual Device? GetByClintId(string id)
         {
-            return _dbContext.Where(s => s.ClientID == id).FirstOrDefault();
+            return _dbContext.Include(x => x.Turbine).Where(s => s.ClientID == id).FirstOrDefault();
         }
 
         public virtual List<Device> GetByTurbineId(int id)

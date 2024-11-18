@@ -11,5 +11,7 @@ namespace OMA_Data.Core.Repositories.Interface
     public interface IDeviceDataRepository : IGenericRepository<DeviceData>
     {
         Task<List<DeviceData>> GetDeviceDataForTurbineAsync(int Id);
+        List<DeviceData> GetAllLatestByDevices();
+        Task<bool> AddRangeAsync(List<DeviceData> entitis);
     }
 }
