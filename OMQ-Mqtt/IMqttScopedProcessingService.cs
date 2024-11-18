@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OMQ_Mqtt
+namespace OMA_Mqtt
 {
     public interface IMqttScopedProcessingService
     {

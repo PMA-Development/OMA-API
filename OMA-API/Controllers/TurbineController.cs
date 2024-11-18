@@ -7,8 +7,8 @@ using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using OMA_Data.Enums;
 using OMA_Data.ExtensionMethods;
-using OMQ_Mqtt;
-using OMQ_Mqtt.Models;
+using OMA_Mqtt;
+using OMA_Mqtt.Models;
 
 namespace OMA_API.Controllers
 {

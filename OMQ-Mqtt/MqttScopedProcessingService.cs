@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MQTTnet;
 using MQTTnet.Client;
-using OMQ_Mqtt.Models;
+using OMA_Mqtt.Models;
 using System.Text;
 using Newtonsoft.Json;
 using MQTTnet.Server;
@@ -11,7 +11,7 @@ using OMA_Data.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-namespace OMQ_Mqtt
+namespace OMA_Mqtt
 {
     public class MqttScopedProcessingService : IMqttScopedProcessingService
     {

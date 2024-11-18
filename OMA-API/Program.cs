@@ -8,7 +8,7 @@ using OMA_Data.Data;
 using OMA_Data.Entities;
 using OMA_InfluxDB;
 using OMA_InfluxDB.Services;
-using OMQ_Mqtt;
+using OMA_Mqtt;
 using Serilog;
 using System.Security.Claims;
 

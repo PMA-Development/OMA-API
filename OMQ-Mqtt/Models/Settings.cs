@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OMQ_Mqtt.Models
+namespace OMA_Mqtt.Models
 {
     public class Settings
     {
