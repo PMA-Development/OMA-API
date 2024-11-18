@@ -13,13 +13,10 @@ namespace OMA_Data.Data
         IUserRepository UserRepository { get; }
         IAlarmConfigRepository AlarmConfigRepository { get; }
         IAlarmRepository AlarmRepository { get; }
-        IAttributeRepository AttributeRepository { get; }
         IDroneRepository DroneRepository { get; }
         IIslandRepository IslandRepository { get; }
         ILogRepository LogRepository { get; }
         IDeviceRepository DeviceRepository { get; }
-        IDeviceActionRepository DeviceActionRepository { get; }
-        IDeviceDataRepository DeviceDataRepository { get; }
         ITaskRepository TaskRepository { get; }
         ITurbineRepository TurbineRepository { get; }
 

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Attribute = OMA_Data.Entities.Attribute;
 using Task = OMA_Data.Entities.Task;
 
 namespace OMA_Data.Data
@@ -15,10 +14,7 @@ namespace OMA_Data.Data
     {
         public DbSet<Turbine> Users { get; set; }
         public DbSet<Log> Logs { get; set; }
-        public DbSet<OMA_Data.Entities.Attribute> Attributes { get; set; }
-        public DbSet<DeviceData> DeviceData { get; set; }
         public DbSet<Device> Device { get; set; }
-        public DbSet<DeviceAction> DeviceAction { get; set; }
         public DbSet<Turbine> Turbines { get; set; }
         public DbSet<OMA_Data.Entities.Task> Tasks { get; set; }
         public DbSet<Drone> Drones { get; set; }
@@ -69,24 +65,6 @@ namespace OMA_Data.Data
             modelBuilder.Entity<Device>()
                 .Navigation(x => x.Turbine)
                 .AutoInclude();
-            modelBuilder.Entity<Device>()
-                .Navigation(x => x.DeviceAction)
-                .AutoInclude();
-            modelBuilder.Entity<Device>()
-                .Navigation(x => x.DeviceData)
-                .AutoInclude();
-            modelBuilder.Entity<DeviceAction>()
-                .Navigation(x => x.Device)
-                .AutoInclude();
-            modelBuilder.Entity<DeviceData>()
-                .Navigation(x => x.Device)
-                .AutoInclude();
-            modelBuilder.Entity<DeviceData>()
-                .Navigation(x => x.Attributes)
-                .AutoInclude();
-            modelBuilder.Entity<Attribute>()
-                .Navigation(x => x.DeviceData)
-                .AutoInclude();
             #endregion
 
             //might need this to avoid Cascade Delete on Tasks, now it just deletes the UserFk
@@ -116,15 +94,6 @@ namespace OMA_Data.Data
 
             modelBuilder.Entity<Turbine>()
                 .Property<int>("IslandFK");
-
-            modelBuilder.Entity<DeviceData>()
-                .Property<int>("DeviceFK");
-
-            modelBuilder.Entity<DeviceData>()
-                .HasOne(d => d.Device)
-                .WithMany(d => d.DeviceData)
-                .HasForeignKey("DeviceFK") 
-                .IsRequired();
 
             modelBuilder.Entity<Island>().HasData(
                 new { IslandID = 1, Title = "Island One", ClientID = "ClientA", Abbreviation = "IS1" },
@@ -175,18 +144,6 @@ namespace OMA_Data.Data
             modelBuilder.Entity<Device>().HasData(
                 new { DeviceId = 1, Type = "Sensor", ClientID = "ClientA", State = StateEnum.On, IslandFK = 1, TurbineID = 1 },
                 new { DeviceId = 2, Type = "Actuator", ClientID = "ClientB", State = StateEnum.On, IslandFK = 1, TurbineID = 1 }
-            );
-
-            modelBuilder.Entity<DeviceData>().HasData(
-                new { DeviceDataID = 1, Type = "TemperatureData", Timestamp = DateTime.Now.AddMinutes(-30), DeviceFK = 1 },
-                new { DeviceDataID = 2, Type = "PressureData", Timestamp = DateTime.Now.AddMinutes(-20), DeviceFK = 2 },
-                new { DeviceDataID = 3, Type = "HumidityData", Timestamp = DateTime.Now.AddMinutes(-10), DeviceFK = 1 }
-            );
-
-            modelBuilder.Entity<Attribute>().HasData(
-                new { AttributeID = 1, Name = "Temperature", Value = "22.5", DeviceDataID = 1 },
-                new { AttributeID = 2, Name = "Pressure", Value = "1013", DeviceDataID = 2 },
-                new { AttributeID = 3, Name = "Humidity", Value = "45%", DeviceDataID = 3 }
             );
 
         }

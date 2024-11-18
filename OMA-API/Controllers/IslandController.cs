@@ -58,29 +58,6 @@ namespace OMA_API.Controllers
             return Results.Ok(taskDTOS);
         }
 
-        [HttpPost(template: "add-Island")]
-        [Produces<int>]
-        public async Task<IResult> Add([FromBody] IslandDTO? DTO)
-        {
-            if (DTO == null)
-                return Results.NoContent();
-
-            Island item = DTO.FromDTO(_genericTurbine);
-            if (item == null)
-                return Results.BadRequest("Failed to format island.");
-
-            try
-            {
-                await _context.IslandRepository.Add(item);
-                await _context.CommitAsync();
-            }
-            catch (Exception)
-            {
-                return Results.BadRequest("Failed to add island.");
-            }
-            return Results.Ok(item.IslandID);
-        }
-
         [HttpPut(template: "update-Island")]
         public async Task<IResult> Update([FromBody] IslandDTO? DTO)
         {

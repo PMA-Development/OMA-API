@@ -67,10 +67,7 @@ namespace OMA_API
 
             builder.Services.AddScoped<IGenericRepository<Alarm>, GenericRepository<Alarm>>();
             builder.Services.AddScoped<IGenericRepository<AlarmConfig>, GenericRepository<AlarmConfig>>();
-            builder.Services.AddScoped<IGenericRepository<OMA_Data.Entities.Attribute>, GenericRepository<OMA_Data.Entities.Attribute>>();
             builder.Services.AddScoped<IGenericRepository<Device>, GenericRepository<Device>>();
-            builder.Services.AddScoped<IGenericRepository<DeviceAction>, GenericRepository<DeviceAction>>();
-            builder.Services.AddScoped<IGenericRepository<DeviceData>, GenericRepository<DeviceData>>();
             builder.Services.AddScoped<IGenericRepository<Drone>, GenericRepository<Drone>>();
             builder.Services.AddScoped<IGenericRepository<Island>, GenericRepository<Island>>();
             builder.Services.AddScoped<IGenericRepository<OMA_Data.Entities.Log>, GenericRepository<OMA_Data.Entities.Log>>();

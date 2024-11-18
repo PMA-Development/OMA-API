@@ -12,10 +12,8 @@ namespace OMA_API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class DeviceController(IDataContext context, IGenericRepository<DeviceData> genericDeviceData, ILoggingService logService, IGenericRepository<DeviceAction> genericDeviceAction, IGenericRepository<Turbine> genericTurbine) : Controller
+    public class DeviceController(IDataContext context, ILoggingService logService, IGenericRepository<Turbine> genericTurbine) : Controller
     {
-        private readonly IGenericRepository<DeviceData> _genericDeviceData = genericDeviceData;
-        private readonly IGenericRepository<DeviceAction> _genericDeviceAction = genericDeviceAction;
         private readonly IGenericRepository<Turbine> _genericTurbine = genericTurbine;
 
         private readonly IDataContext _context = context;
@@ -66,38 +64,6 @@ namespace OMA_API.Controllers
             return Results.Ok(deviceDTOs);
         }
 
-        [HttpPost(template: "add-Device")]
-        [Produces<int>]
-        public async Task<IResult> Add([FromBody] DeviceDTO? DTO)
-        {
-            if (DTO == null)
-            {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add device, but failed in parsing device to API.");
-                return Results.NoContent();
-            }
-
-            Device item = await DTO.FromDTO(_genericDeviceData, _genericDeviceAction, _genericTurbine);
-            if (item == null)
-            {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add device, but failed to format it.");
-                return Results.BadRequest("Failed to format device.");
-            }
-
-            try
-            {
-                await _context.DeviceRepository.Add(item);
-                await _context.CommitAsync();
-            }
-            catch (Exception)
-            {
-                await _logService.AddLog(LogLevel.Critical, $"Attempted to add device, but failed to add the device to the database.");
-                return Results.BadRequest("Failed to add device.");
-            }
-
-            await _logService.AddLog(LogLevel.Information, $"Succeded in adding device.");
-            return Results.Ok(item.DeviceId);
-        }
-
         [HttpPut(template: "update-Device")]
         public async Task<IResult> Update([FromBody] DeviceDTO? DTO)
         {
@@ -107,7 +73,7 @@ namespace OMA_API.Controllers
                 return Results.NoContent();
             }
 
-            Device item = await DTO.FromDTO(_genericDeviceData, _genericDeviceAction, _genericTurbine);
+            Device item = await DTO.FromDTO(_genericTurbine);
             if (item == null)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to update device with id: {DTO.DeviceId}, but failed to format it.");

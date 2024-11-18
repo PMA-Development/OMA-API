@@ -54,7 +54,7 @@ namespace OMA_Data.ExtensionMethods
             return DTOs;
         }
 
-        public static async Task<Device?> FromDTO(this DeviceDTO source, IGenericRepository<DeviceData> genericDeviceData, IGenericRepository<DeviceAction> genericDeviceAction, IGenericRepository<Turbine> genericTurbine)
+        public static async Task<Device?> FromDTO(this DeviceDTO source, IGenericRepository<Turbine> genericTurbine)
         {
             if (source == null)
                 return default;
@@ -65,8 +65,6 @@ namespace OMA_Data.ExtensionMethods
                 State = source.State,
                 Type = source.Type,
                 ClientID = source.ClientID,
-                DeviceData = genericDeviceData.GetAll().Where(x => x.Device.DeviceId == source.DeviceId)?.ToList(),
-                DeviceAction = genericDeviceAction.GetAll().Where(x => x.Device.DeviceId == source.DeviceId)?.ToList(),
                 Turbine = await genericTurbine.GetByIdAsync(source.TurbineID)
             };
             return item;

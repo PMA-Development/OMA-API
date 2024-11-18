@@ -87,38 +87,6 @@ namespace OMA_API.Controllers
             return Results.Ok(turbineDTOs);
         }
 
-        [HttpPost(template: "add-Turbine")]
-        [Produces<int>]
-        public async Task<IResult> Add([FromBody] TurbineDTO? DTO)
-        {
-            if (DTO == null)
-            {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add turbine, but failed in parsing turbine to API.");
-                return Results.NoContent();
-            }
-
-            Turbine item = await DTO.FromDTO(_genericIsland, _genericDevice);
-            if (item == null)
-            {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add turbine, but failed to format it.");
-                return Results.BadRequest("Failed to format turbine.");
-            }
-
-            try
-            {
-                await _context.TurbineRepository.Add(item);
-                await _context.CommitAsync();
-            }
-            catch (Exception)
-            {
-                await _logService.AddLog(LogLevel.Critical, $"Attempted to add turbine, but failed to add the turbine to the database.");
-                return Results.BadRequest("Failed to add turbine.");
-            }
-
-            await _logService.AddLog(LogLevel.Information, $"Succeded in adding turbine.");
-            return Results.Ok(item.TurbineID);
-        }
-
         [HttpPut(template: "update-Turbine")]
         public async Task<IResult> Update([FromBody] TurbineDTO? DTO)
         {
