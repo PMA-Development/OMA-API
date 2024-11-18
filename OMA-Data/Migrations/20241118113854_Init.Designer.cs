@@ -12,12 +12,8 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-<<<<<<<< HEAD:OMA-Data/Migrations/20241118080457_init.Designer.cs
-    [Migration("20241118080457_init")]
-========
-    [Migration("20241115172000_init")]
->>>>>>>> MoreSeedData:OMA-Data/Migrations/20241115172000_init.Designer.cs
-    partial class init
+    [Migration("20241118113854_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -277,21 +273,21 @@ namespace OMA_Data.Migrations
                         {
                             DeviceDataID = 1,
                             DeviceFK = 1,
-                            Timestamp = new DateTime(2024, 11, 15, 17, 50, 0, 314, DateTimeKind.Local).AddTicks(4985),
+                            Timestamp = new DateTime(2024, 11, 18, 12, 8, 53, 846, DateTimeKind.Local).AddTicks(7021),
                             Type = "TemperatureData"
                         },
                         new
                         {
                             DeviceDataID = 2,
                             DeviceFK = 2,
-                            Timestamp = new DateTime(2024, 11, 15, 18, 0, 0, 314, DateTimeKind.Local).AddTicks(5001),
+                            Timestamp = new DateTime(2024, 11, 18, 12, 18, 53, 846, DateTimeKind.Local).AddTicks(7096),
                             Type = "PressureData"
                         },
                         new
                         {
                             DeviceDataID = 3,
                             DeviceFK = 1,
-                            Timestamp = new DateTime(2024, 11, 15, 18, 10, 0, 314, DateTimeKind.Local).AddTicks(5002),
+                            Timestamp = new DateTime(2024, 11, 18, 12, 28, 53, 846, DateTimeKind.Local).AddTicks(7099),
                             Type = "HumidityData"
                         });
                 });

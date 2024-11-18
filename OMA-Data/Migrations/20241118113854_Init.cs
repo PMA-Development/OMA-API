@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OMA_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -354,9 +354,9 @@ namespace OMA_Data.Migrations
                 columns: new[] { "DeviceDataID", "DeviceFK", "Timestamp", "Type" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 11, 15, 17, 50, 0, 314, DateTimeKind.Local).AddTicks(4985), "TemperatureData" },
-                    { 2, 2, new DateTime(2024, 11, 15, 18, 0, 0, 314, DateTimeKind.Local).AddTicks(5001), "PressureData" },
-                    { 3, 1, new DateTime(2024, 11, 15, 18, 10, 0, 314, DateTimeKind.Local).AddTicks(5002), "HumidityData" }
+                    { 1, 1, new DateTime(2024, 11, 18, 12, 8, 53, 846, DateTimeKind.Local).AddTicks(7021), "TemperatureData" },
+                    { 2, 2, new DateTime(2024, 11, 18, 12, 18, 53, 846, DateTimeKind.Local).AddTicks(7096), "PressureData" },
+                    { 3, 1, new DateTime(2024, 11, 18, 12, 28, 53, 846, DateTimeKind.Local).AddTicks(7099), "HumidityData" }
                 });
 
             migrationBuilder.InsertData(
