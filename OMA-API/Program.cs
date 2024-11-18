@@ -53,6 +53,7 @@ namespace OMA_API
                     };
                     options.RequireHttpsMetadata = true; 
                 });
+
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("HasHotlineUser", policy => policy.RequireRole("Hotline-User"));

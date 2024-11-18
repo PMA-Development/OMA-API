@@ -65,7 +65,7 @@ namespace OMA_API.Controllers
         }
 
 
-        //TODO: this has to be moved to the attribute controller
+        //TODO: Change how we get data from the database
         [HttpGet(template: "get-AttributeDataByTurbineId")]
         [Produces<List<AttributeDTO>>]
         public async Task<IResult> AttributeByTurbineId(int Id)

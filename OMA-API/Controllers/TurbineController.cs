@@ -174,13 +174,20 @@ namespace OMA_API.Controllers
             return Results.Ok();
         }
 
-
+        //TODO: Better summary
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="DTO"></param>
+        /// <param name="action"> String    , Settings</param>
+        /// <param name="value">1 = on, 2 = off, 3 = ServiceMode</param>
+        /// <returns></returns>
         [HttpPost(template: "action-Turbine")]
-        public async Task<IResult> actionChangeState([FromBody] TurbineDTO? DTO, string action, int value)
+        public async Task<IResult> actionChangeState(int Id, string action, int value)
         {
-            if (DTO == null)
+            if (Id == 0)
                 return Results.NoContent();
-            Turbine? item = await DTO.FromDTO(_genericIsland, _genericDevice);
+            Turbine? item = await _context.TurbineRepository.GetByIdAsync(Id);
             if (item == null)
                 return Results.BadRequest("Failed to format turbine.");
 
