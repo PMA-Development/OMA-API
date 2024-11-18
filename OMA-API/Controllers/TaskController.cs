@@ -112,60 +112,60 @@ namespace OMA_API.Controllers
 
 
         //TODO: Maybe??? use this for drones. not sure yet
-        //[HttpPut(template: "assign-TaskToFirstAvailableDrone")]
-        //public async Task<IResult> AssignTaskToFirstAvailableDrone([FromQuery] int taskId)
-        //{
-        //    if (taskId <= 0)
-        //    {
-        //        await _logService.AddLog(LogLevel.Error, "Attempted to assign a task to a drone, but the task ID was invalid.");
-        //        return Results.BadRequest("Invalid task ID.");
-        //    }
+        [HttpPut(template: "assign-TaskToFirstAvailableDrone")]
+        public async Task<IResult> AssignTaskToFirstAvailableDrone([FromQuery] int taskId)
+        {
+            if (taskId <= 0)
+            {
+                await _logService.AddLog(LogLevel.Error, "Attempted to assign a task to a drone, but the task ID was invalid.");
+                return Results.BadRequest("Invalid task ID.");
+            }
 
-     
-        //    var task = await _context.TaskRepository.GetByIdAsync(taskId);
 
-        //    if (task == null)
-        //    {
-        //        await _logService.AddLog(LogLevel.Warning, $"No task found with id: {taskId}.");
-        //        return Results.NotFound($"Task with id {taskId} not found.");
-        //    }
+            var task = await _context.TaskRepository.GetByIdAsync(taskId);
 
-        //    if (task.IsCompleted)
-        //    {
-        //        await _logService.AddLog(LogLevel.Warning, $"Task with id: {taskId} is already completed");
-        //        return Results.BadRequest("Task is already completed");
-        //    }
+            if (task == null)
+            {
+                await _logService.AddLog(LogLevel.Warning, $"No task found with id: {taskId}.");
+                return Results.NotFound($"Task with id {taskId} not found.");
+            }
 
- 
-        //    var availableDrone = await _context.DroneRepository
-        //                                       .GetAll()
-        //                                       .Where(d => d.Available)
-        //                                       .OrderBy(d => d.DroneID)
-        //                                       .FirstOrDefaultAsync();
+            if (task.IsCompleted)
+            {
+                await _logService.AddLog(LogLevel.Warning, $"Task with id: {taskId} is already completed");
+                return Results.BadRequest("Task is already completed");
+            }
 
-        //    if (availableDrone == null)
-        //    {
-        //        await _logService.AddLog(LogLevel.Warning, "No available drones found.");
-        //        return Results.NotFound("No available drones found.");
-        //    }
 
-        //    try
-        //    {
-        //        availableDrone.Task = task;
-        //        availableDrone.Available = false;
+            var availableDrone = await _context.DroneRepository
+                                               .GetAll()
+                                               .Where(d => d.Available)
+                                               .OrderBy(d => d.DroneID)
+                                               .FirstOrDefaultAsync();
 
-        //        _context.DroneRepository.Update(availableDrone);
-        //        await _context.CommitAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await _logService.AddLog(LogLevel.Critical, $"Failed to assign task with id: {taskId} to drone with id: {availableDrone.DroneID}. Error: {ex.Message}");
-        //        return Results.BadRequest("Failed to assign task to drone.");
-        //    }
+            if (availableDrone == null)
+            {
+                await _logService.AddLog(LogLevel.Warning, "No available drones found.");
+                return Results.NotFound("No available drones found.");
+            }
 
-        //    await _logService.AddLog(LogLevel.Information, $"Assigned task with id: {taskId} to drone with id: {availableDrone.DroneID}.");
-        //    return Results.Ok("Drone's been Reserved/Send");
-        //}
+            try
+            {
+                availableDrone.Task = task;
+                availableDrone.Available = false;
+
+                _context.DroneRepository.Update(availableDrone);
+                await _context.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await _logService.AddLog(LogLevel.Critical, $"Failed to assign task with id: {taskId} to drone with id: {availableDrone.DroneID}. Error: {ex.Message}");
+                return Results.BadRequest("Failed to assign task to drone.");
+            }
+
+            await _logService.AddLog(LogLevel.Information, $"Assigned task with id: {taskId} to drone with id: {availableDrone.DroneID}.");
+            return Results.Ok("Drone's been Reserved/Send");
+        }
 
 
 

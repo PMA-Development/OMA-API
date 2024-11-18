@@ -5,6 +5,7 @@ using OMA_Data.Core.Utils;
 using OMA_Data.Data;
 using OMA_Data.DTOs;
 using OMA_Data.Entities;
+using OMA_Data.Enums;
 using OMA_Data.ExtensionMethods;
 using OMQ_Mqtt;
 using OMQ_Mqtt.Models;
@@ -196,10 +197,19 @@ namespace OMA_API.Controllers
 
             foreach (var device in _context.DeviceRepository.GetByTurbineId(item.TurbineID))
             {
+                device.State = value switch
+                {
+                    1 => StateEnum.On,
+                    2 => StateEnum.Off,
+                    3 => StateEnum.Service,
+                    _ => device.State 
+                };
+
                 ActionRequest actionRequest = new ActionRequest { Action = action, ClientId = device.ClientID, Value = value };
                 MqttScopedProcessingService.ActionQueue.Enqueue(actionRequest);
+                 _context.DeviceRepository.Update(device);
             }
-
+            await _context.CommitAsync();
             return Results.Ok();
         }
     }

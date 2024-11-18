@@ -77,7 +77,6 @@ namespace OMA_API.Controllers
                 return Results.NotFound("Device data not found.");
             }
 
-
             List<AttributeDTO> attributeDTO = items.ToDTOs().ToList();
 
             if (attributeDTO == null)
