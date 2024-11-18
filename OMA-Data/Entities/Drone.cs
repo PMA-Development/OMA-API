@@ -15,7 +15,6 @@ namespace OMA_Data.Entities
         public string Title { get; set; } = string.Empty;
         [Required]
         public bool Available { get; set; }
-        [Required]
         [ForeignKey("TaskFK")]
         public Task Task { get; set; } = new();
     }
