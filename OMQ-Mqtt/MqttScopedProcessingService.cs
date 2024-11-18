@@ -374,7 +374,20 @@ namespace OMA_Mqtt
         {
             if (AllowedStates.Contains(action.Value))
             {
-                ChangeState changeState = new ChangeState { Value = action.Value };
+                string value = string.Empty;
+                if (action.Value == 1)
+                {
+                    value = "On";
+                }
+                else if (action.Value == 2)
+                {
+                    value = "Off";
+                }
+                else if (action.Value == 3)
+                {
+                    value = "ServiceMode";
+                }
+                ChangeState changeState = new ChangeState { Value = value };
                 var applicationMessage = new MqttApplicationMessageBuilder()
                     .WithTopic($"{_mqttTopicOutbound}/{action.ClientId}/changestate")
                     .WithPayload(JsonConvert.SerializeObject(changeState))

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OMA_Data.Data;
-using OMA_Data.Models;
+using OMA_InfluxDB.Models;
 using OMA_InfluxDB.Converters;
 using OMA_InfluxDB.Entities;
 using System;

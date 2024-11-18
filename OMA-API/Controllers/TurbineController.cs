@@ -12,7 +12,7 @@ using OMA_Mqtt.Models;
 
 namespace OMA_API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TurbineController(IDataContext context, IGenericRepository<Island> genericIsland, ILoggingService logService, IGenericRepository<Device> genericDevice) : Controller

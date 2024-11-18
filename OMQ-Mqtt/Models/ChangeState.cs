@@ -9,6 +9,6 @@ namespace OMA_Mqtt.Models
     // Parsed object to the MQTT network
     public class ChangeState
     {
-        public required int Value { get; set; }
+        public required string Value { get; set; }
     }
 }

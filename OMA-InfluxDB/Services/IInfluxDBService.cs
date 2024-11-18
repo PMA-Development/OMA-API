@@ -1,4 +1,4 @@
-﻿using OMA_Data.Models;
+﻿using OMA_InfluxDB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

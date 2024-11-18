@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
 using OMA_Data.Data;
-using OMA_Data.Models;
+using OMA_InfluxDB.Models;
 using OMA_Data.Entities;
 using OMA_Data.ExtensionMethods;
 using OMA_InfluxDB.Services;
@@ -23,12 +23,12 @@ namespace OMA_API.Controllers
 
         [HttpGet(template: "get-DeviceDatas")]
         [RequestTimeout(milliseconds: 200000)]
-        [Produces<List<OMA_Data.Models.DeviceData>>]
+        [Produces<List<DeviceData>>]
         public async Task<IResult> GetDeviceDatas()
         {
             
 
-            List<OMA_Data.Models.DeviceData> deviceData = await _influxDB.GetAllDeviceData();
+            List<DeviceData> deviceData = await _influxDB.GetAllDeviceData();
             if (deviceData.Count == 0)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData, but failed to format them.");
@@ -40,12 +40,12 @@ namespace OMA_API.Controllers
         }
 
         [HttpGet(template: "get-LatestDeviceDatas")]
-        [Produces<List<OMA_Data.Models.DeviceData>>]
+        [Produces<List<DeviceData>>]
         public async Task<IResult> GetLatestDeviceDatas()
         {
             
 
-            List<OMA_Data.Models.DeviceData> deviceData = await _influxDB.GetLatestDeviceData();
+            List<DeviceData> deviceData = await _influxDB.GetLatestDeviceData();
             if (deviceData.Count == 0)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData, but failed to format them.");
@@ -62,7 +62,7 @@ namespace OMA_API.Controllers
         [Produces<List<DeviceData>>]
         public async Task<IResult> DeviceDataByTurbineId(int Id)
         {
-            List<OMA_Data.Models.DeviceData> deviceData = await _influxDB.GetDeviceDataByTurbineId(Id);
+            List<DeviceData> deviceData = await _influxDB.GetDeviceDataByTurbineId(Id);
             if (deviceData.Count == 0)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData, but failed to format them.");
