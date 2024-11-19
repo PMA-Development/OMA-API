@@ -280,7 +280,7 @@ namespace OMA_Mqtt
                 if (island == null)
                     return;
 
-                OMA_Data.Entities.Turbine turbineEntity = new OMA_Data.Entities.Turbine { ClientID = deviceBeacon.Id, Island = island };
+                OMA_Data.Entities.Turbine turbineEntity = new OMA_Data.Entities.Turbine { Title = deviceBeacon.Id, ClientID = deviceBeacon.Id, Island = island };
                 try
                 {
                     await dbContext.TurbineRepository.Add(turbineEntity);
