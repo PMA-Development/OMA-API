@@ -83,7 +83,7 @@ namespace OMA_API.Controllers
                 return Results.BadRequest("Failed to format tasks.");
             }
 
-            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all alarmConfigs.");
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all Uncompleted tasks.");
             return Results.Ok(taskDTOs);
         }
 
