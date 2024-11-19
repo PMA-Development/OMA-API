@@ -64,37 +64,6 @@ namespace OMA_API.Controllers
             return Results.Ok(alarmDTOs);
         }
 
-        [HttpPost(template: "add-Alarm")]
-        [Produces<int>]
-        public async Task<IResult> Add([FromBody] AlarmDTO? DTO) //TODO : Might remove later.
-        {
-            if (DTO == null)
-            {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add alarms, but failed in parsing alarms to API.");
-                return Results.NoContent();
-            }
-
-            Alarm item = await DTO.FromDTO(genericIsland, genericTurbine);
-            if (item == null)
-            {
-                await _logService.AddLog(LogLevel.Error, $"Attempted to add alarm, but failed to format it.");
-                return Results.BadRequest("Failed to format alarm.");
-            }
-
-            try
-            {
-                await _context.AlarmRepository.Add(item);
-                await _context.CommitAsync();
-            }
-            catch (Exception)
-            {
-                await _logService.AddLog(LogLevel.Critical, $"Attempted to add alarm, but failed to add the alarm to the database.");
-                return Results.BadRequest("Failed to add alarm.");
-            }
-
-            await _logService.AddLog(LogLevel.Information, $"Succeded in adding alarm.");
-            return Results.Ok(item.AlarmID);
-        }
 
         [HttpDelete(template: "delete-Alarm")]
         public async Task<IResult> Delete(int id)

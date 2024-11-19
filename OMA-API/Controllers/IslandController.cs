@@ -49,15 +49,6 @@ namespace OMA_API.Controllers
             return Results.Ok(islandDTOs);
         }
 
-        [HttpGet(template: "get-tasks-from-island")]
-        [Produces<List<TaskDTO>>]
-        public IResult GetTasksFromIsland(int id)
-        {
-            var list = _context.IslandRepository.GetTaskForIsland(id);
-            List<TaskDTO> taskDTOS = list.ToDTOs().ToList();
-            return Results.Ok(taskDTOS);
-        }
-
         [HttpPut(template: "update-Island")]
         public async Task<IResult> Update([FromBody] IslandDTO? DTO)
         {
