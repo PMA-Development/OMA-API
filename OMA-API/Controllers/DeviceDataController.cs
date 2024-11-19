@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace OMA_API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceDataController(IDataContext context, IGenericRepository<Device> genericDevice, ILoggingService logService, IInfluxDBService influxDB) : Controller
@@ -58,13 +58,29 @@ namespace OMA_API.Controllers
             return Results.Ok(deviceData);
         }
 
-        //TODO: this has to be moved to the attribute controller
         [HttpGet(template: "get-DeviceDataByTurbineId")]
         [RequestTimeout(milliseconds: 200000)]
         [Produces<List<DeviceData>>]
         public async Task<IResult> DeviceDataByTurbineId(int Id)
         {
             List<DeviceData> deviceData = await _influxDB.GetDeviceDataByTurbineId(Id);
+            if (deviceData.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData, but failed to format them.");
+                return Results.BadRequest("Failed to format device datas.");
+            }
+
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all deviceData.");
+            return Results.Ok(deviceData);
+
+        }
+
+        [HttpGet(template: "get-LatestDeviceDataByTurbineId")]
+        [RequestTimeout(milliseconds: 200000)]
+        [Produces<List<DeviceData>>]
+        public async Task<IResult> LatestDeviceDataByTurbineId(int Id)
+        {
+            List<DeviceData> deviceData = await _influxDB.GetLatestDeviceDataByTurbineId(Id);
             if (deviceData.Count == 0)
             {
                 await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData, but failed to format them.");

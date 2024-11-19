@@ -30,22 +30,36 @@ namespace OMA_InfluxDB.Converters
                 Attributes = new List<SensorAttributeEntity>()
             };
 
+            SensorAttributeEntity attribute = new SensorAttributeEntity { Name="" };
+
             foreach (var (key, value) in fluxRecord.Values)
             {
+                var myval = fluxRecord.GetValueByKey("property_Voltage");
+                
+                fluxRecord.Values.TryGetValue("property_Voltage", out myval);
                 //
                 // Parse SubCollection values
                 //
                 if (key.StartsWith("property_"))
                 {
-                    var attribute = new SensorAttributeEntity
+                    customEntity.Attributes.Add(new SensorAttributeEntity
                     {
                         Name = key.Replace("property_", string.Empty),
                         Value = double.Parse(Convert.ToString(value)!),
-                    };
-
-                    customEntity.Attributes.Add(attribute);
+                    });
+                }
+                else if (key == "_field" && value.ToString()!.StartsWith("property_"))
+                {
+                    attribute!.Name = value.ToString()!.Replace("property_", string.Empty);
+                }
+                else if (key == "_value")
+                {
+                    attribute!.Value = double.Parse(Convert.ToString(value)!);
                 }
             }
+
+            if (attribute.Name != string.Empty)
+                customEntity.Attributes.Add(attribute);
 
             return (T)Convert.ChangeType(customEntity, typeof(T));
         }

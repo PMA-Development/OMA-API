@@ -158,6 +158,58 @@ namespace OMA_InfluxDB.Services
                 _logger.LogError(e, "InfluxDB - GetLatestByClientId: ");
                 throw;
             }
+        }  
+
+        public async Task<List<DeviceData>> GetLatestDeviceDataByTurbineId(int turbineId)
+        {
+            List<DeviceData> deviceDatas = new List<DeviceData>();
+            OMA_Data.Entities.Turbine turbine = await _context.TurbineRepository.GetByIdAsync(turbineId);
+            if (turbine == null)
+            {
+                return deviceDatas;
+            }
+            List<OMA_Data.Entities.Device> devices = _context.DeviceRepository.GetAll().ToList();
+            IsConnected();
+            _logger.LogDebug("InfluxDB - ReadAll: Before query");
+            try
+            {
+                var queryApi = _client!.GetQueryApi();
+
+                var fluxQuery = $"from(bucket: \"{_bucket}\")"
+                   + $" |> range(start: 0)"
+                   + $" |> filter(fn: (r) => (r._measurement == \"{_measurement}\" and r.TurbineId == \"{turbine.ClientID}\" and r.Type != \"\"))"
+                   + $" |> filter(fn: (r) => r[\"_field\"] == \"property_AMP\" or r[\"_field\"] == \"property_Humidity\" or r[\"_field\"] == \"property_Temperature\" or r[\"_field\"] == \"property_Voltage\")"
+                   + $" |> group(columns: [\"_measurement\", \"TurbineId\", \"Type\", \"Id\"])"
+                   + $" |> last()";
+
+                var tables = await queryApi.QueryAsync(fluxQuery, _org);
+
+                if (tables != null)
+                {
+                    foreach (var fluxRecord in tables.SelectMany(fluxTable => fluxTable.Records))
+                    {
+                        var sensorData = _converter.ConvertToEntity<SensorEntity>(fluxRecord);
+                        var device = devices.Where(x => x.ClientID == sensorData.Id).FirstOrDefault();
+                        if (device != null)
+                        {
+                            var deviceData = new DeviceData { DeviceID = device.DeviceId, Type = sensorData.Type, Timestamp = sensorData.Timestamp.GetValueOrDefault().DateTime, TurbineID = device.Turbine.TurbineID };
+                            foreach (var itemAttribute in sensorData.Attributes)
+                            {
+                                deviceData.Attributes.Add(new DeviceAttribute { Name = itemAttribute.Name, Value = itemAttribute.Value });
+                            }
+                            deviceDatas.Add(deviceData);
+
+                        }
+                    }
+                }
+                _logger.LogDebug("InfluxDB - ReadAll: After query");
+                return deviceDatas;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "InfluxDB - GetLatestByClientId: ");
+                throw;
+            }
         }        
 
         public async Task<List<DeviceData>> GetDeviceDataByTurbineId(int turbineId, int agregateMins = 15)
