@@ -160,14 +160,32 @@ namespace OMA_InfluxDB.Services
             }
         }  
 
-        public async Task<List<DeviceData>> GetLatestDeviceDataByTurbineId(int turbineId)
+        public async Task<Dictionary<int, List<DeviceData>>> GetTurbinesLatestDeviceData()
+        {
+            Dictionary<int, List<DeviceData>> turbineDict = new Dictionary<int, List<DeviceData>>();
+            List<OMA_Data.Entities.Turbine> turbineEntities = _context.TurbineRepository.GetAll().ToList();
+
+            foreach (var item in turbineEntities)
+            {
+                var result = await GetLatestDeviceDataByTurbineId(item.TurbineID, item.ClientID);
+                turbineDict.Add(item.TurbineID, result);
+            }
+            return turbineDict;
+        }
+
+        public async Task<List<DeviceData>> GetLatestDeviceDataByTurbineId(int turbineId, string clientId="")
         {
             List<DeviceData> deviceDatas = new List<DeviceData>();
-            OMA_Data.Entities.Turbine turbine = await _context.TurbineRepository.GetByIdAsync(turbineId);
-            if (turbine == null)
+            if (clientId == "")
             {
-                return deviceDatas;
+                OMA_Data.Entities.Turbine turbine = await _context.TurbineRepository.GetByIdAsync(turbineId);
+                if (turbine == null)
+                {
+                    return deviceDatas;
+                }
+                clientId = turbine.ClientID;
             }
+
             List<OMA_Data.Entities.Device> devices = _context.DeviceRepository.GetAll().ToList();
             IsConnected();
             _logger.LogDebug("InfluxDB - ReadAll: Before query");
@@ -177,7 +195,7 @@ namespace OMA_InfluxDB.Services
 
                 var fluxQuery = $"from(bucket: \"{_bucket}\")"
                    + $" |> range(start: 0)"
-                   + $" |> filter(fn: (r) => (r._measurement == \"{_measurement}\" and r.TurbineId == \"{turbine.ClientID}\" and r.Type != \"\"))"
+                   + $" |> filter(fn: (r) => (r._measurement == \"{_measurement}\" and r.TurbineId == \"{clientId}\" and r.Type != \"\"))"
                    + $" |> filter(fn: (r) => r[\"_field\"] == \"property_AMP\" or r[\"_field\"] == \"property_Humidity\" or r[\"_field\"] == \"property_Temperature\" or r[\"_field\"] == \"property_Voltage\")"
                    + $" |> group(columns: [\"_measurement\", \"TurbineId\", \"Type\", \"Id\"])"
                    + $" |> last()";

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using InfluxDB.Client.Configurations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OMA_API.Services.Interfaces;
 using OMA_Data.Core.Utils;
@@ -7,20 +8,22 @@ using OMA_Data.DTOs;
 using OMA_Data.Entities;
 using OMA_Data.Enums;
 using OMA_Data.ExtensionMethods;
+using OMA_InfluxDB.Services;
 using OMA_Mqtt;
 using OMA_Mqtt.Models;
 
 namespace OMA_API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class TurbineController(IDataContext context, IGenericRepository<Island> genericIsland, ILoggingService logService, IGenericRepository<Device> genericDevice) : Controller
+    public class TurbineController(IDataContext context, IGenericRepository<Island> genericIsland, ILoggingService logService, IGenericRepository<Device> genericDevice, IInfluxDBService influxDB) : Controller
     {
         private readonly IGenericRepository<Island> _genericIsland = genericIsland;
         private readonly IGenericRepository<Device> _genericDevice = genericDevice;
         private readonly IDataContext _context = context;
         private readonly ILoggingService _logService = logService;
+        private readonly IInfluxDBService _influxDB = influxDB;
 
         [HttpGet(template: "get-Turbine")]
         [Produces<TurbineDTO>]
@@ -65,6 +68,23 @@ namespace OMA_API.Controllers
             await _logService.AddLog(LogLevel.Information, $"Succeded in geting all turbines.");
             return Results.Ok(turbineDTOs);
         }
+
+        [HttpGet(template: "get-TurbinesLatestDatas")]
+        [Produces<List<TurbineDTO>>]
+        public async Task<IResult> TurbinesLatestDatas()
+        {
+            Dictionary<int, List<OMA_InfluxDB.Models.DeviceData>> turbineDict = await _influxDB.GetTurbinesLatestDeviceData();
+
+            if (turbineDict.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all turbines, but failed to format them.");
+                return Results.BadRequest("Failed to format turbines.");
+            }
+
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all turbines latest device data.");
+            return Results.Ok(turbineDict);
+        }
+
         [HttpGet(template: "get-Turbines-Island")]
         [Produces<List<TurbineDTO>>]
         public async Task<IResult> GetTurbinesByIslandID(int id)
