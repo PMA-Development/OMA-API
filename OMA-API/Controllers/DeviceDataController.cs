@@ -58,7 +58,7 @@ namespace OMA_API.Controllers
             return Results.Ok(deviceData);
         }
 
-        //TODO: this has to be moved to the attribute controller
+
         [HttpGet(template: "get-DeviceDataByTurbineId")]
         [RequestTimeout(milliseconds: 200000)]
         [Produces<List<DeviceData>>]

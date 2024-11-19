@@ -12,7 +12,7 @@ using OMA_Data.Data;
 namespace OMA_Data.Migrations
 {
     [DbContext(typeof(OMAContext))]
-    [Migration("20241118113854_Init")]
+    [Migration("20241119072343_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -122,55 +122,6 @@ namespace OMA_Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("OMA_Data.Entities.Attribute", b =>
-                {
-                    b.Property<int>("AttributeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttributeID"));
-
-                    b.Property<int>("DeviceDataID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AttributeID");
-
-                    b.HasIndex("DeviceDataID");
-
-                    b.ToTable("Attributes");
-
-                    b.HasData(
-                        new
-                        {
-                            AttributeID = 1,
-                            DeviceDataID = 1,
-                            Name = "Temperature",
-                            Value = "22.5"
-                        },
-                        new
-                        {
-                            AttributeID = 2,
-                            DeviceDataID = 2,
-                            Name = "Pressure",
-                            Value = "1013"
-                        },
-                        new
-                        {
-                            AttributeID = 3,
-                            DeviceDataID = 3,
-                            Name = "Humidity",
-                            Value = "45%"
-                        });
-                });
-
             modelBuilder.Entity("OMA_Data.Entities.Device", b =>
                 {
                     b.Property<int>("DeviceId")
@@ -215,80 +166,6 @@ namespace OMA_Data.Migrations
                             State = 1,
                             TurbineID = 1,
                             Type = "Actuator"
-                        });
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.DeviceAction", b =>
-                {
-                    b.Property<int>("DeviceActionID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceActionID"));
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("DeviceActionID");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("DeviceAction");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.DeviceData", b =>
-                {
-                    b.Property<int>("DeviceDataID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceDataID"));
-
-                    b.Property<int>("DeviceFK")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("DeviceDataID");
-
-                    b.HasIndex("DeviceFK");
-
-                    b.ToTable("DeviceData");
-
-                    b.HasData(
-                        new
-                        {
-                            DeviceDataID = 1,
-                            DeviceFK = 1,
-                            Timestamp = new DateTime(2024, 11, 18, 12, 8, 53, 846, DateTimeKind.Local).AddTicks(7021),
-                            Type = "TemperatureData"
-                        },
-                        new
-                        {
-                            DeviceDataID = 2,
-                            DeviceFK = 2,
-                            Timestamp = new DateTime(2024, 11, 18, 12, 18, 53, 846, DateTimeKind.Local).AddTicks(7096),
-                            Type = "PressureData"
-                        },
-                        new
-                        {
-                            DeviceDataID = 3,
-                            DeviceFK = 1,
-                            Timestamp = new DateTime(2024, 11, 18, 12, 28, 53, 846, DateTimeKind.Local).AddTicks(7099),
-                            Type = "HumidityData"
                         });
                 });
 
@@ -643,17 +520,6 @@ namespace OMA_Data.Migrations
                     b.Navigation("Island");
                 });
 
-            modelBuilder.Entity("OMA_Data.Entities.Attribute", b =>
-                {
-                    b.HasOne("OMA_Data.Entities.DeviceData", "DeviceData")
-                        .WithMany("Attributes")
-                        .HasForeignKey("DeviceDataID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DeviceData");
-                });
-
             modelBuilder.Entity("OMA_Data.Entities.Device", b =>
                 {
                     b.HasOne("OMA_Data.Entities.Turbine", "Turbine")
@@ -663,28 +529,6 @@ namespace OMA_Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Turbine");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.DeviceAction", b =>
-                {
-                    b.HasOne("OMA_Data.Entities.Device", "Device")
-                        .WithMany("DeviceAction")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.DeviceData", b =>
-                {
-                    b.HasOne("OMA_Data.Entities.Device", "Device")
-                        .WithMany("DeviceData")
-                        .HasForeignKey("DeviceFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Drone", b =>
@@ -741,18 +585,6 @@ namespace OMA_Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Island");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.Device", b =>
-                {
-                    b.Navigation("DeviceAction");
-
-                    b.Navigation("DeviceData");
-                });
-
-            modelBuilder.Entity("OMA_Data.Entities.DeviceData", b =>
-                {
-                    b.Navigation("Attributes");
                 });
 
             modelBuilder.Entity("OMA_Data.Entities.Island", b =>
