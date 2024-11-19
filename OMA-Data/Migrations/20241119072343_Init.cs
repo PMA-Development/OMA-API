@@ -196,48 +196,6 @@ namespace OMA_Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeviceAction",
-                columns: table => new
-                {
-                    DeviceActionID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeviceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeviceAction", x => x.DeviceActionID);
-                    table.ForeignKey(
-                        name: "FK_DeviceAction_Device_DeviceId",
-                        column: x => x.DeviceId,
-                        principalTable: "Device",
-                        principalColumn: "DeviceId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DeviceData",
-                columns: table => new
-                {
-                    DeviceDataID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeviceFK = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeviceData", x => x.DeviceDataID);
-                    table.ForeignKey(
-                        name: "FK_DeviceData_Device_DeviceFK",
-                        column: x => x.DeviceFK,
-                        principalTable: "Device",
-                        principalColumn: "DeviceId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Drones",
                 columns: table => new
                 {
@@ -255,27 +213,6 @@ namespace OMA_Data.Migrations
                         column: x => x.TaskFK,
                         principalTable: "Tasks",
                         principalColumn: "TaskID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Attributes",
-                columns: table => new
-                {
-                    AttributeID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeviceDataID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attributes", x => x.AttributeID);
-                    table.ForeignKey(
-                        name: "FK_Attributes_DeviceData_DeviceDataID",
-                        column: x => x.DeviceDataID,
-                        principalTable: "DeviceData",
-                        principalColumn: "DeviceDataID",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -350,32 +287,12 @@ namespace OMA_Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "DeviceData",
-                columns: new[] { "DeviceDataID", "DeviceFK", "Timestamp", "Type" },
-                values: new object[,]
-                {
-                    { 1, 1, new DateTime(2024, 11, 18, 12, 8, 53, 846, DateTimeKind.Local).AddTicks(7021), "TemperatureData" },
-                    { 2, 2, new DateTime(2024, 11, 18, 12, 18, 53, 846, DateTimeKind.Local).AddTicks(7096), "PressureData" },
-                    { 3, 1, new DateTime(2024, 11, 18, 12, 28, 53, 846, DateTimeKind.Local).AddTicks(7099), "HumidityData" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Drones",
                 columns: new[] { "DroneID", "Available", "TaskFK", "Title" },
                 values: new object[,]
                 {
                     { 1, true, 1, "Drone One" },
                     { 2, false, 2, "Drone Two" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Attributes",
-                columns: new[] { "AttributeID", "DeviceDataID", "Name", "Value" },
-                values: new object[,]
-                {
-                    { 1, 1, "Temperature", "22.5" },
-                    { 2, 2, "Pressure", "1013" },
-                    { 3, 3, "Humidity", "45%" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -394,24 +311,9 @@ namespace OMA_Data.Migrations
                 column: "IslandFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attributes_DeviceDataID",
-                table: "Attributes",
-                column: "DeviceDataID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Device_TurbineID",
                 table: "Device",
                 column: "TurbineID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeviceAction_DeviceId",
-                table: "DeviceAction",
-                column: "DeviceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeviceData_DeviceFK",
-                table: "DeviceData",
-                column: "DeviceFK");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drones_TaskFK",
@@ -454,10 +356,7 @@ namespace OMA_Data.Migrations
                 name: "AlarmsConfig");
 
             migrationBuilder.DropTable(
-                name: "Attributes");
-
-            migrationBuilder.DropTable(
-                name: "DeviceAction");
+                name: "Device");
 
             migrationBuilder.DropTable(
                 name: "Drones");
@@ -466,19 +365,13 @@ namespace OMA_Data.Migrations
                 name: "Logs");
 
             migrationBuilder.DropTable(
-                name: "DeviceData");
-
-            migrationBuilder.DropTable(
                 name: "Tasks");
 
             migrationBuilder.DropTable(
-                name: "Device");
+                name: "Turbine");
 
             migrationBuilder.DropTable(
                 name: "User");
-
-            migrationBuilder.DropTable(
-                name: "Turbine");
 
             migrationBuilder.DropTable(
                 name: "Islands");

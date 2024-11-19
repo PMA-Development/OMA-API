@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace OMA_API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceDataController(IDataContext context, IGenericRepository<Device> genericDevice, ILoggingService logService, IInfluxDBService influxDB) : Controller
