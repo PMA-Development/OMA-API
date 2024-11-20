@@ -8,6 +8,7 @@ using OMA_Data.Entities;
 using OMA_Data.ExtensionMethods;
 using OMA_InfluxDB.Services;
 using Microsoft.AspNetCore.Authorization;
+using OMA_Data.DTOs;
 
 namespace OMA_API.Controllers
 {
@@ -74,6 +75,40 @@ namespace OMA_API.Controllers
             return Results.Ok(deviceData);
 
         }
+
+
+        [HttpGet(template: "get-DeviceDataGraphByTurbineId")]
+        [RequestTimeout(milliseconds: 200000)]
+        [Produces<List<DeviceDataGraphDTO>>]
+        public async Task<IResult> DeviceDataGraphByTurbineId(int Id,DateTime startDate, DateTime endDate)
+        {
+            List<DeviceData> deviceData = await _influxDB.GetDeviceDataByTurbineId(Id,startDate,endDate);
+            if (deviceData.Count == 0)
+            {
+                await _logService.AddLog(LogLevel.Error, $"Attempted to get all deviceData, but failed to format them.");
+                return Results.BadRequest("Failed to format device datas.");
+            }
+            List<DeviceDataGraphDTO> deviceDataGraphDTOs = new List<DeviceDataGraphDTO>();
+            foreach (var device in deviceData)
+            {
+                foreach (var item in device.Attributes)
+                {
+                    var deviceDataGraphDTO = new DeviceDataGraphDTO
+                    {
+                        Timestamp = device.Timestamp,
+                        Name = item.Name,
+                        Value = item.Value
+                    };
+                    deviceDataGraphDTOs.Add(deviceDataGraphDTO);
+                }
+               
+            }
+
+            await _logService.AddLog(LogLevel.Information, $"Succeded in geting all deviceData.");
+            return Results.Ok(deviceDataGraphDTOs);
+
+        }
+
 
         [HttpGet(template: "get-LatestDeviceDataByTurbineId")]
         [RequestTimeout(milliseconds: 200000)]

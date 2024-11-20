@@ -12,6 +12,7 @@ namespace OMA_InfluxDB.Services
         Task<List<DeviceData>> GetAllDeviceData(int agregateMins=15);
         Task<List<DeviceData>> GetLatestDeviceData();
         Task<List<DeviceData>> GetDeviceDataByTurbineId(int turbineId, int agregateMins = 15);
+        Task<List<DeviceData>> GetDeviceDataByTurbineId(int turbineId, DateTime startDate, DateTime endDate, int agregateMins = 15);
         Task<List<DeviceData>> GetLatestDeviceDataByTurbineId(int turbineId, string clientId = "");
         Task<Dictionary<int, List<DeviceData>>> GetTurbinesLatestDeviceData();
     }
