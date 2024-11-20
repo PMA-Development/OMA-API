@@ -13,13 +13,13 @@ namespace OMA_API.Services
 
         public async System.Threading.Tasks.Task AddLog(LogLevel logLevel, string description) 
         {
-          
-            //var userID = _httpContext.HttpContext!.User.Identity.GetUserId();
-            //User user = await _context.UserRepository.GetByIdAsync(Guid.Parse(userID));
 
-            //await _context.LogRepository.Add(new Log() { User = user, Severity = logLevel.ToString(), Description = description});
+            var userID = _httpContext.HttpContext!.User.Identity.GetUserId();
+            User user = await _context.UserRepository.GetByIdAsync(Guid.Parse(userID));
 
-            //await _context.CommitAsync();
+            await _context.LogRepository.Add(new Log() { User = user, Severity = logLevel.ToString(), Description = description });
+
+            await _context.CommitAsync();
 
         }
     }
